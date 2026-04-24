@@ -1,6 +1,6 @@
 ﻿using Domain.InfraInterfaces;
 using Domain.Aggregates;
-namespace Infra;
+namespace Infra.Repository;
 
 
 public class PecaRepositoryImp : BaseRepositoryImp<Peca>, PecaRepository

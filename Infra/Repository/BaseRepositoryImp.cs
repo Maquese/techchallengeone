@@ -5,7 +5,7 @@ namespace Infra;
 
 public class BaseRepositoryImp<T> : BaseRepository<T> where T : class
 {
-    private readonly EFContext _context;
+    protected readonly EFContext _context;
     public BaseRepositoryImp(EFContext context)
     {
         _context = context;

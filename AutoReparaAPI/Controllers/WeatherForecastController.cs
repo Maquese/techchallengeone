@@ -1,5 +1,5 @@
-using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Aplication.Services;
 
 namespace AutoReparaAPI.Controllers;
 
@@ -13,8 +13,14 @@ public class WeatherForecastController : ControllerBase
     ];
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get([FromServices]PecaService pecaService)
+    public IEnumerable<WeatherForecast> Get([FromServices]PecaAppServiceImp pecaService)
     {
+        pecaService.AddPeca(new Aplication.Models.PecaModel
+        {
+            Nome = "Teste",
+            Descricao = "Teste",
+            Valor = 10
+        });
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
