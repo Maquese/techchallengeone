@@ -22,4 +22,5 @@ public class Veiculo
     public int Ano { get; private set; }
     public int ClienteId { get; private set; }
     public Cliente Cliente { get; private set; }
+    public ICollection<OrdemServico> OrdemServicos { get; private set; }
 }

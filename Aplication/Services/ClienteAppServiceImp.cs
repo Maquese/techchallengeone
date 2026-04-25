@@ -64,4 +64,23 @@ public class ClienteAppServiceImp
         _veiculoRepository.Adicionar(veiculo);
         return Task.CompletedTask;
     }
+
+    public async Task<VeiculoModel> BuscarVeiculo(string placa)
+    {
+        var veiculo = await _veiculoRepository.BuscarPorPlaca(placa);
+        if (veiculo == null)
+        {
+            return null;
+        }
+
+        return new VeiculoModel
+        {
+            Id = veiculo.Id,
+            Placa = veiculo.Placa,
+            Modelo = veiculo.Modelo,
+            Marca = veiculo.Marca,
+            Ano = veiculo.Ano,
+            ClienteId = veiculo.ClienteId
+        };
+    }
 }

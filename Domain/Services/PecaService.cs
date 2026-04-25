@@ -6,4 +6,5 @@ namespace Domain;
 public interface PecaService
 {     
     void AddPeca(Peca peca);
+    
 }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregates;
+﻿using Domain.Entidades;
+
+namespace Domain.Aggregates;
 
 public class Peca
 {
@@ -10,6 +12,7 @@ public class Peca
     public DateTime DataAtualizacao { get; private set; }
     public bool Ativo { get; private set; }
     public int QuantidadeEmEstoque { get; private set; }
+    public ICollection<OrdemServico> OrdemServicos { get; private set; }
 
     public Peca(int id, string nome, string descricao, decimal valor)
     {

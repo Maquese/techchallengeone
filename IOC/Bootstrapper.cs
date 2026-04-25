@@ -16,9 +16,12 @@ namespace IOC;
             services.AddTransient<PecaRepository, PecaRepositoryImp>();
             services.AddTransient<ClienteRepository, ClienteRepositoryImp>();
             services.AddTransient<VeiculoRepository, VeiculoRepositoryImp>();
+            services.AddTransient<OrdemServicoRepository, OrdemServicoRepositoryImp>();
+            services.AddTransient<ServicoRepository, ServicoReposiroryImp>();
 
             services.AddTransient<PecaAppServiceImp>();
             services.AddTransient<ClienteAppServiceImp>();
+            services.AddTransient<OrdemServicoAppServiceImp>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 

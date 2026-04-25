@@ -10,6 +10,8 @@ public class EFContext : DbContext
     public DbSet<Peca> Pecas { get; set; }
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Veiculo> Veiculos { get; set; }
+    public DbSet<OrdemServico> OrdemServicos { get; set; }
+    public DbSet<Servico> Servicos { get; set; }
 
     public EFContext(DbContextOptions<EFContext> options) : base(options)
     {
@@ -68,6 +70,33 @@ public class EFContext : DbContext
                 .WithMany(c => c.Veiculos)
                 .HasForeignKey(v => v.ClienteId);
 
+        });
+
+        modelBuilder.Entity<Servico>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Descricao).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Valor).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.TempoEstimado).IsRequired();
+        });
+
+        modelBuilder.Entity<OrdemServico>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Descricao).IsRequired().HasMaxLength(1000);
+            entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
+            entity.HasOne(o => o.Veiculo)
+                .WithMany(v => v.OrdemServicos)
+                .HasForeignKey(o => o.VeiculoId);
+
+            entity.HasMany(o => o.Servicos)
+                .WithMany(s => s.OrdemServicos)
+                .UsingEntity(j => j.ToTable("OrdemServicoServicos"));
+
+            entity.HasMany(o => o.Pecas)
+                .WithMany(p => p.OrdemServicos)
+                .UsingEntity(j => j.ToTable("OrdemServicoPecas"));
         });
     }
 

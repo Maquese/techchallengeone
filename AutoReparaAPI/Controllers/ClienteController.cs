@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Aplication.Services;
 using Aplication.Models;
 
-namespace MyApp.Namespace
+namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -32,6 +32,13 @@ namespace MyApp.Namespace
         {
             clienteAppService.AdicionarVeiculo(veiculo);
             return Task.FromResult<IActionResult>(Ok("Veículo adicionado com sucesso"));
+        }
+
+        [HttpGet]
+        public Task<IActionResult> BuscarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string placa)
+        {
+            var veiculo = clienteAppService.BuscarVeiculo(placa);
+            return Task.FromResult<IActionResult>(Ok(veiculo));
         }
     }
 }

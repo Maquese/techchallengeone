@@ -12,31 +12,31 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : class
     }
 
     
-    public void Adicionar(T entity)
+    public async Task Adicionar(T entity)
     {
-        _context.Set<T>().Add(entity);
-        _context.SaveChanges();
+       await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
     }
 
-    public void Atualizar(T entity)
+    public async Task Atualizar(T entity)
     {
         _context.Set<T>().Update(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void Inativar(T entity)
+    public async Task Inativar(T entity)
     {
         _context.Set<T>().Remove(entity);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public List<T> ListarAtivos()
+    public async Task<List<T>> ListarAtivos()
     {
-        return _context.Set<T>().ToList();
+        return await _context.Set<T>().ToListAsync();
     }
 
-    public T? ObterPorId(int id)
+    public async Task<T> ObterPorId(int id)
     {
-        return _context.Set<T>().Find(id);
+        return await _context.Set<T>().FindAsync(id);
     }
 }

@@ -2,9 +2,9 @@
 
 public interface BaseRepository<T> where T : class
 {
-    void Adicionar(T entity);
-    void Atualizar(T entity);
-    void Inativar(T entity);
-    List<T> ListarAtivos();
-    T? ObterPorId(int id);
+    Task Adicionar(T entity);
+    Task Atualizar(T entity);
+    Task Inativar(T entity);
+    Task<List<T>> ListarAtivos();
+    Task<T> ObterPorId(int id);
 }
