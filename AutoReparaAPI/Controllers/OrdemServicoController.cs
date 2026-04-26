@@ -31,5 +31,13 @@ namespace AutoReparaAPI.Controllers
         {
             return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AdicionarServico(servicoModel)));
         }
+
+        [HttpPost]
+        public Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery] int ordemServicoId, [FromQuery] string mecanicoAtribuido)
+        {
+            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AtribuirMecanico(ordemServicoId, mecanicoAtribuido))); 
+        }
+
+        
     }
 }

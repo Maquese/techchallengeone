@@ -2,50 +2,58 @@
 
 namespace Domain.Aggregates;
 
-public class Peca
+public class ItemEstoque
 {
     public int Id { get; private set; }
     public string Nome { get;private set; }
     public string Descricao { get; private set; }
     public decimal Valor { get; private set; }
     public DateTime DataCadastro { get; private set; }
-    public DateTime DataAtualizacao { get; private set; }
+    public DateTime DataAtualizacao { get; private set; }    
+    public DateTime? Datavalidade { get; private set; }
     public bool Ativo { get; private set; }
     public int QuantidadeEmEstoque { get; private set; }
     public ICollection<OrdemServico> OrdemServicos { get; private set; }
+    public string Tipo { get; private set; }
 
-    public Peca(int id, string nome, string descricao, decimal valor)
+     protected ItemEstoque() { }
+
+    public ItemEstoque(int id, string tipo, string nome, string descricao, decimal valor, DateTime? dataValidade = null)
     {
         if (string.IsNullOrEmpty(nome))
-            throw new ArgumentException("O nome da peça é obrigatório.");
+            throw new ArgumentException("O nome do item de estoque é obrigatório.");
         if (string.IsNullOrEmpty(descricao))
-            throw new ArgumentException("A descrição da peça é obrigatória.");
+            throw new ArgumentException("A descrição do item de estoque é obrigatória.");
         if (valor < 0)
-            throw new ArgumentException("O valor da peça não pode ser negativo.");
-
+            throw new ArgumentException("O valor do item de estoque não pode ser negativo.");
+        if(tipo != "Peça" && tipo != "Insumo")
+            throw new ArgumentException("O tipo do item de estoque deve ser 'Peça' ou 'Insumo'.");
         Id = id;
+        Tipo = tipo;
         Nome = nome;
         Descricao = descricao;
         Valor = valor;
         DataCadastro = DateTime.UtcNow;
         DataAtualizacao = DateTime.UtcNow;
+        Datavalidade = dataValidade;
         QuantidadeEmEstoque = 0;
         Ativo = true;
     }
 
-    public void Atualizar(string nome, string descricao, decimal valor)
+    public void Atualizar(string nome, string descricao, decimal valor, DateTime? dataValidade = null)
     {
         if (string.IsNullOrEmpty(nome))
-            throw new ArgumentException("O nome da peça é obrigatório.");
+            throw new ArgumentException("O nome do item de estoque é obrigatório.");
         if (string.IsNullOrEmpty(descricao))
-            throw new ArgumentException("A descrição da peça é obrigatória.");
+            throw new ArgumentException("A descrição do item de estoque é obrigatória.");
         if (valor < 0)
-            throw new ArgumentException("O valor da peça não pode ser negativo.");
+            throw new ArgumentException("O valor do item de estoque não pode ser negativo.");
 
         Nome = nome;
         Descricao = descricao;
         Valor = valor;
         DataAtualizacao = DateTime.UtcNow;
+        Datavalidade = dataValidade;
     }
 
     public void Inativar()

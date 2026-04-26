@@ -22,9 +22,7 @@ public class OrdemServicoAppServiceImp
             id: ordemServico.Id ?? 0,
             dataAbertura: DateTime.Now,
             dataFechamento: null,
-            descricao: ordemServico.Descricao,
-            veiculoId: ordemServico.VeiculoId,
-            status: ordemServico.Status
+            veiculoId: ordemServico.VeiculoId
         );
 
         await _ordemServicoRepository.Adicionar(ordemServicoEntity);
@@ -43,5 +41,19 @@ public class OrdemServicoAppServiceImp
 
         await _servicoRepository.Adicionar(servicoEntity);
         return servico;
+    }
+
+    public async Task<string> AtribuirMecanico(int ordemServicoId, string mecanicoAtribuido)
+    {
+        var ordemServico = await _ordemServicoRepository.ObterPorId(ordemServicoId);
+        if (ordemServico == null)
+        {
+            return $"Ordem de serviço com ID {ordemServicoId} não encontrada.";
+        }
+
+        ordemServico.GetType().GetProperty("MecanicoAtribuido")?.SetValue(ordemServico, mecanicoAtribuido);
+        await _ordemServicoRepository.Atualizar(ordemServico);
+
+        return $"Mecânico '{mecanicoAtribuido}' atribuído à ordem de serviço ID {ordemServicoId}.";
     }
 }

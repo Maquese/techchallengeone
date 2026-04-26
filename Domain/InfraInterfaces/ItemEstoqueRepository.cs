@@ -2,7 +2,7 @@
 
 namespace Domain.InfraInterfaces;
 
-public interface PecaRepository : BaseRepository<Peca>
+public interface ItemEstoqueRepository : BaseRepository<ItemEstoque>
 {
     
 }

@@ -5,15 +5,15 @@ namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PecasController : ControllerBase
+    public class ItemEstoqueController : ControllerBase
     {
-        public PecasController()
+        public ItemEstoqueController()
         {
             
         }
 
-        [HttpPut(Name = "AdicionarPeca")]
-        public Task<IActionResult> AdicionarPeca()
+        [HttpPut(Name = "AdicionarItemEstoque")]
+        public Task<IActionResult> AdicionarItemEstoque()
         {
             return Task.FromResult<IActionResult>(Ok("Hello World"));
         }

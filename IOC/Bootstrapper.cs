@@ -13,13 +13,13 @@ namespace IOC;
         {
             services.AddDbContext<EFContext>(x => x.UseInMemoryDatabase("EFContext"));
 
-            services.AddTransient<PecaRepository, PecaRepositoryImp>();
+            services.AddTransient<ItemEstoqueRepository, ItemEstoqueRepositoryImp>();
             services.AddTransient<ClienteRepository, ClienteRepositoryImp>();
             services.AddTransient<VeiculoRepository, VeiculoRepositoryImp>();
             services.AddTransient<OrdemServicoRepository, OrdemServicoRepositoryImp>();
-            services.AddTransient<ServicoRepository, ServicoReposiroryImp>();
+            services.AddTransient<ServicoRepository, ServicoRepositoryImp>();
 
-            services.AddTransient<PecaAppServiceImp>();
+            services.AddTransient<ItemEstoqueAppServiceImp>();
             services.AddTransient<ClienteAppServiceImp>();
             services.AddTransient<OrdemServicoAppServiceImp>();
 

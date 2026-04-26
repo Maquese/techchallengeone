@@ -13,9 +13,9 @@ public class WeatherForecastController : ControllerBase
     ];
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get([FromServices]PecaAppServiceImp pecaService)
+    public IEnumerable<WeatherForecast> Get([FromServices] ItemEstoqueAppServiceImp pecaService)
     {
-        pecaService.AddPeca(new Aplication.Models.PecaModel
+        pecaService.AddPeca(new Aplication.Models.ItemEstoqueModel
         {
             Nome = "Teste",
             Descricao = "Teste",

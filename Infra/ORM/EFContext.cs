@@ -7,22 +7,22 @@ namespace Infra;
 public class EFContext : DbContext
 {
 
-    public DbSet<Peca> Pecas { get; set; }
+    public DbSet<ItemEstoque> ItensEstoque { get; set; }
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Veiculo> Veiculos { get; set; }
     public DbSet<OrdemServico> OrdemServicos { get; set; }
     public DbSet<Servico> Servicos { get; set; }
+    public DbSet<Insumo> Insumos { get; set; }
 
     public EFContext(DbContextOptions<EFContext> options) : base(options)
     {
 
     }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Peca>(entity =>
+        modelBuilder.Entity<ItemEstoque>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedNever();
@@ -33,6 +33,7 @@ public class EFContext : DbContext
             entity.Property(e => e.DataAtualizacao).IsRequired();
             entity.Property(e => e.Ativo).IsRequired();
             entity.Property(e => e.QuantidadeEmEstoque).IsRequired();
+            entity.Property(e => e.Datavalidade).IsRequired(false);
         });
 
         modelBuilder.Entity<Cliente>(entity =>
@@ -84,8 +85,8 @@ public class EFContext : DbContext
         modelBuilder.Entity<OrdemServico>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Descricao).IsRequired().HasMaxLength(1000);
             entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.MecanicoAtribuido).HasMaxLength(200);
             entity.HasOne(o => o.Veiculo)
                 .WithMany(v => v.OrdemServicos)
                 .HasForeignKey(o => o.VeiculoId);
