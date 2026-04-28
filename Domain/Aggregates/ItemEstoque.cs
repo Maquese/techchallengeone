@@ -2,7 +2,7 @@
 
 namespace Domain.Aggregates;
 
-public class ItemEstoque
+public class ItemEstoque : IEntity
 {
     public int Id { get; private set; }
     public string Nome { get;private set; }

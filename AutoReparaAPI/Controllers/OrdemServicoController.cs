@@ -33,9 +33,9 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery] int ordemServicoId, [FromQuery] string mecanicoAtribuido)
+        public Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiEmDiagnosticoModel atribuiEmDiagnostico)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AtribuirMecanico(ordemServicoId, mecanicoAtribuido))); 
+            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AtribuirMecanico(atribuiEmDiagnostico))); 
         }
 
         

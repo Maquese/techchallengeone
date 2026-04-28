@@ -3,7 +3,7 @@ using Domain.VOs;
 
 namespace Domain.Aggregates;
 
-public class Cliente
+public class Cliente : IEntity
 {
     protected Cliente() { }
     public Cliente(int id, CpfVO cpf, string nome, string email, string celular)

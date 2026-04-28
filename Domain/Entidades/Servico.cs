@@ -2,7 +2,7 @@
 
 namespace Domain.Entidades;
 
-public class Servico
+public class Servico: IEntity
 {
     public Servico(int id, string descricao, decimal valor, int tempoEstimado)
     {

@@ -3,7 +3,7 @@ using Domain.Entidades;
 
 namespace Domain.Aggregates;
 
-public class OrdemServico
+public class OrdemServico : IEntity
 {   
     protected OrdemServico() { }
 
@@ -14,7 +14,7 @@ public class OrdemServico
     public Veiculo Veiculo { get; private set; }
     public string Status { get; private set; }
     public ICollection<Servico>? Servicos { get; private set; }
-    public ICollection<ItemEstoque>? Pecas { get; private set; }
+    public ICollection<ItemEstoque>? ItensEstoque { get; private set; }
     public string? MecanicoAtribuido { get; private set; }
     
 
@@ -28,7 +28,7 @@ public class OrdemServico
         VeiculoId = veiculoId;
         Status = "Recebida";
         Servicos = servicos ?? new List<Servico>();
-        Pecas = pecas ?? new List<ItemEstoque>();
+        ItensEstoque = pecas ?? new List<ItemEstoque>();
         MecanicoAtribuido = mecanicoAtribuido;
     }
 
@@ -38,11 +38,11 @@ public class OrdemServico
         Status = "Em Diagnostico";
     }
 
-    public void OSDiagnosticada(IList<ItemEstoque> pecas, IList<Servico> servicos)
+    public void OSDiagnosticada(IList<ItemEstoque> itens, IList<Servico> servicos)
     {
-        Pecas = pecas;
+        ItensEstoque = itens;
         Servicos = servicos;
         MecanicoAtribuido = null;
-        Status = "Agardando Aprovação";
+        Status = "Aguardando Aprovação";
     }
 }

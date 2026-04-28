@@ -1,8 +1,10 @@
-﻿namespace Domain.InfraInterfaces;
+﻿using Domain.Entidades;
 
-public interface BaseRepository<T> where T : class
+namespace Domain.InfraInterfaces;
+
+public interface BaseRepository<T> where T : IEntity
 {
-    Task Adicionar(T entity);
+    Task<int> Adicionar(T entity);
     Task Atualizar(T entity);
     Task Inativar(T entity);
     Task<List<T>> ListarAtivos();

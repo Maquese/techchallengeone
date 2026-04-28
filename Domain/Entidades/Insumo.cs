@@ -2,7 +2,7 @@
 
 namespace Domain.Entidades;
 
-public class Insumo
+public class Insumo : IEntity
 {
     public int Id { get; private set; }
     public string Nome { get;private set; }

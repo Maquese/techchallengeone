@@ -95,7 +95,7 @@ public class EFContext : DbContext
                 .WithMany(s => s.OrdemServicos)
                 .UsingEntity(j => j.ToTable("OrdemServicoServicos"));
 
-            entity.HasMany(o => o.Pecas)
+            entity.HasMany(o => o.ItensEstoque)
                 .WithMany(p => p.OrdemServicos)
                 .UsingEntity(j => j.ToTable("OrdemServicoPecas"));
         });

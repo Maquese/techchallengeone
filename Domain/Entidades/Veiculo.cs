@@ -2,7 +2,7 @@
 
 namespace Domain.Entidades;
 
-public class Veiculo
+public class Veiculo : IEntity
 {
     protected Veiculo() { }
 

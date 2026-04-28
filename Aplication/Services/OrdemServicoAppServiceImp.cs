@@ -38,22 +38,22 @@ public class OrdemServicoAppServiceImp
             valor: servico.Valor,
             tempoEstimado: servico.TempoEstimado
         );
-
+        
         await _servicoRepository.Adicionar(servicoEntity);
         return servico;
     }
 
-    public async Task<string> AtribuirMecanico(int ordemServicoId, string mecanicoAtribuido)
+    public async Task<string> AtribuirMecanico(AtribuiEmDiagnosticoModel atribuiEmDiagnostico)
     {
-        var ordemServico = await _ordemServicoRepository.ObterPorId(ordemServicoId);
+        var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmDiagnostico.OrdemServicoId);
         if (ordemServico == null)
         {
-            return $"Ordem de serviço com ID {ordemServicoId} não encontrada.";
+            return $"Ordem de serviço com ID {atribuiEmDiagnostico.OrdemServicoId} não encontrada.";
         }
 
-        ordemServico.GetType().GetProperty("MecanicoAtribuido")?.SetValue(ordemServico, mecanicoAtribuido);
+        ordemServico.OSEmDiagnostico(atribuiEmDiagnostico.MecanicoAtribuido);
         await _ordemServicoRepository.Atualizar(ordemServico);
 
-        return $"Mecânico '{mecanicoAtribuido}' atribuído à ordem de serviço ID {ordemServicoId}.";
+        return $"Mecânico '{atribuiEmDiagnostico.MecanicoAtribuido}' atribuído à ordem de serviço ID {atribuiEmDiagnostico.OrdemServicoId}.";
     }
 }

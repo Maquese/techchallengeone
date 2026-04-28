@@ -1,9 +1,10 @@
-﻿using Domain.InfraInterfaces;
+﻿using Domain.Entidades;
+using Domain.InfraInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infra;
 
-public class BaseRepositoryImp<T> : BaseRepository<T> where T : class
+public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
 {
     protected readonly EFContext _context;
     public BaseRepositoryImp(EFContext context)
@@ -12,10 +13,11 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : class
     }
 
     
-    public async Task Adicionar(T entity)
+    public async Task<int> Adicionar(T entity)
     {
-       await _context.Set<T>().AddAsync(entity);
+        await _context.Set<T>().AddAsync(entity);
         await _context.SaveChangesAsync();
+        return entity.Id;
     }
 
     public async Task Atualizar(T entity)
