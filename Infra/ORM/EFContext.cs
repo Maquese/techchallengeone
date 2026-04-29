@@ -12,8 +12,7 @@ public class EFContext : DbContext
     public DbSet<Veiculo> Veiculos { get; set; }
     public DbSet<OrdemServico> OrdemServicos { get; set; }
     public DbSet<Servico> Servicos { get; set; }
-    public DbSet<Insumo> Insumos { get; set; }
-
+    public DbSet<Orcamento> Orcamentos { get; set; }
     public EFContext(DbContextOptions<EFContext> options) : base(options)
     {
 
@@ -99,6 +98,15 @@ public class EFContext : DbContext
                 .WithMany(p => p.OrdemServicos)
                 .UsingEntity(j => j.ToTable("OrdemServicoPecas"));
         });
-    }
 
+        modelBuilder.Entity<Orcamento>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.ValorTotal).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Observacao).HasMaxLength(1000);
+            entity.HasOne(o => o.OrdemServico)
+                .WithMany(os => os.Orcamentos)
+                .HasForeignKey(o => o.OrdemServicoId);
+        });
+    }
 }

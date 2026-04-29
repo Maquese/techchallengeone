@@ -18,7 +18,7 @@ public class ItemEstoque : IEntity
 
      protected ItemEstoque() { }
 
-    public ItemEstoque(int id, string tipo, string nome, string descricao, decimal valor, DateTime? dataValidade = null)
+    public ItemEstoque(string tipo, string nome, string descricao, decimal valor, DateTime? dataValidade = null)
     {
         if (string.IsNullOrEmpty(nome))
             throw new ArgumentException("O nome do item de estoque é obrigatório.");
@@ -28,7 +28,7 @@ public class ItemEstoque : IEntity
             throw new ArgumentException("O valor do item de estoque não pode ser negativo.");
         if(tipo != "Peça" && tipo != "Insumo")
             throw new ArgumentException("O tipo do item de estoque deve ser 'Peça' ou 'Insumo'.");
-        Id = id;
+        
         Tipo = tipo;
         Nome = nome;
         Descricao = descricao;

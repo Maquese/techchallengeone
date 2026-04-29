@@ -1,4 +1,5 @@
-﻿using Aplication.Models;
+﻿using System.Security.Cryptography.X509Certificates;
+using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.InfraInterfaces;
@@ -19,7 +20,6 @@ public class OrdemServicoAppServiceImp
     public async Task<OrdemServico> AdicionarOrdemServico(OrdemServicoModel ordemServico)
     {
         var ordemServicoEntity = new OrdemServico(
-            id: ordemServico.Id ?? 0,
             dataAbertura: DateTime.Now,
             dataFechamento: null,
             veiculoId: ordemServico.VeiculoId
@@ -43,7 +43,7 @@ public class OrdemServicoAppServiceImp
         return servico;
     }
 
-    public async Task<string> AtribuirMecanico(AtribuiEmDiagnosticoModel atribuiEmDiagnostico)
+    public async Task<string> AtribuirMecanico(AtribuiMecanicoModel atribuiEmDiagnostico)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmDiagnostico.OrdemServicoId);
         if (ordemServico == null)
@@ -55,5 +55,32 @@ public class OrdemServicoAppServiceImp
         await _ordemServicoRepository.Atualizar(ordemServico);
 
         return $"Mecânico '{atribuiEmDiagnostico.MecanicoAtribuido}' atribuído à ordem de serviço ID {atribuiEmDiagnostico.OrdemServicoId}.";
+    }
+
+    public async Task<string> AtribuirMecanicoExecucao(AtribuiMecanicoModel atribuiEmReparo)
+    {
+        var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmReparo.OrdemServicoId);
+        if (ordemServico == null)
+        {
+            return $"Ordem de serviço com ID {atribuiEmReparo.OrdemServicoId} não encontrada.";
+        }
+
+        ordemServico.EmExecucao(atribuiEmReparo.MecanicoAtribuido);
+        await _ordemServicoRepository.Atualizar(ordemServico);
+
+        return $"Mecânico '{atribuiEmReparo.MecanicoAtribuido}' atribuído à ordem de serviço ID {atribuiEmReparo.OrdemServicoId}.";
+    }
+
+    public async Task<string> FinalizarOrdemServico(int ordemServicoId)
+    {
+        var ordemServico = await _ordemServicoRepository.ObterPorId(ordemServicoId);
+        if (ordemServico == null)
+        {
+            return $"Ordem de serviço com ID {ordemServicoId} não encontrada.";
+        }
+        ordemServico.FinalizarOrdemServico();
+        await _ordemServicoRepository.Atualizar(ordemServico);
+
+        return $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.";
     }
 }

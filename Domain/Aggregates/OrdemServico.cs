@@ -16,13 +16,15 @@ public class OrdemServico : IEntity
     public ICollection<Servico>? Servicos { get; private set; }
     public ICollection<ItemEstoque>? ItensEstoque { get; private set; }
     public string? MecanicoAtribuido { get; private set; }
+    public IList<Orcamento> Orcamentos { get; private set; }
+    public DateTime? DataInicioExecucao { get; private set; }
+    public DateTime? DataFimExecucao { get; private set; }
     
 
-    public OrdemServico(int id, DateTime dataAbertura, DateTime? dataFechamento, 
+    public OrdemServico(DateTime dataAbertura, DateTime? dataFechamento, 
            int veiculoId, ICollection<Servico>? servicos = null, 
            ICollection<ItemEstoque>? pecas = null, string? mecanicoAtribuido = null)
     {
-        Id = id;
         DataAbertura = dataAbertura;
         DataFechamento = dataFechamento;
         VeiculoId = veiculoId;
@@ -30,6 +32,7 @@ public class OrdemServico : IEntity
         Servicos = servicos ?? new List<Servico>();
         ItensEstoque = pecas ?? new List<ItemEstoque>();
         MecanicoAtribuido = mecanicoAtribuido;
+        Orcamentos = new List<Orcamento>();
     }
 
     public void OSEmDiagnostico(string mecanico)
@@ -44,5 +47,29 @@ public class OrdemServico : IEntity
         Servicos = servicos;
         MecanicoAtribuido = null;
         Status = "Aguardando Aprovação";
+    }
+
+    public void OSAprovada()
+    {
+        Status = "Aprovada";
+    }
+
+    public void EmExecucao(string mecanico)
+    {
+        MecanicoAtribuido = mecanico;
+        Status = "Em Execução";
+        DataInicioExecucao = DateTime.Now;
+    }
+
+    public void FinalizarOrdemServico()
+    {
+        Status = "Finalizada";
+        DataFimExecucao = DateTime.Now;
+    }
+
+    public void OrdemServicoEntregue()
+    {
+        Status = "Entregue";
+        DataFechamento = DateTime.Now;
     }
 }

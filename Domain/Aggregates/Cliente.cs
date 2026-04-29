@@ -6,9 +6,8 @@ namespace Domain.Aggregates;
 public class Cliente : IEntity
 {
     protected Cliente() { }
-    public Cliente(int id, CpfVO cpf, string nome, string email, string celular)
+    public Cliente(CpfVO cpf, string nome, string email, string celular)
     {
-        this.Id = id;
         this.Cpf = cpf;
         Nome = nome;
         Email = email;

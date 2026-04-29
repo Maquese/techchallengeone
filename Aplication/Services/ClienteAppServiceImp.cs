@@ -39,7 +39,6 @@ public class ClienteAppServiceImp
     {
         var cliente = new Cliente
         (
-            0,
             new CpfVO(clienteModel.Cpf),
             clienteModel.Nome,
             clienteModel.Email,

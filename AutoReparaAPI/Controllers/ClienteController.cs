@@ -23,8 +23,7 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]ClienteModel cliente)
         {
-            clienteAppService.CriarCliente(cliente);
-            return Task.FromResult<IActionResult>(Ok("Cliente criado com sucesso"));
+            return Task.FromResult<IActionResult>(Ok(clienteAppService.CriarCliente(cliente)));
         }
 
         [HttpPost]

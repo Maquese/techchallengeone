@@ -18,7 +18,6 @@ public class ItemEstoqueAppServiceImp
     {
         var novaPeca = new ItemEstoque
         (
-            0,
             "Peça",
             itemEstoqueModel.Nome,
             itemEstoqueModel.Descricao,
