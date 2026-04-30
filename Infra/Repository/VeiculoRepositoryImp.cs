@@ -13,7 +13,7 @@ public class VeiculoRepositoryImp : BaseRepositoryImp<Veiculo>, VeiculoRepositor
 
     public async Task<Veiculo> BuscarPorPlaca(string placa)
     {
-        return await _context.Veiculos.FirstOrDefaultAsync(v => v.Placa == placa);
+        return await _context.Veiculos.FirstOrDefaultAsync(v => v.Placa == new Domain.VOs.PlacaVO(placa));
     }
 }
 

@@ -3,6 +3,7 @@ using System;
 using Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class EFContextModelSnapshot : ModelSnapshot
+    [Migration("20260430223753_AddUniqueIndexesEmailCelular")]
+    partial class AddUniqueIndexesEmailCelular
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,6 +196,11 @@ namespace Infra.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Placa")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
@@ -338,32 +346,7 @@ namespace Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Domain.VOs.PlacaVO", "Placa", b1 =>
-                        {
-                            b1.Property<int>("VeiculoId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Valor")
-                                .IsRequired()
-                                .HasMaxLength(7)
-                                .HasColumnType("varchar(7)")
-                                .HasColumnName("Placa");
-
-                            b1.HasKey("VeiculoId");
-
-                            b1.HasIndex("Valor")
-                                .IsUnique();
-
-                            b1.ToTable("Veiculo");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VeiculoId");
-                        });
-
                     b.Navigation("Cliente");
-
-                    b.Navigation("Placa")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ItemEstoqueOrdemServico", b =>

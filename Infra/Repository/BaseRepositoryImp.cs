@@ -1,4 +1,5 @@
 ﻿using Domain.Entidades;
+using Domain.Exceptions;
 using Domain.InfraInterfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,35 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
     
     public async Task<int> Adicionar(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
-        await _context.SaveChangesAsync();
-        return entity.Id;
+        try
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id;
+        }
+        catch (DbUpdateException ex)
+        {
+            throw TraducaoErroUnicidade(ex);
+        }
+    }
+
+    private DomainException TraducaoErroUnicidade(DbUpdateException ex)
+    {
+        var mensagem = ex.InnerException?.Message ?? ex.Message;
+
+        if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Cpf"))
+            return new DomainException("CPF já cadastrado");
+
+        if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Email"))
+            return new DomainException("Email já cadastrado");
+
+        if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Celular"))
+            return new DomainException("Celular já cadastrado");
+
+        if (mensagem.Contains("Duplicate entry"))
+            return new DomainException("Dados duplicados no banco de dados");
+
+        return new DomainException("Erro ao salvar dados");
     }
 
     public async Task Atualizar(T entity)

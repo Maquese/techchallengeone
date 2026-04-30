@@ -1,4 +1,5 @@
 ﻿using Domain.Aggregates;
+using Domain.VOs;
 
 namespace Domain.Entidades;
 
@@ -6,7 +7,7 @@ public class Veiculo : IEntity
 {
     protected Veiculo() { }
 
-    public Veiculo(string placa, string modelo, string marca, int ano, int clienteId)
+    public Veiculo(PlacaVO placa, string modelo, string marca, int ano, int clienteId)
     {
         Placa = placa;
         Modelo = modelo;
@@ -16,7 +17,7 @@ public class Veiculo : IEntity
     }
 
     public int Id { get; private set; }
-    public string Placa { get;private set; }
+    public PlacaVO Placa { get; private set; }
     public string Modelo { get; private set; }
     public string Marca { get; private set; }
     public int Ano { get; private set; }

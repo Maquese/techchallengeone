@@ -57,15 +57,32 @@ public class EFContext : DbContext
             });
 
             entity.Property(e => e.Nome).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Email).HasMaxLength(200);
-            entity.Property(e => e.Celular).HasMaxLength(20);
+            
+            entity.OwnsOne(c => c.Email, email =>
+            {
+                email.Property(e => e.Endereco)
+                    .HasColumnName("Email")
+                    .HasMaxLength(200)
+                    .IsRequired();
+
+                email.HasIndex(e => e.Endereco).IsUnique();
+            });
+
+            entity.OwnsOne(c => c.Celular, celular =>
+            {
+                celular.Property(c => c.Numero)
+                    .HasColumnName("Celular")
+                    .HasMaxLength(11)
+                    .IsRequired();
+
+                celular.HasIndex(c => c.Numero).IsUnique();
+            });
         });
 
         modelBuilder.Entity<Veiculo>(entity =>
         {
             entity.ToTable("Veiculo");
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Placa).IsRequired().HasMaxLength(20);
+            entity.HasKey(e => e.Id);            
             entity.Property(e => e.Modelo).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Marca).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Ano).IsRequired();
@@ -73,6 +90,15 @@ public class EFContext : DbContext
                 .WithMany(c => c.Veiculos)
                 .HasForeignKey(v => v.ClienteId);
 
+                entity.OwnsOne(v => v.Placa, placa =>
+                {
+                    placa.Property(p => p.Valor)
+                        .HasColumnName("Placa")
+                        .HasMaxLength(7)
+                        .IsRequired();
+
+                    placa.HasIndex(p => p.Valor).IsUnique();
+                });
         });
 
         modelBuilder.Entity<Servico>(entity =>

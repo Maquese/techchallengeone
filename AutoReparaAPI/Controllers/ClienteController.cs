@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Aplication.Services;
 using Aplication.Models;
+using Domain.Exceptions;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -17,15 +18,39 @@ namespace AutoReparaAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
         {            
-            var cliente = clienteAppService.VerificaCadastroCliente(cpf);
-            return Ok(cliente?.Nome);
+            try
+            {
+                var cliente = clienteAppService.VerificaCadastroCliente(cpf);
+                return Ok(cliente?.Nome);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Erro de Validação",
+                    Detail = ex.Message,
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]ClienteModel cliente)
         {
-            var id = await clienteAppService.CriarCliente(cliente);
-            return Ok(id);
+            try
+            {
+                var id = await clienteAppService.CriarCliente(cliente);
+                return Ok(new { id = id });
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Erro de Validação",
+                    Detail = ex.Message,
+                    Status = StatusCodes.Status400BadRequest
+                });
+            }
         }
 
         [HttpPost]

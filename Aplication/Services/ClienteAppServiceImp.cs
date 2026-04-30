@@ -1,6 +1,7 @@
 ﻿using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Entidades;
+using Domain.Exceptions;
 using Domain.InfraInterfaces;
 using Domain.VOs;
 
@@ -30,30 +31,37 @@ public class ClienteAppServiceImp
             Id = cliente.Id,
             Cpf = cliente.Cpf.Numero,
             Nome = cliente.Nome,
-            Email = cliente.Email,
-            Celular = cliente.Celular
+            Email = cliente.Email.Endereco,
+            Celular = cliente.Celular.Numero
         };
     }
 
     public async Task<int> CriarCliente(ClienteModel clienteModel)
     {
-        var cliente = new Cliente
-        (
-            new CpfVO(clienteModel.Cpf),
-            clienteModel.Nome,
-            clienteModel.Email,
-            clienteModel.Celular
-        );
+        try
+        {
+            var cliente = new Cliente
+            (
+                new CpfVO(clienteModel.Cpf),
+                clienteModel.Nome,
+                new EmailVO(clienteModel.Email),
+                new CelularVO(clienteModel.Celular)
+            );
 
-        await _clienteRepository.Adicionar(cliente);
-        return cliente.Id;
+            await _clienteRepository.Adicionar(cliente);
+            return cliente.Id;
+        }
+        catch (DomainException ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task AdicionarVeiculo(VeiculoModel veiculoModel)
     {
         var veiculo = new Veiculo
         (
-            veiculoModel.Placa,
+            new PlacaVO(veiculoModel.Placa),
             veiculoModel.Modelo,
             veiculoModel.Marca,
             veiculoModel.Ano,
@@ -74,7 +82,7 @@ public class ClienteAppServiceImp
         return new VeiculoModel
         {
             Id = veiculo.Id,
-            Placa = veiculo.Placa,
+            Placa = veiculo.Placa.Valor,
             Modelo = veiculo.Modelo,
             Marca = veiculo.Marca,
             Ano = veiculo.Ano,

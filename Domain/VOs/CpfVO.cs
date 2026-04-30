@@ -1,4 +1,6 @@
-﻿namespace Domain.VOs;
+﻿using Domain.Exceptions;
+
+namespace Domain.VOs;
 
 public class CpfVO
 {
@@ -8,7 +10,7 @@ public class CpfVO
     public CpfVO(string numero)
     {
         if (!Validar(numero))
-            throw new ArgumentException("CPF inválido");
+            throw new DomainException("CPF inválido");
         Numero = numero;
     }
 
