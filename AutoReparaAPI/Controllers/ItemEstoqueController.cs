@@ -13,9 +13,9 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPut(Name = "AdicionarItemEstoque")]
-        public Task<IActionResult> AdicionarItemEstoque()
+        public async Task<IActionResult> AdicionarItemEstoque()
         {
-            return Task.FromResult<IActionResult>(Ok("Hello World"));
+            return Ok("Hello World");
         }
     }
 }

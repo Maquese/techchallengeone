@@ -15,29 +15,31 @@ namespace AutoReparaAPI.Controllers
         }
         
         [HttpGet]
-        public Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
+        public async Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
         {            
-            return Task.FromResult<IActionResult>(Ok("Hello World" + clienteAppService.VerificaCadastroCliente(cpf)?.Nome));
+            var cliente = clienteAppService.VerificaCadastroCliente(cpf);
+            return Ok(cliente?.Nome);
         }
 
         [HttpPost]
-        public Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]ClienteModel cliente)
+        public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]ClienteModel cliente)
         {
-            return Task.FromResult<IActionResult>(Ok(clienteAppService.CriarCliente(cliente)));
+            var id = await clienteAppService.CriarCliente(cliente);
+            return Ok(id);
         }
 
         [HttpPost]
-        public Task<IActionResult> AdicionarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]VeiculoModel veiculo)
+        public async Task<IActionResult> AdicionarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]VeiculoModel veiculo)
         {
-            clienteAppService.AdicionarVeiculo(veiculo);
-            return Task.FromResult<IActionResult>(Ok("Veículo adicionado com sucesso"));
+            await clienteAppService.AdicionarVeiculo(veiculo);
+            return Ok("Veículo adicionado com sucesso");
         }
 
         [HttpGet]
-        public Task<IActionResult> BuscarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string placa)
+        public async Task<IActionResult> BuscarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string placa)
         {
-            var veiculo = clienteAppService.BuscarVeiculo(placa);
-            return Task.FromResult<IActionResult>(Ok(veiculo));
+            var veiculo = await clienteAppService.BuscarVeiculo(placa);
+            return Ok(veiculo);
         }
     }
 }

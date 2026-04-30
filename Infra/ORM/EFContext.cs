@@ -23,6 +23,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<ItemEstoque>(entity =>
         {
+            entity.ToTable("ItemEstoque");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Nome).IsRequired().HasMaxLength(200);
@@ -37,6 +38,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<Cliente>(entity =>
         {
+            entity.ToTable("Cliente");
             entity.HasKey(e => e.Id);
 
             entity.HasMany(c => c.Veiculos)
@@ -61,6 +63,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<Veiculo>(entity =>
         {
+            entity.ToTable("Veiculo");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Placa).IsRequired().HasMaxLength(20);
             entity.Property(e => e.Modelo).IsRequired().HasMaxLength(100);
@@ -74,6 +77,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<Servico>(entity =>
         {
+            entity.ToTable("Servico");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Descricao).IsRequired().HasMaxLength(200);
@@ -101,6 +105,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<Orcamento>(entity =>
         {
+            entity.ToTable("Orcamento");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.ValorTotal).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.Observacao).HasMaxLength(1000);

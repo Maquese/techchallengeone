@@ -35,7 +35,7 @@ public class ClienteAppServiceImp
         };
     }
 
-    public Task<int> CriarCliente(ClienteModel clienteModel)
+    public async Task<int> CriarCliente(ClienteModel clienteModel)
     {
         var cliente = new Cliente
         (
@@ -45,11 +45,11 @@ public class ClienteAppServiceImp
             clienteModel.Celular
         );
 
-        _clienteRepository.Adicionar(cliente);
-        return Task.FromResult(cliente.Id);
+        await _clienteRepository.Adicionar(cliente);
+        return cliente.Id;
     }
 
-    public Task AdicionarVeiculo(VeiculoModel veiculoModel)
+    public async Task AdicionarVeiculo(VeiculoModel veiculoModel)
     {
         var veiculo = new Veiculo
         (
@@ -60,8 +60,7 @@ public class ClienteAppServiceImp
             veiculoModel.ClienteId
         );
 
-        _veiculoRepository.Adicionar(veiculo);
-        return Task.CompletedTask;
+        await _veiculoRepository.Adicionar(veiculo);
     }
 
     public async Task<VeiculoModel> BuscarVeiculo(string placa)

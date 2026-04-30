@@ -15,15 +15,17 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> CriarOrcamento([FromServices] OrcamentoAppServiceImp appService, [FromBody] AddOrcamentoModel model)
+        public async Task<IActionResult> CriarOrcamento([FromServices] OrcamentoAppServiceImp appService, [FromBody] AddOrcamentoModel model)
         {
-            return Task.FromResult<IActionResult>(Ok(appService.AddOrcamento(model))) ;
+            var id = await appService.AddOrcamento(model);
+            return Ok(id);
         }
 
         [HttpPost]
-        public Task<IActionResult> AprovarOrcamento([FromServices] OrcamentoAppServiceImp appService, [FromBody] int orcamentoId)
+        public async Task<IActionResult> AprovarOrcamento([FromServices] OrcamentoAppServiceImp appService, [FromBody] int orcamentoId)
         {
-            return Task.FromResult<IActionResult>(Ok(appService.AprovarOrcamento(orcamentoId))) ;
+            await appService.AprovarOrcamento(orcamentoId);
+            return Ok("Orçamento aprovado com sucesso");
         }
     }
 }

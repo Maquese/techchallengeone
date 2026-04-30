@@ -15,39 +15,45 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
+        public async Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AdicionarOrdemServico(ordemServicoModel)));
+            var id = await ordemServicoAppService.AdicionarOrdemServico(ordemServicoModel);
+            return Ok(id);
         }
 
         // [HttpPost]
-        // public Task<IActionResult> AdicionarPecaServicos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
+        // public async Task<IActionResult> AdicionarPecaServicos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
         // {
-        //     return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AdicionarPecaServicos(ordemServicoModel)));
+        //     var id = await ordemServicoAppService.AdicionarPecaServicos(ordemServicoModel);
+        //     return Ok(id);
         // }
 
         [HttpPost]
-        public Task<IActionResult> AdicionarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] ServicoModel servicoModel)
+        public async Task<IActionResult> AdicionarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] ServicoModel servicoModel)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AdicionarServico(servicoModel)));
+            var id = await ordemServicoAppService.AdicionarServico(servicoModel);
+            return Ok(id);
         }
 
         [HttpPost]
-        public Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)
+        public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AtribuirMecanico(atribuiEmDiagnostico))); 
+            await ordemServicoAppService.AtribuirMecanico(atribuiEmDiagnostico);
+            return Ok("Mecânico atribuído ao diagnóstico");
         }
 
         [HttpPost]
-        public Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
+        public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.AtribuirMecanicoExecucao(atribuiEmExecucao)));
+            await ordemServicoAppService.AtribuirMecanicoExecucao(atribuiEmExecucao);
+            return Ok("Mecânico atribuído à execução");
         }
 
         [HttpPost]
-        public Task<IActionResult> FinalizarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] int ordemServicoId)
+        public async Task<IActionResult> FinalizarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] int ordemServicoId)
         {
-            return Task.FromResult<IActionResult>(Ok(ordemServicoAppService.FinalizarOrdemServico(ordemServicoId)));
+            await ordemServicoAppService.FinalizarOrdemServico(ordemServicoId);
+            return Ok("Ordem de serviço finalizada com sucesso");
         }
         
     }

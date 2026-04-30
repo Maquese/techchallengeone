@@ -3,15 +3,20 @@ using Domain.InfraInterfaces;
 using Infra;
 using Infra.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IOC;
 
  public static class BootStrapper
     {
-        public static void AddAppServices(this IServiceCollection services)
+        public static void AddAppServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<EFContext>(x => x.UseInMemoryDatabase("EFContext"));
+            var connectionString = configuration.GetConnectionString("DefaultConnection") 
+                ?? "Server=127.0.0.1;Port=3306;Database=Tests;User=root;Password=SuaSenhaSegura;";
+            
+            services.AddDbContext<EFContext>(options =>
+                options.UseMySQL(connectionString));
 
             services.AddTransient<ItemEstoqueRepository, ItemEstoqueRepositoryImp>();
             services.AddTransient<ClienteRepository, ClienteRepositoryImp>();
