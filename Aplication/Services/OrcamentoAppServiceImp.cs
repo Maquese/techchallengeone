@@ -24,7 +24,8 @@ public class OrcamentoAppServiceImp
         }
         var orcamento = new Orcamento
         (model.OrdemServicoId, 100,"obs");
-        return await _orcamentoRepository.Adicionar(orcamento);
+        await _orcamentoRepository.Adicionar(orcamento);
+        return orcamento.Id;
     }
 
     public async Task AprovarOrcamento(int orcamentoId)

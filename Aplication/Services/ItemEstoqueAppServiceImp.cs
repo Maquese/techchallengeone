@@ -14,16 +14,19 @@ public class ItemEstoqueAppServiceImp
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-    public void AddPeca(ItemEstoqueModel itemEstoqueModel)
+    public async Task<int> AdicionarItemEstoque(AddItemEstoqueModel itemEstoqueModel)
     {
         var novaPeca = new ItemEstoque
         (
-            "Peça",
+            itemEstoqueModel.Tipo,
             itemEstoqueModel.Nome,
             itemEstoqueModel.Descricao,
-            itemEstoqueModel.Valor
+            itemEstoqueModel.Valor,
+            itemEstoqueModel.UnidadeMedida,
+            itemEstoqueModel.DataValidade
         );
-        _itemEstoqueRepository.Adicionar(novaPeca);
+        await _itemEstoqueRepository.Adicionar(novaPeca);
+        return novaPeca.Id;
     }
 }
     

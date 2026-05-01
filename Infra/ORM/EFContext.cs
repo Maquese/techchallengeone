@@ -26,7 +26,6 @@ public class EFContext : DbContext
             entity.Property(e => e.Ativo).HasDefaultValue(true);
             entity.ToTable("ItemEstoque");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Nome).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Descricao).IsRequired().HasMaxLength(1000);
             //entity.Property(e => e.Valor).IsRequired().HasColumnType("decimal(18,2)");
@@ -35,6 +34,8 @@ public class EFContext : DbContext
             entity.Property(e => e.Ativo).IsRequired();
             entity.Property(e => e.QuantidadeEmEstoque).IsRequired();
             entity.Property(e => e.Datavalidade).IsRequired(false);
+            entity.Property(e => e.Tipo).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.UnidadeMedida).IsRequired().HasMaxLength(20);
         });
 
         modelBuilder.Entity<Cliente>(entity =>
@@ -116,6 +117,7 @@ public class EFContext : DbContext
 
         modelBuilder.Entity<OrdemServico>(entity =>
         {
+            entity.ToTable("OrdemServico");
             entity.Property(e => e.Ativo).HasDefaultValue(true);
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Status).IsRequired().HasMaxLength(50);

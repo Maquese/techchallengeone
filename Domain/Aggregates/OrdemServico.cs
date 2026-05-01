@@ -21,17 +21,16 @@ public class OrdemServico : IEntity
     public DateTime? DataFimExecucao { get; private set; }
     
 
-    public OrdemServico(DateTime dataAbertura, DateTime? dataFechamento, 
-           int veiculoId, ICollection<Servico>? servicos = null, 
-           ICollection<ItemEstoque>? pecas = null, string? mecanicoAtribuido = null)
+    public OrdemServico(int veiculoId, ICollection<Servico>? servicos = null)
+           
     {
-        DataAbertura = dataAbertura;
-        DataFechamento = dataFechamento;
+        DataAbertura = DateTime.Now;
+        DataFechamento = null;
         VeiculoId = veiculoId;
         Status = "Recebida";
         Servicos = servicos ?? new List<Servico>();
-        ItensEstoque = pecas ?? new List<ItemEstoque>();
-        MecanicoAtribuido = mecanicoAtribuido;
+        ItensEstoque = new List<ItemEstoque>();
+        MecanicoAtribuido = null;
         Orcamentos = new List<Orcamento>();
         Ativo = true;
     }

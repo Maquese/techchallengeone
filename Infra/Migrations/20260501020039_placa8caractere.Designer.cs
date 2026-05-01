@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20260501010347_placa8caracteres")]
-    partial class placa8caracteres
+    [Migration("20260501020039_placa8caractere")]
+    partial class placa8caractere
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,7 @@ namespace Infra.Migrations
             modelBuilder.Entity("Domain.Aggregates.ItemEstoque", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
@@ -77,7 +78,13 @@ namespace Infra.Migrations
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("UnidadeMedida")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
@@ -167,7 +174,7 @@ namespace Infra.Migrations
 
                     b.HasIndex("VeiculoId");
 
-                    b.ToTable("OrdemServicos");
+                    b.ToTable("OrdemServico", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entidades.Servico", b =>

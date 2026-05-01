@@ -1,9 +1,11 @@
+using Aplication.Models;
+using Aplication.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoReparaAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ItemEstoqueController : ControllerBase
     {
@@ -12,10 +14,11 @@ namespace AutoReparaAPI.Controllers
             
         }
 
-        [HttpPut(Name = "AdicionarItemEstoque")]
-        public async Task<IActionResult> AdicionarItemEstoque()
+        [HttpPost]
+        public async Task<IActionResult> AdicionarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromBody] AddItemEstoqueModel itemEstoqueModel)
         {
-            return Ok("Hello World");
+            var id = await itemEstoqueAppService.AdicionarItemEstoque(itemEstoqueModel);
+            return Ok($"Item de estoque adicionado com sucesso. ID: {id}");
         }
     }
 }

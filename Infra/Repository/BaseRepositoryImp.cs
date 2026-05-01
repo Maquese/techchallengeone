@@ -14,13 +14,12 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
     }
 
     
-    public async Task<int> Adicionar(T entity)
+    public async Task Adicionar(T entity)
     {
         try
         {
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity.Id;
         }
         catch (DbUpdateException ex)
         {
@@ -68,5 +67,10 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
     public async Task<T> ObterPorId(int id)
     {
         return await _context.Set<T>().FindAsync(id);
+    }
+
+    public async Task<List<T>> ListarPorIds(List<int> ids)
+    {
+        return await _context.Set<T>().Where(e => ids.Contains(e.Id) && e.Ativo).ToListAsync();
     }
 }

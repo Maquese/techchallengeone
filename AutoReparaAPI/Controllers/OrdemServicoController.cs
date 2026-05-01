@@ -15,7 +15,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
+        public async Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AddOrdemServicoModel ordemServicoModel)
         {
             var id = await ordemServicoAppService.AdicionarOrdemServico(ordemServicoModel);
             return Ok(id);

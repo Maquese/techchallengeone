@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class placa8caracteres : Migration
+    public partial class placa8caractere : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,8 @@ namespace Infra.Migrations
                 name: "ItemEstoque",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Nome = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Descricao = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -46,7 +47,8 @@ namespace Infra.Migrations
                     Datavalidade = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     QuantidadeEmEstoque = table.Column<int>(type: "int", nullable: false),
-                    Tipo = table.Column<string>(type: "longtext", nullable: false)
+                    Tipo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    UnidadeMedida = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,7 +99,7 @@ namespace Infra.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "OrdemServicos",
+                name: "OrdemServico",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -113,9 +115,9 @@ namespace Infra.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrdemServicos", x => x.Id);
+                    table.PrimaryKey("PK_OrdemServico", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrdemServicos_Veiculo_VeiculoId",
+                        name: "FK_OrdemServico_Veiculo_VeiculoId",
                         column: x => x.VeiculoId,
                         principalTable: "Veiculo",
                         principalColumn: "Id",
@@ -142,9 +144,9 @@ namespace Infra.Migrations
                 {
                     table.PrimaryKey("PK_Orcamento", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orcamento_OrdemServicos_OrdemServicoId",
+                        name: "FK_Orcamento_OrdemServico_OrdemServicoId",
                         column: x => x.OrdemServicoId,
-                        principalTable: "OrdemServicos",
+                        principalTable: "OrdemServico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -167,9 +169,9 @@ namespace Infra.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrdemServicoPecas_OrdemServicos_OrdemServicosId",
+                        name: "FK_OrdemServicoPecas_OrdemServico_OrdemServicosId",
                         column: x => x.OrdemServicosId,
-                        principalTable: "OrdemServicos",
+                        principalTable: "OrdemServico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -186,9 +188,9 @@ namespace Infra.Migrations
                 {
                     table.PrimaryKey("PK_OrdemServicoServicos", x => new { x.OrdemServicosId, x.ServicosId });
                     table.ForeignKey(
-                        name: "FK_OrdemServicoServicos_OrdemServicos_OrdemServicosId",
+                        name: "FK_OrdemServicoServicos_OrdemServico_OrdemServicosId",
                         column: x => x.OrdemServicosId,
-                        principalTable: "OrdemServicos",
+                        principalTable: "OrdemServico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -224,14 +226,14 @@ namespace Infra.Migrations
                 column: "OrdemServicoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdemServico_VeiculoId",
+                table: "OrdemServico",
+                column: "VeiculoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdemServicoPecas_OrdemServicosId",
                 table: "OrdemServicoPecas",
                 column: "OrdemServicosId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrdemServicos_VeiculoId",
-                table: "OrdemServicos",
-                column: "VeiculoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrdemServicoServicos_ServicosId",
@@ -266,7 +268,7 @@ namespace Infra.Migrations
                 name: "ItemEstoque");
 
             migrationBuilder.DropTable(
-                name: "OrdemServicos");
+                name: "OrdemServico");
 
             migrationBuilder.DropTable(
                 name: "Servico");

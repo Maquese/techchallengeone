@@ -11,23 +11,30 @@ public class OrdemServicoAppServiceImp
 {
     private readonly OrdemServicoRepository _ordemServicoRepository;
     private readonly ServicoRepository _servicoRepository;
-
-    public OrdemServicoAppServiceImp(OrdemServicoRepository ordemServicoRepository, ServicoRepository servicoRepository)
+    private readonly VeiculoRepository _veiculoRepository;
+    public OrdemServicoAppServiceImp(OrdemServicoRepository ordemServicoRepository, ServicoRepository servicoRepository,
+                                     VeiculoRepository veiculoRepository)
     {
         _ordemServicoRepository = ordemServicoRepository;
         _servicoRepository = servicoRepository;
+        _veiculoRepository = veiculoRepository;
     }
 
-    public async Task<OrdemServico> AdicionarOrdemServico(OrdemServicoModel ordemServico)
+    public async Task<int> AdicionarOrdemServico(AddOrdemServicoModel ordemServico)
     {
-        var ordemServicoEntity = new OrdemServico(
-            dataAbertura: DateTime.Now,
-            dataFechamento: null,
-            veiculoId: ordemServico.VeiculoId
-        );
+        var veiculo = await _veiculoRepository.ObterPorId(ordemServico.VeiculoId);
+        if (veiculo == null)        {
+            throw new DomainException($"Veículo com ID {ordemServico.VeiculoId} não encontrado.");
+        }
 
-        await _ordemServicoRepository.Adicionar(ordemServicoEntity);
-        return ordemServicoEntity;
+        var ordemServicoEntity = new OrdemServico(
+            ordemServico.VeiculoId,
+            servicos: ordemServico.ServicosIds != null 
+                ? await _servicoRepository.ListarPorIds(ordemServico.ServicosIds) 
+                : new List<Servico>()
+        );
+        await _ordemServicoRepository.Adicionar(ordemServicoEntity); 
+        return ordemServicoEntity.Id;
     }
 
 
@@ -36,7 +43,7 @@ public class OrdemServicoAppServiceImp
         var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmDiagnostico.OrdemServicoId);
         if (ordemServico == null)
         {
-            return $"Ordem de serviço com ID {atribuiEmDiagnostico.OrdemServicoId} não encontrada.";
+            throw new DomainException($"Ordem de serviço com ID {atribuiEmDiagnostico.OrdemServicoId} não encontrada.");
         }
 
         ordemServico.OSEmDiagnostico(atribuiEmDiagnostico.MecanicoAtribuido);
@@ -50,7 +57,7 @@ public class OrdemServicoAppServiceImp
         var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmReparo.OrdemServicoId);
         if (ordemServico == null)
         {
-            return $"Ordem de serviço com ID {atribuiEmReparo.OrdemServicoId} não encontrada.";
+            throw new DomainException($"Ordem de serviço com ID {atribuiEmReparo.OrdemServicoId} não encontrada.");
         }
 
         ordemServico.EmExecucao(atribuiEmReparo.MecanicoAtribuido);
@@ -64,7 +71,7 @@ public class OrdemServicoAppServiceImp
         var ordemServico = await _ordemServicoRepository.ObterPorId(ordemServicoId);
         if (ordemServico == null)
         {
-            return $"Ordem de serviço com ID {ordemServicoId} não encontrada.";
+            throw new DomainException($"Ordem de serviço com ID {ordemServicoId} não encontrada.");
         }
         ordemServico.FinalizarOrdemServico();
         await _ordemServicoRepository.Atualizar(ordemServico);

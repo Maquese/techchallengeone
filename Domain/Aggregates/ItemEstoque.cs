@@ -15,11 +15,12 @@ public class ItemEstoque : IEntity
     public int QuantidadeEmEstoque { get; private set; }
     public ICollection<OrdemServico> OrdemServicos { get; private set; }
     public string Tipo { get; private set; }
+    public string UnidadeMedida { get; private set; }
 
      protected ItemEstoque() { }
 
-    public ItemEstoque(string tipo, string nome, string descricao, decimal valor, DateTime? dataValidade = null)
-    {
+    public ItemEstoque(string tipo, string nome, string descricao, decimal valor, string unidadeMedida, DateTime? dataValidade = null)
+      {
         if (string.IsNullOrEmpty(nome))
             throw new ArgumentException("O nome do item de estoque é obrigatório.");
         if (string.IsNullOrEmpty(descricao))
@@ -28,7 +29,10 @@ public class ItemEstoque : IEntity
             throw new ArgumentException("O valor do item de estoque não pode ser negativo.");
         if(tipo != "Peça" && tipo != "Insumo")
             throw new ArgumentException("O tipo do item de estoque deve ser 'Peça' ou 'Insumo'.");
+        if(string.IsNullOrEmpty(unidadeMedida))
+            throw new ArgumentException("A unidade de medida do item de estoque é obrigatória.");
         
+        UnidadeMedida = unidadeMedida;
         Tipo = tipo;
         Nome = nome;
         Descricao = descricao;
