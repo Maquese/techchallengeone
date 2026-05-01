@@ -11,10 +11,11 @@ public class Orcamento : IEntity
     public OrdemServico OrdemServico { get; private set; }
     public decimal ValorTotal { get; private set; }
     public string Observacao { get; private set; }
-    public bool OrcamentoAprovado { get; private set; }
+    public bool? OrcamentoAprovado { get; private set; }
     public DateTime? DataDecisaoClienteAprovacao { get; private set; }
-    public bool OrcamentoPago { get; private set; }
+    public bool? OrcamentoPago { get; private set; }
     public DateTime? DataDecisaoClientePagamento { get; private set; }
+    public DateTime DataCadastro { get; private set; }
     
 
     public Orcamento(int ordemServicoId, decimal valorTotal, string observacoes)
@@ -22,9 +23,10 @@ public class Orcamento : IEntity
         OrdemServicoId = ordemServicoId;
         ValorTotal = valorTotal;
         Observacao = observacoes;
-        OrcamentoAprovado = false;
+        OrcamentoAprovado = null;
         DataDecisaoClienteAprovacao = null;
         Ativo = true;
+        DataCadastro = DateTime.UtcNow;
     }
 
     public void AprovarOrcamento()
@@ -42,6 +44,12 @@ public class Orcamento : IEntity
     public void MarcarOrcamentoPago()
     {
         OrcamentoPago = true;
+        DataDecisaoClientePagamento = DateTime.Now;
+    }
+
+    public void MarcarOrcamentoNaoPago()
+    {
+        OrcamentoPago = false;
         DataDecisaoClientePagamento = DateTime.Now;
     }
 }

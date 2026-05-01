@@ -27,5 +27,12 @@ namespace AutoReparaAPI.Controllers
             await appService.AprovarOrcamento(orcamentoId);
             return Ok("Orçamento aprovado com sucesso");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PagamentoEfetuado([FromServices] OrcamentoAppServiceImp appService, [FromBody] int orcamentoId)
+        {
+            await appService.PagarOrcamento(orcamentoId);
+            return Ok("Orçamento pago com sucesso");
+        }
     }
 }

@@ -12,12 +12,17 @@ public class OrdemServicoAppServiceImp
     private readonly OrdemServicoRepository _ordemServicoRepository;
     private readonly ServicoRepository _servicoRepository;
     private readonly VeiculoRepository _veiculoRepository;
+    private readonly OrcamentoRepository _orcamentoRepository;
+    private readonly ItemEstoqueRepository _itensEstoqueRepository;
     public OrdemServicoAppServiceImp(OrdemServicoRepository ordemServicoRepository, ServicoRepository servicoRepository,
-                                     VeiculoRepository veiculoRepository)
+                                     VeiculoRepository veiculoRepository, OrcamentoRepository orcamentoRepository,
+                                     ItemEstoqueRepository itensEstoqueRepository)
     {
         _ordemServicoRepository = ordemServicoRepository;
         _servicoRepository = servicoRepository;
         _veiculoRepository = veiculoRepository;
+        _orcamentoRepository = orcamentoRepository;
+        _itensEstoqueRepository = itensEstoqueRepository;
     }
 
     public async Task<int> AdicionarOrdemServico(AddOrdemServicoModel ordemServico)
@@ -60,6 +65,11 @@ public class OrdemServicoAppServiceImp
             throw new DomainException($"Ordem de serviço com ID {atribuiEmReparo.OrdemServicoId} não encontrada.");
         }
 
+        if (ordemServico.Status != "Aprovada")
+        {
+            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Aprovada' para atribuição de mecânico à execução.");
+        }
+
         ordemServico.EmExecucao(atribuiEmReparo.MecanicoAtribuido);
         await _ordemServicoRepository.Atualizar(ordemServico);
 
@@ -73,15 +83,67 @@ public class OrdemServicoAppServiceImp
         {
             throw new DomainException($"Ordem de serviço com ID {ordemServicoId} não encontrada.");
         }
+
+        if (ordemServico.Status != "Em Execução")
+        {
+            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em Execução' para finalização.");
+        }
+
+        await DeduzirItensEstoque(ordemServico.OrdemServicoItensEstoque?.Select(i => new AddItensOrdemServicoModel { id = i.ItemEstoqueId, quantidade = i.Quantidade }).ToList() ?? new List<AddItensOrdemServicoModel>());
+
         ordemServico.FinalizarOrdemServico();
         await _ordemServicoRepository.Atualizar(ordemServico);
 
         return $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.";
     }
 
+    private async Task DeduzirItensEstoque(List<AddItensOrdemServicoModel> itensEstoque)
+    {   
+        foreach (var item in itensEstoque)
+        {
+            var itemEstoque = await _itensEstoqueRepository.ObterPorId(item.id);
+            if (itemEstoque == null)
+            {
+                throw new DomainException($"Item de estoque com ID {item.id} não encontrado.");
+            }
+
+            itemEstoque.DeduzirQuantidadeEstoque(item.quantidade);
+            await _itensEstoqueRepository.Atualizar(itemEstoque);
+        }
+    }
+
+      public async Task DiagnosticoFinalizado(DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+    {
+        var ordemServico = await _ordemServicoRepository.ObterPorId(diagnosticoFinalizadoModel.Id);
+        if (ordemServico == null)
+        {
+            throw new DomainException($"Ordem de serviço para o veículo ID {diagnosticoFinalizadoModel.Id} não encontrada.");
+        }
+
+        var itensEstoque = diagnosticoFinalizadoModel.ItensEstoque.Select(item => new OrdemServicoItemEstoque
+        (diagnosticoFinalizadoModel.Id, item.id, item.quantidade)).ToList();
+       
+        ordemServico.OSDiagnosticada(itensEstoque);
+        var orcamento = new Orcamento(
+            diagnosticoFinalizadoModel.Id, 
+            await CalcularValorTotalOrcamento(diagnosticoFinalizadoModel.ItensEstoque, ordemServico.Servicos?.Select(x => x.Id).ToList()),
+            "obs");
+        await _ordemServicoRepository.Atualizar(ordemServico);
+        await _orcamentoRepository.Adicionar(orcamento);
+    }
+
+    private async Task<decimal> CalcularValorTotalOrcamento(List<AddItensOrdemServicoModel> itensEstoque, List<int> servicosIds)
+    {
+        var servicos = await _servicoRepository.ListarPorIds(servicosIds);
+
+        var itens = await _itensEstoqueRepository.ListarPorIds(itensEstoque.Select(i => i.id).ToList());
+
+        return servicos.Sum(s => s.Valor) + itens.Sum(i => i.Valor * itensEstoque.First(e => e.id == i.Id).quantidade);
+    }
 
 
-    
+
+    #region Métodos relacionados a serviços dentro da ordem de serviço
     public async Task<ServicoModel> AdicionarServico(ServicoModel servico)
     {
         var servicoEntity = new Servico
@@ -147,18 +209,7 @@ public class OrdemServicoAppServiceImp
         }).ToList();
     }
 
-    public async Task DiagnosticoFinalizado(DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
-    {
-        var ordemServico = await _ordemServicoRepository.ObterPorId(diagnosticoFinalizadoModel.Id);
-        if (ordemServico == null)
-        {
-            throw new DomainException($"Ordem de serviço para o veículo ID {diagnosticoFinalizadoModel.Id} não encontrada.");
-        }
+    #endregion
 
-        var itensEstoque = diagnosticoFinalizadoModel.ItensEstoque.Select(item => new OrdemServicoItemEstoque
-        (diagnosticoFinalizadoModel.Id, item.id, item.quantidade)).ToList();
-       
-        ordemServico.OSDiagnosticada(itensEstoque);
-        await _ordemServicoRepository.Atualizar(ordemServico);
-    }
+  
 }

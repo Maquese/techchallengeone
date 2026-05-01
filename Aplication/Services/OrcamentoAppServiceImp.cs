@@ -42,6 +42,11 @@ public class OrcamentoAppServiceImp
             throw new Exception($"Ordem de serviço com ID {orcamento.OrdemServicoId} não encontrada.");
         }
 
+        if(ordemServico.Status != "Aguardando Aprovação")
+        {
+            throw new Exception($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Aguardando Aprovação' para aprovação de orçamento.");
+        }
+
         orcamento.AprovarOrcamento();
         ordemServico.OSAprovada();
         await _orcamentoRepository.Atualizar(orcamento);

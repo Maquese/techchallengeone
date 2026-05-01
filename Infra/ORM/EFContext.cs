@@ -159,6 +159,11 @@ public class EFContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.ValorTotal).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.Observacao).HasMaxLength(1000);
+            entity.Property(e => e.OrcamentoAprovado).IsRequired(false);
+            entity.Property(e => e.DataDecisaoClienteAprovacao).IsRequired(false);
+            entity.Property(e => e.OrcamentoPago).IsRequired(false);
+            entity.Property(e => e.DataDecisaoClientePagamento).IsRequired(false);
+            entity.Property(e => e.DataCadastro).IsRequired();
             entity.HasOne(o => o.OrdemServico)
                 .WithMany(os => os.Orcamentos)
                 .HasForeignKey(o => o.OrdemServicoId);

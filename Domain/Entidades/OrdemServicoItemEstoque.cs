@@ -12,6 +12,8 @@ public class OrdemServicoItemEstoque : IEntity
     public int Quantidade { get; private set; }
     public DateTime DataCadastro { get; private set; }
     public bool Ativo { get; private set; }
+    ///para v2 válido ter valor aqui
+
 
     protected OrdemServicoItemEstoque() { }
 

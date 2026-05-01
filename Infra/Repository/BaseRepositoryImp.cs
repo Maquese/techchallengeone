@@ -64,7 +64,7 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
         return await _context.Set<T>().Where(e => e.Ativo).ToListAsync();
     }
 
-    public async Task<T> ObterPorId(int id)
+    public virtual async Task<T> ObterPorId(int id)
     {
         return await _context.Set<T>().FindAsync(id);
     }
