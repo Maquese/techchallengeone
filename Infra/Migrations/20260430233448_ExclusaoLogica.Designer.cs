@@ -3,6 +3,7 @@ using System;
 using Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class EFContextModelSnapshot : ModelSnapshot
+    [Migration("20260430233448_ExclusaoLogica")]
+    partial class ExclusaoLogica
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +29,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -46,9 +47,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("datetime(6)");
@@ -91,9 +90,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("DataDecisaoClienteAprovacao")
                         .HasColumnType("datetime(6)");
@@ -132,9 +129,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime(6)");
@@ -173,9 +168,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -203,9 +196,7 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true);
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
@@ -372,8 +363,8 @@ namespace Infra.Migrations
 
                             b1.Property<string>("Valor")
                                 .IsRequired()
-                                .HasMaxLength(8)
-                                .HasColumnType("varchar(8)")
+                                .HasMaxLength(7)
+                                .HasColumnType("varchar(7)")
                                 .HasColumnName("Placa");
 
                             b1.HasKey("VeiculoId");

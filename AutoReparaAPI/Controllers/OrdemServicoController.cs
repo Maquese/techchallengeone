@@ -14,6 +14,17 @@ namespace AutoReparaAPI.Controllers
             
         }
 
+        
+        [HttpPost]
+        public async Task<IActionResult> AdicionarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] ServicoModel servicoModel)
+        {
+            var id = await ordemServicoAppService.AdicionarServico(servicoModel);
+            return Ok(id);
+        }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
         {
@@ -21,19 +32,7 @@ namespace AutoReparaAPI.Controllers
             return Ok(id);
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> AdicionarPecaServicos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] OrdemServicoModel ordemServicoModel)
-        // {
-        //     var id = await ordemServicoAppService.AdicionarPecaServicos(ordemServicoModel);
-        //     return Ok(id);
-        // }
-
-        [HttpPost]
-        public async Task<IActionResult> AdicionarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] ServicoModel servicoModel)
-        {
-            var id = await ordemServicoAppService.AdicionarServico(servicoModel);
-            return Ok(id);
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)

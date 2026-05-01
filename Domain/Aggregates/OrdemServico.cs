@@ -33,6 +33,7 @@ public class OrdemServico : IEntity
         ItensEstoque = pecas ?? new List<ItemEstoque>();
         MecanicoAtribuido = mecanicoAtribuido;
         Orcamentos = new List<Orcamento>();
+        Ativo = true;
     }
 
     public void OSEmDiagnostico(string mecanico)

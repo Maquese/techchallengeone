@@ -55,13 +55,14 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
 
     public async Task Inativar(T entity)
     {
-        _context.Set<T>().Remove(entity);
+        entity.Inativar();
+        _context.Set<T>().Update(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task<List<T>> ListarAtivos()
     {
-        return await _context.Set<T>().ToListAsync();
+        return await _context.Set<T>().Where(e => e.Ativo).ToListAsync();
     }
 
     public async Task<T> ObterPorId(int id)

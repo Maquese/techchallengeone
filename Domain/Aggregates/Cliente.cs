@@ -12,6 +12,7 @@ public class Cliente : IEntity
         Nome = nome;
         Email = email;
         Celular = celular;
+        Ativo = true;
     }
     public int Id { get; private set; }
     public CpfVO Cpf { get; private set; }
@@ -19,4 +20,11 @@ public class Cliente : IEntity
     public EmailVO Email { get; private set; }
     public CelularVO Celular { get; private set; }
     public IList<Veiculo> Veiculos { get; private set; }
+
+    public void Atualizar(string nome, EmailVO email, CelularVO celular)
+    {
+        Nome = nome;
+        Email = email;
+        Celular = celular;
+    }
 }

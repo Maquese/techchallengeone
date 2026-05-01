@@ -10,6 +10,7 @@ public class Servico: IEntity
         Descricao = descricao;
         Valor = valor;
         TempoEstimado = tempoEstimado;
+         Ativo = true;
     }
 
     protected Servico() { }

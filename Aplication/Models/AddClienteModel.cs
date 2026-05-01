@@ -1,6 +1,6 @@
 ﻿namespace Aplication.Models;
 
-public class ClienteModel
+public class AddClienteModel
 {
     public int? Id { get; set; }
     public string Cpf { get;  set; }

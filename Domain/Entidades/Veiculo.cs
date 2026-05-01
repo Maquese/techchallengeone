@@ -7,13 +7,14 @@ public class Veiculo : IEntity
 {
     protected Veiculo() { }
 
-    public Veiculo(PlacaVO placa, string modelo, string marca, int ano, int clienteId)
+    public Veiculo(PlacaVO placa, string modelo, string marca, int ano, int clienteId): base()
     {
         Placa = placa;
         Modelo = modelo;
         Marca = marca;
         Ano = ano;
         ClienteId = clienteId;
+        Ativo = true;
     }
 
     public int Id { get; private set; }
@@ -24,4 +25,12 @@ public class Veiculo : IEntity
     public int ClienteId { get; private set; }
     public Cliente Cliente { get; private set; }
     public ICollection<OrdemServico> OrdemServicos { get; private set; }
+
+    public void Atualizar(PlacaVO placaVO, string modelo, string marca, int ano)
+    {
+        Placa = placaVO;
+        Modelo = modelo;
+        Marca = marca;
+        Ano = ano;
+    }
 }

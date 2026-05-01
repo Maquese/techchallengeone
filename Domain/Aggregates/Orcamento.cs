@@ -24,6 +24,7 @@ public class Orcamento : IEntity
         Observacao = observacoes;
         OrcamentoAprovado = false;
         DataDecisaoClienteAprovacao = null;
+        Ativo = true;
     }
 
     public void AprovarOrcamento()

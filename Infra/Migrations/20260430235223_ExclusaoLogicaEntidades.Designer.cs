@@ -3,6 +3,7 @@ using System;
 using Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(EFContext))]
-    partial class EFContextModelSnapshot : ModelSnapshot
+    [Migration("20260430235223_ExclusaoLogicaEntidades")]
+    partial class ExclusaoLogicaEntidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,8 +375,8 @@ namespace Infra.Migrations
 
                             b1.Property<string>("Valor")
                                 .IsRequired()
-                                .HasMaxLength(8)
-                                .HasColumnType("varchar(8)")
+                                .HasMaxLength(7)
+                                .HasColumnType("varchar(7)")
                                 .HasColumnName("Placa");
 
                             b1.HasKey("VeiculoId");

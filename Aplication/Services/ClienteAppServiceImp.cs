@@ -18,25 +18,8 @@ public class ClienteAppServiceImp
         _veiculoRepository = veiculoRepository;
     }
 
-    public ClienteModel VerificaCadastroCliente(string cpf)
-    {
-        var cliente = _clienteRepository.ObterPorCpf(cpf);
-        if (cliente == null)
-        {
-            return null;
-        }
-
-        return new ClienteModel
-        {
-            Id = cliente.Id,
-            Cpf = cliente.Cpf.Numero,
-            Nome = cliente.Nome,
-            Email = cliente.Email.Endereco,
-            Celular = cliente.Celular.Numero
-        };
-    }
-
-    public async Task<int> CriarCliente(ClienteModel clienteModel)
+    #region Cliente
+    public async Task<int> CriarCliente(AddClienteModel clienteModel)
     {
         try
         {
@@ -57,6 +40,59 @@ public class ClienteAppServiceImp
         }
     }
 
+    public async Task AtualizarCliente(UpdateClienteModel clienteModel)
+    {
+        var cliente = await _clienteRepository.ObterPorId(clienteModel.Id);
+        if (cliente == null)
+        {
+            throw new DomainException("Cliente não encontrado");
+        }
+
+         try
+        {     
+            cliente.Atualizar(clienteModel.Nome, new EmailVO(clienteModel.Email), new CelularVO(clienteModel.Celular));
+
+            await _clienteRepository.Atualizar(cliente);
+        }
+        catch (DomainException ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task InativarCliente(int id)
+    {
+        var cliente = await _clienteRepository.ObterPorId(id);
+        if (cliente == null)
+        {
+            throw new DomainException("Cliente não encontrado");
+        }
+
+        await _clienteRepository.Inativar(cliente);
+    }
+
+
+    public UpdateClienteModel VerificaCadastroCliente(string cpf)
+    {
+        var cliente = _clienteRepository.ObterPorCpf(cpf);
+        if (cliente == null)
+        {
+            return null;
+        }
+
+        return new UpdateClienteModel
+        {
+            Id = cliente.Id,
+            Cpf = cliente.Cpf.Numero,
+            Nome = cliente.Nome,
+            Email = cliente.Email.Endereco,
+            Celular = cliente.Celular.Numero
+        };
+    }
+
+    #endregion
+    
+    #region Veiculo
     public async Task AdicionarVeiculo(VeiculoModel veiculoModel)
     {
         var veiculo = new Veiculo
@@ -89,4 +125,30 @@ public class ClienteAppServiceImp
             ClienteId = veiculo.ClienteId
         };
     }
+
+    public async Task InativarVeiculo(int id)
+    {
+        var veiculo = await _veiculoRepository.ObterPorId(id);
+        if (veiculo == null)
+        {
+            throw new DomainException("Veículo não encontrado");
+        }
+
+        await _veiculoRepository.Inativar(veiculo);
+    }
+
+    public async Task AtualizarVeiculo(UpdateVeiculoModel veiculoModel)
+    {
+        var veiculo = await _veiculoRepository.ObterPorId(veiculoModel.Id);
+        if (veiculo == null)
+        {
+            throw new DomainException("Veículo não encontrado");
+        }
+
+        veiculo.Atualizar(new PlacaVO(veiculoModel.Placa), veiculoModel.Modelo, veiculoModel.Marca, veiculoModel.Ano);
+
+        await _veiculoRepository.Atualizar(veiculo);
+    }
+
+    #endregion
 }

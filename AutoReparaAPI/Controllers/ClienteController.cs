@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Aplication.Services;
 using Aplication.Models;
-using Domain.Exceptions;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -18,39 +17,29 @@ namespace AutoReparaAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
         {            
-            try
-            {
-                var cliente = clienteAppService.VerificaCadastroCliente(cpf);
-                return Ok(cliente?.Nome);
-            }
-            catch (DomainException ex)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Title = "Erro de Validação",
-                    Detail = ex.Message,
-                    Status = StatusCodes.Status400BadRequest
-                });
-            }
+            var cliente = clienteAppService.VerificaCadastroCliente(cpf);
+            return Ok(cliente);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]ClienteModel cliente)
+        public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]AddClienteModel cliente)
         {
-            try
-            {
-                var id = await clienteAppService.CriarCliente(cliente);
-                return Ok(new { id = id });
-            }
-            catch (DomainException ex)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Title = "Erro de Validação",
-                    Detail = ex.Message,
-                    Status = StatusCodes.Status400BadRequest
-                });
-            }
+            var id = await clienteAppService.CriarCliente(cliente);
+            return Ok(id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AtualizarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]UpdateClienteModel cliente)
+        {
+            await clienteAppService.AtualizarCliente(cliente);
+            return Ok("Cliente atualizado com sucesso");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> InativarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]int id)
+        {
+            await clienteAppService.InativarCliente(id);
+            return Ok("Cliente inativado com sucesso");
         }
 
         [HttpPost]
@@ -65,6 +54,20 @@ namespace AutoReparaAPI.Controllers
         {
             var veiculo = await clienteAppService.BuscarVeiculo(placa);
             return Ok(veiculo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AtualizarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]UpdateVeiculoModel veiculo)
+        {
+            await clienteAppService.AtualizarVeiculo(veiculo);
+            return Ok("Veículo atualizado com sucesso");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> InativarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]int id)
+        {
+            await clienteAppService.InativarVeiculo(id);
+            return Ok("Veículo inativado com sucesso");
         }
     }
 }

@@ -5,8 +5,6 @@ namespace Domain.VOs;
 
 public class PlacaVO
 {
-    private static readonly HashSet<string> _placasRegistradas = new();
-
     public string Valor { get; private set; }
 
     protected PlacaVO() { }
@@ -21,8 +19,6 @@ public class PlacaVO
         if (!Validar(normalizada))
             throw new DomainException("Placa inválida. Deve estar no padrão brasileiro (AAA-1234 ou ABC1D23).");
 
-        if (!_placasRegistradas.Add(normalizada))
-            throw new DomainException("Placa já registrada. Deve ser única.");
 
         Valor = normalizada;
     }
