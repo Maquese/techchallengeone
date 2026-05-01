@@ -14,7 +14,7 @@ public class OrdemServico : IEntity
     public Veiculo Veiculo { get; private set; }
     public string Status { get; private set; }
     public ICollection<Servico>? Servicos { get; private set; }
-    public ICollection<ItemEstoque>? ItensEstoque { get; private set; }
+    public ICollection<OrdemServicoItemEstoque>? OrdemServicoItensEstoque { get; private set; }
     public string? MecanicoAtribuido { get; private set; }
     public IList<Orcamento> Orcamentos { get; private set; }
     public DateTime? DataInicioExecucao { get; private set; }
@@ -29,7 +29,7 @@ public class OrdemServico : IEntity
         VeiculoId = veiculoId;
         Status = "Recebida";
         Servicos = servicos ?? new List<Servico>();
-        ItensEstoque = new List<ItemEstoque>();
+        OrdemServicoItensEstoque = new List<OrdemServicoItemEstoque>();
         MecanicoAtribuido = null;
         Orcamentos = new List<Orcamento>();
         Ativo = true;
@@ -41,10 +41,9 @@ public class OrdemServico : IEntity
         Status = "Em Diagnostico";
     }
 
-    public void OSDiagnosticada(IList<ItemEstoque> itens, IList<Servico> servicos)
+    public void OSDiagnosticada(IList<OrdemServicoItemEstoque> itensEstoque)
     {
-        ItensEstoque = itens;
-        Servicos = servicos;
+        OrdemServicoItensEstoque = itensEstoque;
         MecanicoAtribuido = null;
         Status = "Aguardando Aprovação";
     }

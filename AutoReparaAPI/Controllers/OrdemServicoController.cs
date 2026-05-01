@@ -29,6 +29,13 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> DiagnosticoFInalizado([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+        {
+            await ordemServicoAppService.DiagnosticoFinalizado(diagnosticoFinalizadoModel);
+            return Ok("Diagnóstico finalizado com sucesso");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
         {
             await ordemServicoAppService.AtribuirMecanicoExecucao(atribuiEmExecucao);

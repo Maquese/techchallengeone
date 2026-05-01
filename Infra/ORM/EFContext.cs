@@ -13,6 +13,7 @@ public class EFContext : DbContext
     public DbSet<OrdemServico> OrdemServicos { get; set; }
     public DbSet<Servico> Servicos { get; set; }
     public DbSet<Orcamento> Orcamentos { get; set; }
+    public DbSet<OrdemServicoItemEstoque> OrdemServicoItensEstoque { get; set; }
     public EFContext(DbContextOptions<EFContext> options) : base(options)
     {
 
@@ -129,10 +130,26 @@ public class EFContext : DbContext
             entity.HasMany(o => o.Servicos)
                 .WithMany(s => s.OrdemServicos)
                 .UsingEntity(j => j.ToTable("OrdemServicoServicos"));
+        });
 
-            entity.HasMany(o => o.ItensEstoque)
-                .WithMany(p => p.OrdemServicos)
-                .UsingEntity(j => j.ToTable("OrdemServicoPecas"));
+        modelBuilder.Entity<OrdemServicoItemEstoque>(entity =>
+        {
+            entity.ToTable("OrdemServicoItensEstoque");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Ativo).HasDefaultValue(true);
+            entity.Property(e => e.Quantidade).IsRequired();
+            entity.Property(e => e.DataCadastro).IsRequired();
+
+            entity.HasOne(op => op.OrdemServico)
+                .WithMany(o => o.OrdemServicoItensEstoque)
+                .HasForeignKey(op => op.OrdemServicoId);
+
+            entity.HasOne(op => op.ItemEstoque)
+                .WithMany(ie => ie.OrdemServicoItensEstoque)
+                .HasForeignKey(op => op.ItemEstoqueId);
+
+            // Índice para evitar duplicatas
+            entity.HasIndex(op => new { op.OrdemServicoId, op.ItemEstoqueId }).IsUnique();
         });
 
         modelBuilder.Entity<Orcamento>(entity =>

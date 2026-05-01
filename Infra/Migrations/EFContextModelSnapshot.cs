@@ -174,6 +174,39 @@ namespace Infra.Migrations
                     b.ToTable("OrdemServico", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entidades.OrdemServicoItemEstoque", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Ativo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ItemEstoqueId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrdemServicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemEstoqueId");
+
+                    b.HasIndex("OrdemServicoId", "ItemEstoqueId")
+                        .IsUnique();
+
+                    b.ToTable("OrdemServicoItensEstoque", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entidades.Servico", b =>
                 {
                     b.Property<int>("Id")
@@ -233,21 +266,6 @@ namespace Infra.Migrations
                     b.HasIndex("ClienteId");
 
                     b.ToTable("Veiculo", (string)null);
-                });
-
-            modelBuilder.Entity("ItemEstoqueOrdemServico", b =>
-                {
-                    b.Property<int>("ItensEstoqueId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrdemServicosId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ItensEstoqueId", "OrdemServicosId");
-
-                    b.HasIndex("OrdemServicosId");
-
-                    b.ToTable("OrdemServicoPecas", (string)null);
                 });
 
             modelBuilder.Entity("OrdemServicoServico", b =>
@@ -365,6 +383,25 @@ namespace Infra.Migrations
                     b.Navigation("Veiculo");
                 });
 
+            modelBuilder.Entity("Domain.Entidades.OrdemServicoItemEstoque", b =>
+                {
+                    b.HasOne("Domain.Aggregates.ItemEstoque", "ItemEstoque")
+                        .WithMany("OrdemServicoItensEstoque")
+                        .HasForeignKey("ItemEstoqueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Aggregates.OrdemServico", "OrdemServico")
+                        .WithMany("OrdemServicoItensEstoque")
+                        .HasForeignKey("OrdemServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemEstoque");
+
+                    b.Navigation("OrdemServico");
+                });
+
             modelBuilder.Entity("Domain.Entidades.Veiculo", b =>
                 {
                     b.HasOne("Domain.Aggregates.Cliente", "Cliente")
@@ -401,21 +438,6 @@ namespace Infra.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ItemEstoqueOrdemServico", b =>
-                {
-                    b.HasOne("Domain.Aggregates.ItemEstoque", null)
-                        .WithMany()
-                        .HasForeignKey("ItensEstoqueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Aggregates.OrdemServico", null)
-                        .WithMany()
-                        .HasForeignKey("OrdemServicosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("OrdemServicoServico", b =>
                 {
                     b.HasOne("Domain.Aggregates.OrdemServico", null)
@@ -436,9 +458,16 @@ namespace Infra.Migrations
                     b.Navigation("Veiculos");
                 });
 
+            modelBuilder.Entity("Domain.Aggregates.ItemEstoque", b =>
+                {
+                    b.Navigation("OrdemServicoItensEstoque");
+                });
+
             modelBuilder.Entity("Domain.Aggregates.OrdemServico", b =>
                 {
                     b.Navigation("Orcamentos");
+
+                    b.Navigation("OrdemServicoItensEstoque");
                 });
 
             modelBuilder.Entity("Domain.Entidades.Veiculo", b =>

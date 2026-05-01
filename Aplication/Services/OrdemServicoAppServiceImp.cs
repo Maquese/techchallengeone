@@ -147,4 +147,18 @@ public class OrdemServicoAppServiceImp
         }).ToList();
     }
 
+    public async Task DiagnosticoFinalizado(DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+    {
+        var ordemServico = await _ordemServicoRepository.ObterPorId(diagnosticoFinalizadoModel.Id);
+        if (ordemServico == null)
+        {
+            throw new DomainException($"Ordem de serviço para o veículo ID {diagnosticoFinalizadoModel.Id} não encontrada.");
+        }
+
+        var itensEstoque = diagnosticoFinalizadoModel.ItensEstoque.Select(item => new OrdemServicoItemEstoque
+        (diagnosticoFinalizadoModel.Id, item.id, item.quantidade)).ToList();
+       
+        ordemServico.OSDiagnosticada(itensEstoque);
+        await _ordemServicoRepository.Atualizar(ordemServico);
+    }
 }

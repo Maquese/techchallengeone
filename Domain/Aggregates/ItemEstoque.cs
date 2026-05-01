@@ -13,7 +13,7 @@ public class ItemEstoque : IEntity
     public DateTime? Datavalidade { get; private set; }
     public bool Ativo { get; private set; }
     public int QuantidadeEmEstoque { get; private set; }
-    public ICollection<OrdemServico> OrdemServicos { get; private set; }
+    public ICollection<OrdemServicoItemEstoque> OrdemServicoItensEstoque { get; private set; }
     public string Tipo { get; private set; }
     public string UnidadeMedida { get; private set; }
 
@@ -42,9 +42,10 @@ public class ItemEstoque : IEntity
         Datavalidade = dataValidade;
         QuantidadeEmEstoque = 0;
         Ativo = true;
+        OrdemServicoItensEstoque = new List<OrdemServicoItemEstoque>();
     }
 
-    public void Atualizar(string nome, string descricao, decimal valor, DateTime? dataValidade = null)
+    public void Atualizar(string nome, string descricao, decimal valor, string tipo, string unidadeMedida, DateTime? dataValidade = null)
     {
         if (string.IsNullOrEmpty(nome))
             throw new ArgumentException("O nome do item de estoque é obrigatório.");
@@ -52,7 +53,12 @@ public class ItemEstoque : IEntity
             throw new ArgumentException("A descrição do item de estoque é obrigatória.");
         if (valor < 0)
             throw new ArgumentException("O valor do item de estoque não pode ser negativo.");
-
+        if(tipo != "Peça" && tipo != "Insumo")
+            throw new ArgumentException("O tipo do item de estoque deve ser 'Peça' ou 'Insumo'.");
+        if(string.IsNullOrEmpty(unidadeMedida))
+            throw new ArgumentException("A unidade de medida do item de estoque é obrigatória.");
+        Tipo = tipo;
+        UnidadeMedida = unidadeMedida;
         Nome = nome;
         Descricao = descricao;
         Valor = valor;

@@ -20,5 +20,33 @@ namespace AutoReparaAPI.Controllers
             var id = await itemEstoqueAppService.AdicionarItemEstoque(itemEstoqueModel);
             return Ok($"Item de estoque adicionado com sucesso. ID: {id}");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarItensEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService)
+        {
+            var itensEstoque = await itemEstoqueAppService.ListarItensEstoque();
+            return Ok(itensEstoque);
+        }
+
+         [HttpGet]
+        public async Task<IActionResult> ObterItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService,[FromQuery] int id)
+        {
+            var itemEstoque = await itemEstoqueAppService.ObterItemEstoque(id);
+            return Ok(itemEstoque);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AtualizarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromBody] UpdateItemEstoqueModel itemEstoqueModel)
+        {
+            await itemEstoqueAppService.AtualizarItemEstoque(itemEstoqueModel);
+            return Ok("Item de estoque atualizado com sucesso.");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> InativarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromQuery] int id)
+        {
+            await itemEstoqueAppService.InativarItemEstoque(id);
+            return Ok("Item de estoque inativado com sucesso.");
+        }
     }
 }
