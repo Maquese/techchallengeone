@@ -49,15 +49,19 @@ public class EFContext : DbContext
                 .WithOne(v => v.Cliente)
                 .HasForeignKey(v => v.ClienteId);
 
-            entity.OwnsOne(c => c.Cpf, cpf =>
+            entity.OwnsOne(c => c.Documento, documento =>
             {
-                cpf.Property(c => c.Numero)
-                .HasColumnName("Cpf")   // coluna no banco
-                .HasMaxLength(11)
+                documento.Property(d => d.Numero)
+                .HasColumnName("Documento")
+                .HasMaxLength(14)
                 .IsRequired();
 
-                // índice único sobre Numero
-                cpf.HasIndex(c => c.Numero).IsUnique();
+                documento.Property(d => d.Tipo)
+                .HasColumnName("TipoDocumento")
+                .HasMaxLength(4)
+                .IsRequired();
+
+                documento.HasIndex(d => d.Numero).IsUnique();
             });
 
             entity.Property(e => e.Nome).IsRequired().HasMaxLength(200);

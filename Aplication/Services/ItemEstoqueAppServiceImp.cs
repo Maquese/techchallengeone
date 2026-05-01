@@ -70,5 +70,17 @@ public class ItemEstoqueAppServiceImp
         itemExistente.Inativar();
         await _itemEstoqueRepository.Atualizar(itemExistente);
     }
+
+    public async Task AdicionarQuantidadeEstoque(AddQuantidadeItemEstoqueModel adicionarQuantidadeModel)
+    {
+        var itemExistente = await _itemEstoqueRepository.ObterPorId(adicionarQuantidadeModel.Id);
+        if (itemExistente == null)
+        {
+            throw new DomainException("Item de estoque não encontrado para adicionar quantidade.");
+        }
+
+        itemExistente.AdicionarQuantidadeEstoque(adicionarQuantidadeModel.Quantidade);
+        await _itemEstoqueRepository.Atualizar(itemExistente);
+    }
 }
     

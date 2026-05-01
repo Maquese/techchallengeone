@@ -6,16 +6,16 @@ namespace Domain.Aggregates;
 public class Cliente : IEntity
 {
     protected Cliente() { }
-    public Cliente(CpfVO cpf, string nome, EmailVO email, CelularVO celular)
+    public Cliente(DocumentoVO documento, string nome, EmailVO email, CelularVO celular)
     {
-        this.Cpf = cpf;
+        this.Documento = documento;
         Nome = nome;
         Email = email;
         Celular = celular;
         Ativo = true;
     }
     public int Id { get; private set; }
-    public CpfVO Cpf { get; private set; }
+    public DocumentoVO Documento { get; private set; }
     public string Nome { get; private set; }
     public EmailVO Email { get; private set; }
     public CelularVO Celular { get; private set; }
@@ -23,6 +23,14 @@ public class Cliente : IEntity
 
     public void Atualizar(string nome, EmailVO email, CelularVO celular)
     {
+        Nome = nome;
+        Email = email;
+        Celular = celular;
+    }
+
+    public void AtualizarComDocumento(DocumentoVO documento, string nome, EmailVO email, CelularVO celular)
+    {
+        Documento = documento;
         Nome = nome;
         Email = email;
         Celular = celular;

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Aplication.Models;
 using Aplication.Services;
 
@@ -7,6 +8,7 @@ namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class OrdemServicoController : ControllerBase
     {
         public OrdemServicoController()
@@ -48,7 +50,20 @@ namespace AutoReparaAPI.Controllers
             await ordemServicoAppService.FinalizarOrdemServico(ordemServicoId);
             return Ok("Ordem de serviço finalizada com sucesso");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> StatusAtualOrdensServicoCliente([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery] int clienteId)
+        {
+            var status = await ordemServicoAppService.StatusAtualOrdensServico(clienteId);
+            return Ok(status);
+        }
         
+        [HttpGet]
+        public async Task<IActionResult> TempoMedioExecucaoMinutos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService)
+        {
+            var tempoMedio = await ordemServicoAppService.TempoMedioExecucao();
+            return Ok(tempoMedio);
+        }
 
         
 

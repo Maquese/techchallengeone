@@ -14,15 +14,17 @@ public class OrdemServicoAppServiceImp
     private readonly VeiculoRepository _veiculoRepository;
     private readonly OrcamentoRepository _orcamentoRepository;
     private readonly ItemEstoqueRepository _itensEstoqueRepository;
+    private readonly ClienteRepository _clienteRepository;
     public OrdemServicoAppServiceImp(OrdemServicoRepository ordemServicoRepository, ServicoRepository servicoRepository,
                                      VeiculoRepository veiculoRepository, OrcamentoRepository orcamentoRepository,
-                                     ItemEstoqueRepository itensEstoqueRepository)
+                                     ItemEstoqueRepository itensEstoqueRepository, ClienteRepository clienteRepository)
     {
         _ordemServicoRepository = ordemServicoRepository;
         _servicoRepository = servicoRepository;
         _veiculoRepository = veiculoRepository;
         _orcamentoRepository = orcamentoRepository;
         _itensEstoqueRepository = itensEstoqueRepository;
+        _clienteRepository = clienteRepository;
     }
 
     public async Task<int> AdicionarOrdemServico(AddOrdemServicoModel ordemServico)
@@ -209,7 +211,35 @@ public class OrdemServicoAppServiceImp
         }).ToList();
     }
 
+    public async Task<IList<StatusOSsClienteModel>> StatusAtualOrdensServico(int clienteId)
+    {
+        var cliente = await _clienteRepository.ObterPorId(clienteId);
+        if (cliente == null)        {
+            throw new DomainException($"Cliente com ID {clienteId} não encontrado.");
+        }
+        var ordensServico = await _ordemServicoRepository.ListarOrdensServicoPorCliente(cliente.Veiculos.Select(v => v.Id).ToList());
+        return ordensServico.Select(os => new StatusOSsClienteModel
+        {
+            Id = os.Id,
+            Status = os.Status,
+            DataCriacao = os.DataAbertura,
+            PlacaVeiculo = os.Veiculo.Placa.Valor
+        }).ToList();
+    }
+
+    public async Task<int> TempoMedioExecucao()
+    {
+        var ordensFinalizadas = await _ordemServicoRepository.ListarOrdensServicoPorStatus(new List<string> { "Finalizada", "Entregue" });
+        if (!ordensFinalizadas.Any())
+        {
+            return 0;
+        }
+
+        var tempoTotalExecucao = ordensFinalizadas.Sum(os => (os.DataFimExecucao.Value - os.DataInicioExecucao.Value).TotalMinutes);
+        return (int)(tempoTotalExecucao / ordensFinalizadas.Count());
+    }
+
     #endregion
 
-  
+
 }

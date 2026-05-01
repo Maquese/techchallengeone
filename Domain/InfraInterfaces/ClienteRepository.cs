@@ -4,5 +4,5 @@ namespace Domain.InfraInterfaces;
 
 public interface ClienteRepository : BaseRepository<Cliente>
 {
-    Cliente ObterPorCpf(string cpf);
+    Cliente ObterPorDocumento(string documento);
 }

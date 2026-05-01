@@ -25,7 +25,7 @@ public class ClienteAppServiceImp
         {
             var cliente = new Cliente
             (
-                new CpfVO(clienteModel.Cpf),
+                new DocumentoVO(clienteModel.Documento),
                 clienteModel.Nome,
                 new EmailVO(clienteModel.Email),
                 new CelularVO(clienteModel.Celular)
@@ -48,9 +48,14 @@ public class ClienteAppServiceImp
             throw new DomainException("Cliente não encontrado");
         }
 
-         try
-        {     
-            cliente.Atualizar(clienteModel.Nome, new EmailVO(clienteModel.Email), new CelularVO(clienteModel.Celular));
+        try
+        {
+            cliente.AtualizarComDocumento(
+                new DocumentoVO(clienteModel.Documento),
+                clienteModel.Nome,
+                new EmailVO(clienteModel.Email),
+                new CelularVO(clienteModel.Celular)
+            );
 
             await _clienteRepository.Atualizar(cliente);
         }
@@ -72,9 +77,9 @@ public class ClienteAppServiceImp
     }
 
 
-    public UpdateClienteModel VerificaCadastroCliente(string cpf)
+    public UpdateClienteModel VerificaCadastroCliente(string documento)
     {
-        var cliente = _clienteRepository.ObterPorCpf(cpf);
+        var cliente = _clienteRepository.ObterPorDocumento(documento);
         if (cliente == null)
         {
             return null;
@@ -83,7 +88,7 @@ public class ClienteAppServiceImp
         return new UpdateClienteModel
         {
             Id = cliente.Id,
-            Cpf = cliente.Cpf.Numero,
+            Documento = cliente.Documento.Numero,
             Nome = cliente.Nome,
             Email = cliente.Email.Endereco,
             Celular = cliente.Celular.Numero

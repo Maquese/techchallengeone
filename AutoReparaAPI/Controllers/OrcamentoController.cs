@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Aplication.Services;
 using Aplication.Models;
 
@@ -7,6 +8,7 @@ namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class OrcamentoController : ControllerBase
     {
         public OrcamentoController()
