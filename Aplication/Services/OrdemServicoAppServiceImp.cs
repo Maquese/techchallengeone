@@ -2,6 +2,7 @@
 using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Entidades;
+using Domain.Exceptions;
 using Domain.InfraInterfaces;
 
 namespace Aplication.Services;
@@ -29,19 +30,6 @@ public class OrdemServicoAppServiceImp
         return ordemServicoEntity;
     }
 
-    public async Task<ServicoModel> AdicionarServico(ServicoModel servico)
-    {
-        var servicoEntity = new Servico
-        (
-            id: servico.Id ?? 0,
-            descricao: servico.Descricao,
-            valor: servico.Valor,
-            tempoEstimado: servico.TempoEstimado
-        );
-        
-        await _servicoRepository.Adicionar(servicoEntity);
-        return servico;
-    }
 
     public async Task<string> AtribuirMecanico(AtribuiMecanicoModel atribuiEmDiagnostico)
     {
@@ -83,4 +71,73 @@ public class OrdemServicoAppServiceImp
 
         return $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.";
     }
+
+
+
+    
+    public async Task<ServicoModel> AdicionarServico(ServicoModel servico)
+    {
+        var servicoEntity = new Servico
+        (
+            descricao: servico.Descricao,
+            valor: servico.Valor,
+            tempoEstimado: servico.TempoEstimado
+        );
+        
+        await _servicoRepository.Adicionar(servicoEntity);
+        return servico;
+    }
+    public async Task<ServicoModel> BuscarServico(int id)
+    {
+        var servico = await _servicoRepository.ObterPorId(id);
+        if (servico == null)
+        {
+            return null;
+        }
+
+        return new ServicoModel
+        {
+            Id = servico.Id,
+            Descricao = servico.Descricao,
+            Valor = servico.Valor,
+            TempoEstimado = servico.TempoEstimado
+        };
+    }
+
+    public async Task AtualizarServico(UpdateServicoModel servicoModel)
+    {
+        var servico = await _servicoRepository.ObterPorId(servicoModel.Id);
+        if (servico == null)
+        {
+            throw new DomainException("Serviço não encontrado");
+        }
+
+        servico.Atualizar(servicoModel.Descricao, servicoModel.Valor, servicoModel.TempoEstimado);
+
+        await _servicoRepository.Atualizar(servico);
+    }
+
+    public async Task InativarServico(int id)
+    {
+        var servico = await _servicoRepository.ObterPorId(id);
+        if (servico == null)
+        {
+            throw new DomainException("Serviço não encontrado");
+        }
+
+        await _servicoRepository.Inativar(servico);
+    }
+
+    public async Task<List<ServicoModel>> ListarServicosAtivos()
+    {
+        var servicos = await _servicoRepository.ListarAtivos();
+        return servicos.Select(s => new ServicoModel
+        {
+            Id = s.Id,
+            Descricao = s.Descricao,
+            Valor = s.Valor,
+            TempoEstimado = s.TempoEstimado
+        }).ToList();
+    }
+
 }

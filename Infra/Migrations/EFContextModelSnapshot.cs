@@ -170,6 +170,7 @@ namespace Infra.Migrations
             modelBuilder.Entity("Domain.Entidades.Servico", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")

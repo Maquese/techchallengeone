@@ -109,7 +109,6 @@ public class EFContext : DbContext
             entity.Property(e => e.Ativo).HasDefaultValue(true);
             entity.ToTable("Servico");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Descricao).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Valor).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.TempoEstimado).IsRequired();

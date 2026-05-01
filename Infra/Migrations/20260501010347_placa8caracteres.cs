@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class placa8caracteres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +24,8 @@ namespace Infra.Migrations
                     Cpf = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
                     Nome = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
-                    Celular = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                    Celular = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -43,7 +44,7 @@ namespace Infra.Migrations
                     DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Datavalidade = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     QuantidadeEmEstoque = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<string>(type: "longtext", nullable: false)
                 },
@@ -57,10 +58,12 @@ namespace Infra.Migrations
                 name: "Servico",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Descricao = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TempoEstimado = table.Column<int>(type: "int", nullable: false)
+                    TempoEstimado = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -74,11 +77,12 @@ namespace Infra.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Placa = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
+                    Placa = table.Column<string>(type: "varchar(8)", maxLength: 8, nullable: false),
                     Modelo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Marca = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
                     Ano = table.Column<int>(type: "int", nullable: false),
-                    ClienteId = table.Column<int>(type: "int", nullable: false)
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -104,7 +108,8 @@ namespace Infra.Migrations
                     Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     MecanicoAtribuido = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
                     DataInicioExecucao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DataFimExecucao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    DataFimExecucao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -130,7 +135,8 @@ namespace Infra.Migrations
                     OrcamentoAprovado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     DataDecisaoClienteAprovacao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     OrcamentoPago = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    DataDecisaoClientePagamento = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    DataDecisaoClientePagamento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -195,9 +201,21 @@ namespace Infra.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cliente_Celular",
+                table: "Cliente",
+                column: "Celular",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cliente_Cpf",
                 table: "Cliente",
                 column: "Cpf",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cliente_Email",
+                table: "Cliente",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -224,6 +242,12 @@ namespace Infra.Migrations
                 name: "IX_Veiculo_ClienteId",
                 table: "Veiculo",
                 column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Veiculo_Placa",
+                table: "Veiculo",
+                column: "Placa",
+                unique: true);
         }
 
         /// <inheritdoc />

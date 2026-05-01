@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20260430233448_ExclusaoLogica")]
-    partial class ExclusaoLogica
+    [Migration("20260501010347_placa8caracteres")]
+    partial class placa8caracteres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,9 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -47,7 +49,9 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("datetime(6)");
@@ -90,7 +94,9 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("DataDecisaoClienteAprovacao")
                         .HasColumnType("datetime(6)");
@@ -129,7 +135,9 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime>("DataAbertura")
                         .HasColumnType("datetime(6)");
@@ -165,10 +173,13 @@ namespace Infra.Migrations
             modelBuilder.Entity("Domain.Entidades.Servico", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -196,7 +207,9 @@ namespace Infra.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
@@ -363,8 +376,8 @@ namespace Infra.Migrations
 
                             b1.Property<string>("Valor")
                                 .IsRequired()
-                                .HasMaxLength(7)
-                                .HasColumnType("varchar(7)")
+                                .HasMaxLength(8)
+                                .HasColumnType("varchar(8)")
                                 .HasColumnName("Placa");
 
                             b1.HasKey("VeiculoId");
