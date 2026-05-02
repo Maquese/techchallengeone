@@ -17,7 +17,7 @@ public class OrcamentoAppServiceImp
 
     public async Task<int> AddOrcamento(AddOrcamentoModel model)
     {
-        var ordemServico = _ordemServicoRepository.ObterPorId(model.OrdemServicoId);
+        var ordemServico = await _ordemServicoRepository.ObterPorId(model.OrdemServicoId);
         if (ordemServico == null)
         {
             throw new Exception($"Ordem de serviço com ID {model.OrdemServicoId} não encontrada.");

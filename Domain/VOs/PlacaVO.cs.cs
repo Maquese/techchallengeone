@@ -19,7 +19,6 @@ public class PlacaVO
         if (!Validar(normalizada))
             throw new DomainException("Placa inválida. Deve estar no padrão brasileiro (AAA-1234 ou ABC1D23).");
 
-
         Valor = normalizada;
     }
 
@@ -29,7 +28,7 @@ public class PlacaVO
         var regexAntigo = new Regex(@"^[A-Z]{3}-\d{4}$");
 
         // Padrão Mercosul: ABC1D23
-        var regexNovo = new Regex(@"^[A-Z]{3}\d[A-Z]\d{2}$");
+        var regexNovo = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
 
         return regexAntigo.IsMatch(placa) || regexNovo.IsMatch(placa);
     }
