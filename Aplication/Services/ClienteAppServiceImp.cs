@@ -77,9 +77,9 @@ public class ClienteAppServiceImp
     }
 
 
-    public UpdateClienteModel VerificaCadastroCliente(string documento)
+    public async Task<UpdateClienteModel> VerificaCadastroCliente(string documento)
     {
-        var cliente = _clienteRepository.ObterPorDocumento(documento);
+        var cliente = await _clienteRepository.ObterPorDocumento(documento);
         if (cliente == null)
         {
             return null;

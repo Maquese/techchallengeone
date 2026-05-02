@@ -9,9 +9,9 @@ public class ClienteRepositoryImp : BaseRepositoryImp<Cliente>, ClienteRepositor
     {
     }
 
-    public Cliente ObterPorDocumento(string documento)
+    public async Task<Cliente> ObterPorDocumento(string documento)
     {
-        return _context.Clientes.FirstOrDefault(c => c.Documento.Numero == documento);
+        return await _context.Clientes.FirstOrDefaultAsync(c => c.Documento.Numero == documento);
     }
 
     public override async Task<Cliente> ObterPorId(int id)

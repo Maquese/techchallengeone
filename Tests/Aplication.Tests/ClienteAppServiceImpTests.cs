@@ -5,9 +5,9 @@ using Aplication.Services;
 using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Exceptions;
-using Domain.VOs;
 using Domain.Entidades;
 using Domain.InfraInterfaces;
+using Domain.VOs;
 
 namespace Aplication.Tests
 {
@@ -27,10 +27,9 @@ namespace Aplication.Tests
         [Fact]
         public async Task CriarCliente_DeveAdicionarClienteERetornarId()
         {
-            // Arrange
             var model = new AddClienteModel
             {
-                Documento = "11144477735", // CPF válido
+                Documento = "11144477735",
                 Nome = "João",
                 Email = "teste@dominio.com",
                 Celular = "11999999999"
@@ -39,12 +38,10 @@ namespace Aplication.Tests
             _clienteRepoMock.Setup(r => r.Adicionar(It.IsAny<Cliente>()))
                 .Returns(Task.CompletedTask);
 
-            // Act
             var id = await _service.CriarCliente(model);
 
-            // Assert
             _clienteRepoMock.Verify(r => r.Adicionar(It.IsAny<Cliente>()), Times.Once);
-            Assert.True(id >= 0); // Id é gerado pelo domínio/persistência
+            Assert.True(id >= 0);
         }
 
         [Fact]
@@ -57,6 +54,33 @@ namespace Aplication.Tests
         }
 
         [Fact]
+        public async Task AtualizarCliente_ClienteEncontrado_DeveAtualizar()
+        {
+            var cliente = new Cliente(
+                new DocumentoVO("11144477735"),
+                "Antigo",
+                new EmailVO("teste@dominio.com"),
+                new CelularVO("11999999999")
+            );
+
+            _clienteRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(cliente);
+
+            var model = new UpdateClienteModel 
+            { 
+                Id = 1, 
+                Documento = "11144477735", // <-- ajuste aqui
+                Nome = "Novo", 
+                Email = "novo@dominio.com", 
+                Celular = "11988888888" 
+            };
+
+            await _service.AtualizarCliente(model);
+
+            _clienteRepoMock.Verify(r => r.Atualizar(It.IsAny<Cliente>()), Times.Once);
+        }
+
+
+        [Fact]
         public async Task InativarCliente_ClienteNaoEncontrado_DeveLancarExcecao()
         {
             _clienteRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Cliente)null);
@@ -65,14 +89,37 @@ namespace Aplication.Tests
         }
 
         [Fact]
-        public void VerificaCadastroCliente_ClienteNaoEncontrado_DeveRetornarNull()
+        public async Task VerificaCadastroCliente_ClienteNaoEncontrado_DeveRetornarNull()
         {
             _clienteRepoMock.Setup(r => r.ObterPorDocumento("11144477735"))
-                .Returns((Cliente)null);
+                .ReturnsAsync((Cliente)null);
 
-            var result = _service.VerificaCadastroCliente("11144477735");
+            var result = await _service.VerificaCadastroCliente("11144477735");
 
-            Assert.Null(result);
+            Assert.Null(result); // ajuste: agora verificamos null
+        }
+
+        [Fact]
+        public async Task VerificaCadastroCliente_ClienteEncontrado_DeveRetornarUpdateClienteModel()
+        {
+            var cliente = new Cliente(
+                new DocumentoVO("11144477735"),
+                "João",
+                new EmailVO("teste@dominio.com"),
+                new CelularVO("11999999999")
+            );
+
+            _clienteRepoMock.Setup(r => r.ObterPorDocumento("11144477735"))
+                .ReturnsAsync(cliente);
+
+            var result = await _service.VerificaCadastroCliente("11144477735");
+
+            Assert.NotNull(result); // ajuste: verificamos objeto
+            Assert.Equal(cliente.Id, result.Id);
+            Assert.Equal(cliente.Documento.Numero, result.Documento);
+            Assert.Equal(cliente.Nome, result.Nome);
+            Assert.Equal(cliente.Email.Endereco, result.Email);
+            Assert.Equal(cliente.Celular.Numero, result.Celular);
         }
 
         [Fact]
@@ -107,11 +154,49 @@ namespace Aplication.Tests
         }
 
         [Fact]
+        public async Task BuscarVeiculo_VeiculoEncontrado_DeveRetornarObjeto()
+        {
+            var veiculo = new Veiculo(
+                new PlacaVO("ABC-1234"),
+                "Civic",
+                "Honda",
+                2020,
+                1
+            );
+
+            _veiculoRepoMock.Setup(r => r.BuscarPorPlaca("ABC-1234")).ReturnsAsync(veiculo);
+
+            var result = await _service.BuscarVeiculo("ABC-1234");
+
+            Assert.NotNull(result);
+            Assert.Equal("ABC-1234", result.Placa);
+        }
+
+        [Fact]
         public async Task InativarVeiculo_VeiculoNaoEncontrado_DeveLancarExcecao()
         {
             _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Veiculo)null);
 
             await Assert.ThrowsAsync<DomainException>(() => _service.InativarVeiculo(1));
+        }
+
+        [Fact]
+        public async Task AtualizarVeiculo_VeiculoEncontrado_DeveAtualizar()
+        {
+            var veiculo = new Veiculo(
+                new PlacaVO("XYZ-9876"),
+                "Antigo",
+                "Ford",
+                2015,
+                1
+            );
+
+            _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(veiculo);
+
+            var model = new UpdateVeiculoModel { Id = 1, Modelo = "Novo", Marca = "Ford", Ano = 2022, Placa = "XYZ-9876" };
+            await _service.AtualizarVeiculo(model);
+
+            _veiculoRepoMock.Verify(r => r.Atualizar(It.IsAny<Veiculo>()), Times.Once);
         }
     }
 }
