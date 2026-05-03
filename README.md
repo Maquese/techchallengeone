@@ -42,7 +42,6 @@ docker-compose.yml
 GestaoAutoRepara.slnx
 README.md
 
-
 ---
 
 ## 🚀 Como Executar Localmente
@@ -58,18 +57,31 @@ http://localhost:5000
 5. Doc Swagger 
 http://localhost:5000/swagger
 
+---
 
 ## 🧪 Testes
 dotnet test
 
+---
 
 ## 🔒 Segurança
 Autenticação JWT para rotas administrativas.
 Validação de dados sensíveis (CPF, CNPJ, placa de veículo).
 
+---
+
+
 ## 👥 Equipe
 Kenney Maquese
 Discord: Kenney - rm374177
 
+---
+
 ## 📎 Links
 📘 Documentação DDD : https://drive.google.com/file/d/1SiuB8-Hso8AXvtbeRIW2V1-Y8_mfmyWc/view?usp=sharing
+
+---
+
+## Considerações 
+Tive vários pontos que gostaria de fazer melhor mas me segurei devido a ser um MVP, segurança, estoque, cliente e outras coisas que devem 
+ser melhoradas na continuidade do projeto.
