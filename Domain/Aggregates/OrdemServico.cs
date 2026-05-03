@@ -38,14 +38,14 @@ public class OrdemServico : IEntity
     public void OSEmDiagnostico(string mecanico)
     {
         MecanicoAtribuido = mecanico;
-        Status = "Em Diagnostico";
+        Status = "Em diagnóstico";
     }
 
     public void OSDiagnosticada(IList<OrdemServicoItemEstoque> itensEstoque)
     {
         OrdemServicoItensEstoque = itensEstoque;
         MecanicoAtribuido = null;
-        Status = "Aguardando Aprovação";
+        Status = "Aguardando aprovação";
     }
 
     public void OSAprovada()
@@ -56,7 +56,7 @@ public class OrdemServico : IEntity
     public void EmExecucao(string mecanico)
     {
         MecanicoAtribuido = mecanico;
-        Status = "Em Execução";
+        Status = "Em execução";
         DataInicioExecucao = DateTime.Now;
     }
 

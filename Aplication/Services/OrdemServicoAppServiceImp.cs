@@ -53,6 +53,11 @@ public class OrdemServicoAppServiceImp
             throw new DomainException($"Ordem de serviço com ID {atribuiEmDiagnostico.OrdemServicoId} não encontrada.");
         }
 
+        if(ordemServico.Status != "Recebida")
+        {
+            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Recebida' para atribuição de mecânico ao diagnóstico.");
+        }
+
         ordemServico.OSEmDiagnostico(atribuiEmDiagnostico.MecanicoAtribuido);
         await _ordemServicoRepository.Atualizar(ordemServico);
 
@@ -86,9 +91,9 @@ public class OrdemServicoAppServiceImp
             throw new DomainException($"Ordem de serviço com ID {ordemServicoId} não encontrada.");
         }
 
-        if (ordemServico.Status != "Em Execução")
+        if (ordemServico.Status != "Em execução")
         {
-            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em Execução' para finalização.");
+            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em execução' para finalização.");
         }
 
         await DeduzirItensEstoque(ordemServico.OrdemServicoItensEstoque?.Select(i => new AddItensOrdemServicoModel { id = i.ItemEstoqueId, quantidade = i.Quantidade }).ToList() ?? new List<AddItensOrdemServicoModel>());
@@ -120,6 +125,11 @@ public class OrdemServicoAppServiceImp
         if (ordemServico == null)
         {
             throw new DomainException($"Ordem de serviço para o veículo ID {diagnosticoFinalizadoModel.Id} não encontrada.");
+        }
+
+        if(ordemServico.Status != "Em diagnóstico")
+        {
+            throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em diagnóstico' para finalização do diagnóstico.");
         }
 
         var itensEstoque = diagnosticoFinalizadoModel.ItensEstoque.Select(item => new OrdemServicoItemEstoque

@@ -25,8 +25,7 @@ O sistema foi desenvolvido aplicando **Domain-Driven Design (DDD)**, boas práti
 - **Testes:** Unitários e de integração com cobertura mínima de 80%
 
 ### 🎯 Justificativa da escolha do MySQL
-O **MySQL** foi escolhido por ser um banco relacional robusto, amplamente utilizado em aplicações corporativas, com suporte a **transações ACID**, alta compatibilidade com ferramentas de mercado e excelente integração com **Docker**.  
-Além disso, sua comunidade ativa e documentação extensa garantem suporte confiável para o desenvolvimento do MVP.
+O **MySQL** banco de dados relacional foi escolhido porque o sistema é simples e bem estruturado além que tem transações um pouco mais complexas que envolve algumas relações de dados e que precisam ser ACID porém no futuro existe a possibilidade de alguns micro serviços usarem outro tipo de banco de dados.
 
 ---
 
@@ -85,3 +84,5 @@ Discord: Kenney - rm374177
 ## Considerações 
 Tive vários pontos que gostaria de fazer melhor mas me segurei devido a ser um MVP, segurança, estoque, cliente e outras coisas que devem 
 ser melhoradas na continuidade do projeto.
+Me debrucei muito mais no processo de entendimento do DDD que é o que de fato eu não tinha muito conhecimento e o que eu queria me aprofundar. 
+Não manjo muito de OWASPZAP então pode não ter ficado tão bom quanto deveria, o meu processo foi chamar as api via insominia com proxy e depois atacar.

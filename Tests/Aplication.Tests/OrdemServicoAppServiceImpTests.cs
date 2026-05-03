@@ -93,7 +93,7 @@ namespace Aplication.Tests
             var result = await _service.AtribuirMecanico(model);
 
             Assert.Contains("Carlos", result);
-            Assert.Equal("Em Diagnostico", ordem.Status);
+            Assert.Equal("Em diagnóstico", ordem.Status);
         }
 
         [Fact]
@@ -287,11 +287,12 @@ namespace Aplication.Tests
             return ordem;
         }
 
-        [Fact]
+       [Fact]
         public async Task DiagnosticoFinalizado_DeveAtualizarOrdemEAdicionarOrcamento()
         {
-            // Arrange
             var ordem = new OrdemServico(1);
+            // Corrigido: status precisa ser "Em diagnóstico"
+            SetPrivateProperty(ordem, "Status", "Em diagnóstico");
             SetPrivateProperty(ordem, "Servicos", new List<Servico> { new Servico("Troca de óleo", 100, 30) });
 
             var diagnosticoModel = new DiagnosticoFinalizadoModel
@@ -303,15 +304,7 @@ namespace Aplication.Tests
                 }
             };
 
-            // Cria item de estoque usando o construtor correto
-            var itemEstoque = new ItemEstoque(
-                tipo: "Peça",
-                nome: "Filtro de óleo",
-                descricao: "Filtro para motor",
-                valor: 50,
-                unidadeMedida: "unidade"
-            );
-            // Força Id via reflection
+            var itemEstoque = new ItemEstoque("Peça", "Filtro de óleo", "Filtro motor", 50, "unidade");
             SetPrivateProperty(itemEstoque, "Id", 10);
 
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
@@ -322,22 +315,18 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.Atualizar(ordem)).Returns(Task.CompletedTask);
             _orcamentoRepoMock.Setup(r => r.Adicionar(It.IsAny<Orcamento>())).Returns(Task.CompletedTask);
 
-            // Act
             await _service.DiagnosticoFinalizado(diagnosticoModel);
 
-            // Assert
             _ordemRepoMock.Verify(r => r.Atualizar(ordem), Times.Once);
             _orcamentoRepoMock.Verify(r => r.Adicionar(It.IsAny<Orcamento>()), Times.Once);
 
-            // Confirma que a ordem foi diagnosticada
-            Assert.Equal("Aguardando Aprovação", ordem.Status);
-            Assert.NotNull(ordem.OrdemServicoItensEstoque);
+            Assert.Equal("Aguardando aprovação", ordem.Status);
             Assert.Single(ordem.OrdemServicoItensEstoque);
 
-            // Confirma que o orçamento foi calculado corretamente
-            var valorEsperado = 100 /* serviço */ + (50 * 2) /* item estoque */;
+            var valorEsperado = 100 + (50 * 2);
             _orcamentoRepoMock.Verify(r => r.Adicionar(It.Is<Orcamento>(o => o.ValorTotal == valorEsperado)), Times.Once);
         }
+
         [Fact]
         public async Task DeduzirItensEstoque_ItemNaoEncontrado_DeveLancarDomainException()
         {
@@ -360,13 +349,7 @@ namespace Aplication.Tests
                 new AddItensOrdemServicoModel { id = 10, quantidade = 2 }
             };
 
-            var itemEstoque = new ItemEstoque(
-                tipo: "Peça",
-                nome: "Filtro de óleo",
-                descricao: "Filtro para motor",
-                valor: 50,
-                unidadeMedida: "unidade"
-            );
+            var itemEstoque = new ItemEstoque("Peça", "Filtro de óleo", "Filtro motor", 50, "unidade");
             SetPrivateProperty(itemEstoque, "Id", 10);
             SetPrivateProperty(itemEstoque, "QuantidadeEmEstoque", 5);
 
@@ -375,12 +358,10 @@ namespace Aplication.Tests
 
             await InvokePrivateDeduzirItensEstoque(itens);
 
-            // Confirma que a quantidade foi deduzida
             Assert.Equal(3, itemEstoque.QuantidadeEmEstoque);
-
-            // Confirma que o repositório foi chamado
             _itemRepoMock.Verify(r => r.Atualizar(itemEstoque), Times.Once);
         }
+
         private async Task InvokePrivateDeduzirItensEstoque(List<AddItensOrdemServicoModel> itens)
         {
             var method = typeof(OrdemServicoAppServiceImp)
@@ -390,7 +371,7 @@ namespace Aplication.Tests
             await task;
         }
 
-        [Fact]
+       [Fact]
         public async Task AtualizarServico_ServicoNaoEncontrado_DeveLancarDomainException()
         {
             var model = new UpdateServicoModel
@@ -425,14 +406,60 @@ namespace Aplication.Tests
 
             await _service.AtualizarServico(model);
 
-            // Confirma que o objeto foi atualizado
             Assert.Equal("Troca de óleo premium", servico.Descricao);
             Assert.Equal(150, servico.Valor);
             Assert.Equal(40, servico.TempoEstimado);
 
-            // Confirma que o repositório foi chamado
             _servicoRepoMock.Verify(r => r.Atualizar(servico), Times.Once);
         }
+    
 
+    [Fact]
+        public async Task AtribuirMecanico_StatusInvalido_DeveLancarDomainException()
+        {
+            var ordem = new OrdemServico(1);
+            // Força status inválido
+            SetPrivateProperty(ordem, "Status", "Em diagnóstico");
+
+            var model = new AtribuiMecanicoModel { OrdemServicoId = 1, MecanicoAtribuido = "Carlos" };
+            _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanico(model));
+        }
+
+        [Fact]
+        public async Task AtribuirMecanicoExecucao_OrdemNaoEncontrada_DeveLancarDomainException()
+        {
+            var model = new AtribuiMecanicoModel { OrdemServicoId = 1, MecanicoAtribuido = "João" };
+            _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanicoExecucao(model));
+        }
+
+        [Fact]
+        public async Task FinalizarOrdemServico_OrdemNaoEncontrada_DeveLancarDomainException()
+        {
+            _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.FinalizarOrdemServico(1));
+        }
+
+        [Fact]
+        public async Task DiagnosticoFinalizado_StatusInvalido_DeveLancarDomainException()
+        {
+            var ordem = new OrdemServico(1);
+            // Status inicial = "Recebida", inválido para finalização de diagnóstico
+            SetPrivateProperty(ordem, "Status", "Recebida");
+
+            var model = new DiagnosticoFinalizadoModel
+            {
+                Id = 1,
+                ItensEstoque = new List<AddItensOrdemServicoModel>()
+            };
+
+            _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.DiagnosticoFinalizado(model));
+        }
     }
 }

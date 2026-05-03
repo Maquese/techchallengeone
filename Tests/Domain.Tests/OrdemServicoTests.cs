@@ -35,7 +35,7 @@ namespace Domain.Tests
 
             ordem.OSEmDiagnostico("Carlos");
 
-            Assert.Equal("Em Diagnostico", ordem.Status);
+            Assert.Equal("Em diagnóstico", ordem.Status);
             Assert.Equal("Carlos", ordem.MecanicoAtribuido);
         }
 
@@ -50,7 +50,7 @@ namespace Domain.Tests
 
             ordem.OSDiagnosticada(itens);
 
-            Assert.Equal("Aguardando Aprovação", ordem.Status);
+            Assert.Equal("Aguardando aprovação", ordem.Status);
             Assert.Equal(itens, ordem.OrdemServicoItensEstoque);
             Assert.Null(ordem.MecanicoAtribuido);
         }
@@ -72,7 +72,7 @@ namespace Domain.Tests
 
             ordem.EmExecucao("João");
 
-            Assert.Equal("Em Execução", ordem.Status);
+            Assert.Equal("Em execução", ordem.Status);
             Assert.Equal("João", ordem.MecanicoAtribuido);
             Assert.NotNull(ordem.DataInicioExecucao);
         }

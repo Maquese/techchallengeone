@@ -8,6 +8,8 @@ using Aplication.Models;
 using Domain.Aggregates;
 using Domain.InfraInterfaces;
 using Domain.Entidades;
+using Domain.Exceptions;
+using System.Reflection;
 
 namespace Aplication.Tests
 {
@@ -25,12 +27,12 @@ namespace Aplication.Tests
         }
 
         [Fact]
-        public async Task AddOrcamento_OrdemServicoNaoEncontrada_DeveLancarExcecao()
+        public async Task AddOrcamento_OrdemServicoNaoEncontrada_DeveLancarDomainException()
         {
             var model = new AddOrcamentoModel { OrdemServicoId = 1 };
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<Exception>(() => _service.AddOrcamento(model));
+            await Assert.ThrowsAsync<DomainException>(() => _service.AddOrcamento(model));
         }
 
         [Fact]
@@ -50,25 +52,25 @@ namespace Aplication.Tests
         }
 
         [Fact]
-        public async Task AprovarOrcamento_OrcamentoNaoEncontrado_DeveLancarExcecao()
+        public async Task AprovarOrcamento_OrcamentoNaoEncontrado_DeveLancarDomainException()
         {
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Orcamento?)null);
 
-            await Assert.ThrowsAsync<Exception>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
         }
 
         [Fact]
-        public async Task AprovarOrcamento_OrdemServicoNaoEncontrada_DeveLancarExcecao()
+        public async Task AprovarOrcamento_OrdemServicoNaoEncontrada_DeveLancarDomainException()
         {
             var orcamento = new Orcamento(1, 100, "obs");
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<Exception>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
         }
 
         [Fact]
-        public async Task AprovarOrcamento_StatusInvalido_DeveLancarExcecao()
+        public async Task AprovarOrcamento_StatusInvalido_DeveLancarDomainException()
         {
             var orcamento = new Orcamento(1, 100, "obs");
             var ordemServico = new OrdemServico(1); // Status inicial = "Recebida"
@@ -76,7 +78,7 @@ namespace Aplication.Tests
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
 
-            await Assert.ThrowsAsync<Exception>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
         }
 
         [Fact]
@@ -84,7 +86,7 @@ namespace Aplication.Tests
         {
             var orcamento = new Orcamento(1, 100, "obs");
             var ordemServico = new OrdemServico(1);
-            ordemServico.OSDiagnosticada(new List<OrdemServicoItemEstoque>()); // muda status para "Aguardando Aprovação"
+            ordemServico.OSDiagnosticada(new List<OrdemServicoItemEstoque>()); // muda status para "Aguardando aprovação"
 
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
@@ -98,11 +100,11 @@ namespace Aplication.Tests
         }
 
         [Fact]
-        public async Task PagarOrcamento_OrcamentoNaoEncontrado_DeveLancarExcecao()
+        public async Task PagarOrcamento_OrcamentoNaoEncontrado_DeveLancarDomainException()
         {
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Orcamento?)null);
 
-            await Assert.ThrowsAsync<Exception>(() => _service.PagarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
         }
 
         [Fact]
@@ -110,6 +112,8 @@ namespace Aplication.Tests
         {
             var orcamento = new Orcamento(1, 100, "obs");
             var ordemServico = new OrdemServico(1);
+            // Corrigido: status precisa ser "Finalizada" para permitir pagamento
+            SetPrivateProperty(ordemServico, "Status", "Finalizada");
 
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
@@ -121,5 +125,65 @@ namespace Aplication.Tests
             Assert.Equal("Entregue", ordemServico.Status);
             _orcamentoRepoMock.Verify(r => r.Atualizar(orcamento), Times.Once);
         }
+
+        // Helper para setar propriedades privadas
+        private static void SetPrivateProperty<T>(object target, string propertyName, T value)
+        {
+            var prop = target.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (prop == null)
+                throw new InvalidOperationException($"Property '{propertyName}' not found on type {target.GetType().FullName}.");
+            prop.SetValue(target, value);
+        }
+
+        [Fact]
+        public async Task AprovarOrcamento_JaDecididoPagamento_DeveLancarDomainException()
+        {
+            var orcamento = new Orcamento(1, 100, "obs");
+            // Força DataDecisaoClientePagamento para simular já decidido
+            SetPrivateProperty(orcamento, "DataDecisaoClientePagamento", DateTime.UtcNow);
+
+            _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+        }
+
+        [Fact]
+        public async Task AprovarOrcamento_JaDecididoAprovacao_DeveLancarDomainException()
+        {
+            var orcamento = new Orcamento(1, 100, "obs");
+            // Força DataDecisaoClienteAprovacao para simular já decidido
+            SetPrivateProperty(orcamento, "DataDecisaoClienteAprovacao", DateTime.UtcNow);
+
+            _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+        }
+
+        [Fact]
+        public async Task PagarOrcamento_JaDecididoPagamento_DeveLancarDomainException()
+        {
+            var orcamento = new Orcamento(1, 100, "obs");
+            // Força DataDecisaoClientePagamento para simular já pago
+            SetPrivateProperty(orcamento, "DataDecisaoClientePagamento", DateTime.UtcNow);
+
+            _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
+        }
+
+        [Fact]
+        public async Task PagarOrcamento_StatusInvalido_DeveLancarDomainException()
+        {
+            var orcamento = new Orcamento(1, 100, "obs");
+            var ordemServico = new OrdemServico(1);
+            // Status inicial = "Recebida", inválido para pagamento
+            SetPrivateProperty(ordemServico, "Status", "Recebida");
+
+            _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
+            _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
+
+            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
+        }
+
     }
 }
