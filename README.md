@@ -78,6 +78,7 @@ Discord: Kenney - rm374177
 
 ## 📎 Links
 📘 Documentação DDD : https://drive.google.com/file/d/1SiuB8-Hso8AXvtbeRIW2V1-Y8_mfmyWc/view?usp=sharing
+📘 Toda a documentação: https://drive.google.com/drive/folders/17s-o27T-Lx22VP-ce8oVhZQR15ROc96a?usp=sharing
 
 ---
 
