@@ -55,6 +55,8 @@ docker-compose up --build
 http://localhost:5000
 5. Doc Swagger 
 http://localhost:5000/swagger
+6. JWT
+user: admin senha:admin123
 
 ---
 
