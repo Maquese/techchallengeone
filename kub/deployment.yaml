@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: auto-repara-deployment
+spec:
+ replicas: 3
+ selector:
+  matchLabels:
+   app: auto-repara-api
+ template: 
+  metadata:
+   labels: 
+    app: auto-repara-api
+  spec: 
+   containers:
+    - name: auto-repara-api
+      image: auto:latest
+      env:
+      - name: ConnectionStrings__DefaultConnection
+        value: "Server=mysql;Port=3306;Database=auto_repara;User=root;Password=example;"
+      - name: Jwt__SecretKey
+        value: "sua-chave-super-secreta-muito-longa-para-256bits-change-me"
+      - name: Jwt__Issuer
+        value: "GestaoAutoRepara"
+      - name: Jwt__Audience
+        value: "GestaoAutoReparaUsers" 
+      - name: Jwt__ExpirationMinutes
+        value: "60"
+      - name: ASPNETCORE_URLS
+        value: "http://+:80"

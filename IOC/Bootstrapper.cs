@@ -14,13 +14,13 @@ namespace IOC;
         {
             services.AddScoped<AuthService>();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection") 
-                ?? "Server=127.0.0.1;Port=3306;Database=Tests;User=root;Password=SuaSenhaSegura;";
+            // var connectionString = configuration.GetConnectionString("DefaultConnection") 
+            //     ?? "Server=127.0.0.1;Port=3306;Database=Tests;User=root;Password=SuaSenhaSegura;";
             
-            services.AddDbContext<EFContext>(options =>
-                options.UseMySQL(connectionString));
+            // services.AddDbContext<EFContext>(options =>
+            //     options.UseMySQL(connectionString));
             
-            services.BuildServiceProvider().GetService<EFContext>().Database.Migrate();
+            //services.BuildServiceProvider().GetService<EFContext>().Database.Migrate();
 
 
             services.AddTransient<ItemEstoqueRepository, ItemEstoqueRepositoryImp>();
