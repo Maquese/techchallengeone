@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
  name: auto-repara-deployment
 spec:
- replicas: 3
+ replicas: 1
  selector:
   matchLabels:
    app: auto-repara-api
@@ -28,3 +28,7 @@ spec:
       #   value: "60"
       # - name: ASPNETCORE_URLS
       #   value: "http://+:80"
+   volumes:
+   - name: mysql-pv-storage
+     persistentVolumeClaim:
+      claimName: mysql-pvc

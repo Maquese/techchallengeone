@@ -7,5 +7,8 @@ spec:
     storage: 1Gi 
   hostPath:
    path: /data/mysql
+   type: DirectoryOrCreate
   accessModes:
     - ReadWriteOnce
+  storageClassName: manual
+  
