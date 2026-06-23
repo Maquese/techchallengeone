@@ -1,34 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: auto-repara-deployment
+  name: auto-repara-deployment
 spec:
- replicas: 1
- selector:
-  matchLabels:
-   app: auto-repara-api
- template: 
-  metadata:
-   labels: 
-    app: auto-repara-api
-  spec: 
-   containers:
-    - name: auto-repara-api
-      image: auto:latest
-      # env:
-      # - name: ConnectionStrings__DefaultConnection
-      #   value: "Server=mysql;Port=3306;Database=auto_repara;User=root;Password=example;"
-      # - name: Jwt__SecretKey
-      #   value: "sua-chave-super-secreta-muito-longa-para-256bits-change-me"
-      # - name: Jwt__Issuer
-      #   value: "GestaoAutoRepara"
-      # - name: Jwt__Audience
-      #   value: "GestaoAutoReparaUsers" 
-      # - name: Jwt__ExpirationMinutes
-      #   value: "60"
-      # - name: ASPNETCORE_URLS
-      #   value: "http://+:80"
-   volumes:
-   - name: mysql-pv-storage
-     persistentVolumeClaim:
-      claimName: mysql-pvc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auto-repara-api
+  template:
+    metadata:
+      labels:
+        app: auto-repara-api
+    spec:
+      containers:
+        - name: auto-repara-api
+          image: auto:latest
+          envFrom:
+            - configMapRef:
+                name: appsettings-config
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/appsettings.Production.json
+              subPath: appsettings.Production.json
+      volumes:
+        - name: mysql-pv-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: config-volume
+          configMap:
+            name: appsettings-config

@@ -16,9 +16,11 @@ namespace IOC;
 
             var connectionString = configuration.GetConnectionString("DefaultConnection") 
                 ?? "Server=mysql;Port=3306;Database=auto_repara;User=root;Password=minha-senha;";
+
+            Console.WriteLine($"Connection String: {connectionString}");
             
             services.AddDbContext<EFContext>(options =>
-                options.UseMySQL("Server=mysql;Port=3306;Database=auto_repara;Uid=root;Password=minha-senha;"));
+                options.UseMySQL(connectionString));
             
             services.BuildServiceProvider().GetService<EFContext>().Database.Migrate();
 
