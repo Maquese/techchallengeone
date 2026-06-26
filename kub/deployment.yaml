@@ -18,7 +18,7 @@ spec:
           command: ['sh', '-c', 'until nc -z mysql-svc 3306; do echo waiting for mysql; sleep 5; done;']
       containers:
         - name: auto-repara-api
-          image: auto:latest
+          image: auto:latest 
           envFrom:
             - configMapRef:
                 name: appsettings-config
