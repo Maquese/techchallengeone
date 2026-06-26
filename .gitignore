@@ -55,3 +55,11 @@ nunit-*.xml
 .fake
 
 .sonarqube/
+
+# Terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfvars.json

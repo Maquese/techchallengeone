@@ -12,6 +12,10 @@ spec:
       labels:
         app: auto-repara-api
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mysql-svc 3306; do echo waiting for mysql; sleep 5; done;']
       containers:
         - name: auto-repara-api
           image: auto:latest

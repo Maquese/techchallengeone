@@ -7,7 +7,7 @@ data:
   appsettings.json: |
     {
       "ConnectionStrings": {
-        "DefaultConnection": "Server=mysql;Port=3306;Database=Tests;User=root;Password=minha-senha;;"
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=Tests;User=root;Password=minha-senha;;"
       },
       "Logging": {
         "LogLevel": {
@@ -21,7 +21,7 @@ data:
   appsettings.Development.json: |
     {
       "ConnectionStrings": {
-        "DefaultConnection": "Server=mysql;Port=3306;Database=Tests;User=root;Password=minha-senha;"
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=Tests;User=root;Password=minha-senha;"
       },
       "Logging": {
         "LogLevel": {
@@ -35,7 +35,7 @@ data:
   appsettings.Production.json: |
     {
       "ConnectionStrings": {
-        "DefaultConnection": "Server=mysql;Port=3306;Database=auto_repara;Uid=root;Password=minha-senha;"
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=auto_repara;Uid=root;Password=minha-senha;"
       },
       "Logging": {
         "LogLevel": {
