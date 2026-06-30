@@ -47,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Abrir PR para main
+      - name: Sugerir PR para main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -55,12 +55,9 @@ jobs:
           echo "Branch atual: ${{ github.ref_name }}"
           EXISTING_PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "${{ github.ref_name }}" --base main --json number --jq '.[0].number')
           if [ -z "$EXISTING_PR" ]; then
-            gh pr create \
-              --repo "$GITHUB_REPOSITORY" \
-              --base main \
-              --head "${{ github.ref_name }}" \
-              --title "PR automática: ${{ github.ref_name }}" \
-              --body "PR criada automaticamente após a validação da feature. Aguardando aprovação para seguir com o fluxo da main."
+            echo "Validação da feature concluída com sucesso."
+            echo "A PR para main precisa ser criada manualmente por você, pois o token padrão do GitHub Actions não tem permissão para criar PRs neste repositório."
+            echo "Link sugerido: https://github.com/$GITHUB_REPOSITORY/compare/main...${{ github.ref_name }}?expand=1"
           else
             echo "Já existe PR aberta para esta branch: #$EXISTING_PR"
           fi
