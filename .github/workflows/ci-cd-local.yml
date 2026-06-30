@@ -1,5 +1,9 @@
 name: CI/CD Local
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   push:
     branches: [ 'feature/**' ]
@@ -31,6 +35,28 @@ jobs:
       - name: Executar testes
         working-directory: app
         run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
+
+  open-pr-to-main:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'feature/')
+
+    steps:
+      - name: Abrir PR para main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Branch atual: ${{ github.ref_name }}"
+          EXISTING_PR=$(gh pr list --head "${{ github.ref_name }}" --base main --json number --jq '.[0].number')
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --base main \
+              --head "${{ github.ref_name }}" \
+              --title "PR automática: ${{ github.ref_name }}" \
+              --body "PR criada automaticamente após a validação da feature. Aguardando aprovação para seguir com o fluxo da main."
+          else
+            echo "Já existe PR aberta para esta branch: #$EXISTING_PR"
+          fi
 
   docker-and-deploy-local:
     needs: build-and-test
