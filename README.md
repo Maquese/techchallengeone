@@ -50,11 +50,11 @@ README.md
    ```
 2. Acesse a pasta:
    ```bash
-   cd techchallengeone
+   cd techchallengeone/app
    ```
 3. Suba os containers:
    ```bash
-   docker-compose up --build
+   docker compose up --build -d
    ```
 4. Acesse a API:
    ```text
@@ -64,6 +64,19 @@ README.md
    ```text
    http://localhost:5000/swagger
    ```
+6. Para derrubar o ambiente:
+   ```bash
+   docker compose down
+   ```
+
+## 🔁 CI/CD local
+O repositório já conta com um workflow em `.github/workflows/ci-cd-local.yml` que executa:
+- build da solução .NET
+- execução dos testes
+- build da imagem Docker
+- subida do stack local com Docker Compose
+
+Para executar manualmente no GitHub Actions, use a opção "Run workflow" no painel do repositório.
 
 ---
 

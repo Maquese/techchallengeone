@@ -1,0 +1,65 @@
+name: CI/CD Local
+
+on:
+  push:
+    branches: [ 'feature/**' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar dependências
+        working-directory: app
+        run: dotnet restore GestaoAutoRepara.slnx
+
+      - name: Build da solução
+        working-directory: app
+        run: dotnet build GestaoAutoRepara.slnx --no-restore --configuration Release
+
+      - name: Executar testes
+        working-directory: app
+        run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
+
+  docker-and-deploy-local:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'master')
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build da imagem Docker
+        working-directory: app
+        run: docker build -t autorepara-api:local .
+
+      - name: Subir stack local com Docker Compose
+        working-directory: app
+        run: docker compose up -d --build
+
+      - name: Aguardar API subir
+        run: |
+          for i in {1..30}; do
+            curl -sf http://localhost:5000/swagger/index.html >/dev/null 2>&1 && exit 0
+            sleep 5
+          done
+          echo "API não subiu corretamente" >&2
+          exit 1
+
+      - name: Verificar containers
+        run: docker compose -f app/docker-compose.yml ps
