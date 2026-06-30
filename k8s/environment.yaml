@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appsettings-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  appsettings.json: |
+    {
+      "ConnectionStrings": {
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=Tests;Uid=root;"
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": "*"
+    }
+  appsettings.Development.json: |
+    {
+      "ConnectionStrings": {
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=Tests;Uid=root;"
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": "*"
+    }
+  appsettings.Production.json: |
+    {
+      "ConnectionStrings": {
+        "DefaultConnection": "Server=mysql-svc;Port=3306;Database=auto_repara;Uid=root;"
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      },
+      "AllowedHosts": "*"
+    }

@@ -1,0 +1,93 @@
+name: CI/CD Local
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches: [ 'feature/**' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restaurar dependências
+        working-directory: app
+        run: dotnet restore GestaoAutoRepara.slnx
+
+      - name: Build da solução
+        working-directory: app
+        run: dotnet build GestaoAutoRepara.slnx --no-restore --configuration Release
+
+      - name: Executar testes
+        working-directory: app
+        run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
+
+  deploy-k8s-local:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'master')
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build da imagem Docker
+        working-directory: app
+        run: docker build -t autorepara-api:local .
+
+      - name: Instalar kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Preparar cluster local
+        run: |
+          if ! command -v kind >/dev/null 2>&1; then
+            curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
+            chmod +x ./kind
+            sudo mv ./kind /usr/local/bin/kind
+          fi
+          if ! kind get clusters | grep -q '^kind$'; then
+            kind create cluster --name kind
+          fi
+          kubectl cluster-info
+
+      - name: Carregar imagem no cluster local
+        run: |
+          kind load docker-image autorepara-api:local --name kind
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Inicializar Terraform
+        working-directory: infra
+        run: terraform init
+
+      - name: Aplicar infraestrutura com Terraform
+        working-directory: infra
+        run: terraform apply -auto-approve
+
+      - name: Aguardar deploy do cluster
+        run: |
+          kubectl rollout status deployment/mysql --timeout=300s
+          kubectl rollout status deployment/auto-repara-deployment --timeout=300s

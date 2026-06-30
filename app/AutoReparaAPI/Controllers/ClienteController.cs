@@ -19,7 +19,7 @@ namespace AutoReparaAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
         {            
-            var cliente = clienteAppService.VerificaCadastroCliente(cpf);
+            var cliente = await clienteAppService.VerificaCadastroCliente(cpf);
             return Ok(cliente);
         }
 

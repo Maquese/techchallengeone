@@ -47,21 +47,140 @@ README.md
 1. Clone o repositório:
    ```bash
    git clone https://github.com/Maquese/techchallengeone
-2. Acesse a pasta 
-cd TECHCHALLENGEONE
-3. Suba os containers 
-docker-compose up --build
-4. Acesse a API 
-http://localhost:5000
-5. Doc Swagger 
-http://localhost:5000/swagger
-6. JWT
-user: admin senha:admin123
+   ```
+2. Acesse a pasta:
+   ```bash
+   cd techchallengeone/app
+   ```
+3. Suba os containers:
+   ```bash
+   docker compose up --build -d
+   ```
+4. Acesse a API:
+   ```text
+   http://localhost:5000
+   ```
+5. Acesse a documentação Swagger:
+   ```text
+   http://localhost:5000/swagger
+   ```
+6. Para derrubar o ambiente:
+   ```bash
+   docker compose down
+   ```
+
+## 🔁 CI/CD local
+O repositório já conta com um workflow em `.github/workflows/ci-cd-local.yml` que executa:
+- build da solução .NET
+- execução dos testes
+- build da imagem Docker
+- subida do stack local com Docker Compose
+
+Para executar manualmente no GitHub Actions, use a opção "Run workflow" no painel do repositório.
+
+---
+
+## 📘 Descrição da Solução desta Fase
+Este projeto entrega um back-end ASP.NET Core containerizado para gestão de oficina mecânica com orquestração local em Docker Compose e deploy de infraestrutura via Kubernetes.
+A fase atual foca em:
+- Containerização da aplicação e do banco MySQL
+- Orquestração em Kubernetes com Deployments, Services, ConfigMap, Secret e HPA
+- Infraestrutura como código local usando Terraform para aplicar os manifestos Kubernetes
+- Documentação do fluxo de deploy e dos componentes
+
+---
+
+## 🏗️ Arquitetura Proposta
+### Componentes da aplicação
+- `AutoReparaAPI`: serviço ASP.NET Core que expõe APIs REST para clientes, ordens de serviço, veículos e estoque.
+- `Aplication`, `Domain`, `Infra`, `IOC`: camadas da aplicação que suportam lógica de negócio, entidades, repositórios e injeção de dependências.
+- MySQL: banco relacional para persistência dos dados.
+
+### Infraestrutura provisionada
+- Kubernetes local (cluster existente via `kubectl`): executa os deployments da API e do MySQL.
+- `Deployment` da API e `Deployment` do MySQL.
+- `Service` da API (`LoadBalancer` local) e `Service` do MySQL (`NodePort`).
+- `ConfigMap` para configurações públicas de ambiente.
+- `Secret` para dados sensíveis (senha do MySQL, string de conexão e JWT secret).
+- `PersistentVolume` e `PersistentVolumeClaim` para armazenamento persistente do MySQL.
+- `metrics-server` para métricas de cluster e HPA.
+- `HorizontalPodAutoscaler` para escalar o deployment da API com base em CPU.
+
+### Fluxo de deploy
+1. Construir a imagem Docker da API com o `Dockerfile`.
+2. Para desenvolvimento local, usar `docker-compose` para garantir API + MySQL.
+3. Para deploy Kubernetes local, usar Terraform para aplicar os manifestos em `kub/`.
+4. O `Secret` é aplicado antes do deployment da API para injetar valores sensíveis.
+5. O HPA monitora uso de CPU e escala réplicas do deployment da API.
+
+---
+
+## ☸️ Deploy em Kubernetes
+### Pré-requisitos
+- Cluster Kubernetes local disponível (`minikube`, `kind`, Docker Desktop Kubernetes, etc.).
+- `kubectl` configurado para o cluster.
+- `terraform` instalado.
+
+### Passos
+1. Navegue até o diretório Terraform:
+   ```bash
+   cd terraform
+   ```
+2. Inicialize o Terraform:
+   ```bash
+   terraform init
+   ```
+3. Aplique a infraestrutura:
+   ```bash
+   terraform apply
+   ```
+4. O processo aplica os manifestos em `kub/` na ordem:
+   - `volume.yaml`
+   - `persistClaim.yaml`
+   - `deployment-sql.yaml`
+   - `service-sql.yaml`
+   - `secret.yaml`
+   - `environment.yaml`
+   - `deployment.yaml`
+   - `service.yaml`
+   - `metrics.yaml`
+   - `hpa.yaml`
+
+### Resultado esperado
+- MySQL em execução no cluster
+- API ASP.NET Core acessível via Service
+- Dados persistidos em volume
+- HPA pronto para escalar com base em CPU
+
+---
+
+## ⚙️ Provisionamento da infraestrutura com Terraform
+O Terraform atual não cria o cluster Kubernetes nem um banco de dados em nuvem; ele executa `kubectl apply` nos manifestos locais.
+Use-o para aplicar a infraestrutura Kubernetes local já modelada nos arquivos YAML.
+
+---
+
+## 🔐 Uso de Secrets
+No arquivo `kub/secret.yaml` devem ficar os valores sensíveis:
+- `MYSQL_ROOT_PASSWORD`
+- `ConnectionStrings__DefaultConnection`
+- `Jwt__SecretKey`
+
+Esses valores não devem ser armazenados no `ConfigMap`.
+
+---
+
+## 📄 Collection de APIs
+- Swagger: `http://localhost:5000/swagger`
+- Postman Collection:  
+- Collection completa:  
 
 ---
 
 ## 🧪 Testes
+```bash
 dotnet test
+```
 
 ---
 

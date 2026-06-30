@@ -2,24 +2,24 @@
 <CoverageSession>
   <Summary numSequencePoints="379" visitedSequencePoints="300" numBranchPoints="90" visitedBranchPoints="50" sequenceCoverage="79.15" branchCoverage="55.55" maxCyclomaticComplexity="192" minCyclomaticComplexity="192" visitedClasses="12" numClasses="13" visitedMethods="88" numMethods="119" />
   <Modules>
-    <Module hash="5B38094D-0D2F-4D2F-BC5F-C986852E5C16">
+    <Module hash="A25417EE-159C-4A75-8359-118EB65830DC">
       <ModulePath>Domain.dll</ModulePath>
-      <ModuleTime>2026-05-03T07:40:45</ModuleTime>
+      <ModuleTime>2026-06-30T02:51:29</ModuleTime>
       <ModuleName>Domain</ModuleName>
       <Files>
-        <File uid="1" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\CelularVO.cs" />
-        <File uid="2" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\DocumentoVO.cs" />
-        <File uid="3" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\EmailVO.cs" />
-        <File uid="4" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\PlacaVO.cs.cs" />
-        <File uid="5" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Exceptions\DomainException.cs" />
-        <File uid="6" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\IEntity.cs" />
-        <File uid="7" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\OrdemServicoItemEstoque.cs" />
-        <File uid="8" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\Servico.cs" />
-        <File uid="9" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\Veiculo.cs" />
-        <File uid="10" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\Cliente.cs" />
-        <File uid="11" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\ItemEstoque.cs" />
-        <File uid="12" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\Orcamento.cs" />
-        <File uid="13" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\OrdemServico.cs" />
+        <File uid="1" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\CelularVO.cs" />
+        <File uid="2" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\DocumentoVO.cs" />
+        <File uid="3" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\EmailVO.cs" />
+        <File uid="4" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\PlacaVO.cs.cs" />
+        <File uid="5" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Exceptions\DomainException.cs" />
+        <File uid="6" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\IEntity.cs" />
+        <File uid="7" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\OrdemServicoItemEstoque.cs" />
+        <File uid="8" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\Servico.cs" />
+        <File uid="9" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\Veiculo.cs" />
+        <File uid="10" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\Cliente.cs" />
+        <File uid="11" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\ItemEstoque.cs" />
+        <File uid="12" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\Orcamento.cs" />
+        <File uid="13" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\OrdemServico.cs" />
       </Files>
       <Classes>
         <Class>

@@ -2,33 +2,33 @@
 <CoverageSession>
   <Summary numSequencePoints="862" visitedSequencePoints="654" numBranchPoints="178" visitedBranchPoints="100" sequenceCoverage="75.87" branchCoverage="56.17" maxCyclomaticComplexity="192" minCyclomaticComplexity="182" visitedClasses="66" numClasses="71" visitedMethods="183" numMethods="238" />
   <Modules>
-    <Module hash="AB8EBD5F-689F-44CE-B3B1-AAE240FB4EB1">
+    <Module hash="C7FDA72D-A8B5-41D1-9E15-0E297E6A7EE4">
       <ModulePath>Aplication.dll</ModulePath>
-      <ModuleTime>2026-05-03T07:40:46</ModuleTime>
+      <ModuleTime>2026-06-30T02:51:31</ModuleTime>
       <ModuleName>Aplication</ModuleName>
       <Files>
-        <File uid="1" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Services\AuthService.cs" />
-        <File uid="2" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Services\ClienteAppServiceImp.cs" />
-        <File uid="3" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Services\ItemEstoqueAppServiceImp.cs" />
-        <File uid="4" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Services\OrcamentoAppServiceImp.cs" />
-        <File uid="5" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Services\OrdemServicoAppServiceImp.cs" />
-        <File uid="6" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddClienteModel.cs" />
-        <File uid="7" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddIQuantidadetemEstoqueModel.cs" />
-        <File uid="8" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddItemEstoqueModel.cs" />
-        <File uid="9" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddItensOrdemServicoModel.cs" />
-        <File uid="10" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddOrcamentoModel.cs" />
-        <File uid="11" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AddOrdemServicoModel.cs" />
-        <File uid="12" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\AtribuiEmDiagnosticoModel.cs" />
-        <File uid="13" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\DiagnosticoFinalizadoModel.cs" />
-        <File uid="14" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\ListOrcamentoModel.cs" />
-        <File uid="15" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\LoginModel.cs" />
-        <File uid="16" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\ServicoModel.cs" />
-        <File uid="17" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\StatusOSsClienteModel.cs" />
-        <File uid="18" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\UpdateClienteModel.cs" />
-        <File uid="19" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\UpdateItemEstoqueModel.cs" />
-        <File uid="20" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\UpdateServicoModel.cs" />
-        <File uid="21" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\UpdateVeiculoModel.cs" />
-        <File uid="22" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Aplication\Models\VeiculoModel.cs" />
+        <File uid="1" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Services\AuthService.cs" />
+        <File uid="2" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Services\ClienteAppServiceImp.cs" />
+        <File uid="3" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Services\ItemEstoqueAppServiceImp.cs" />
+        <File uid="4" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Services\OrcamentoAppServiceImp.cs" />
+        <File uid="5" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Services\OrdemServicoAppServiceImp.cs" />
+        <File uid="6" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddClienteModel.cs" />
+        <File uid="7" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddIQuantidadetemEstoqueModel.cs" />
+        <File uid="8" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddItemEstoqueModel.cs" />
+        <File uid="9" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddItensOrdemServicoModel.cs" />
+        <File uid="10" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddOrcamentoModel.cs" />
+        <File uid="11" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AddOrdemServicoModel.cs" />
+        <File uid="12" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\AtribuiEmDiagnosticoModel.cs" />
+        <File uid="13" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\DiagnosticoFinalizadoModel.cs" />
+        <File uid="14" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\ListOrcamentoModel.cs" />
+        <File uid="15" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\LoginModel.cs" />
+        <File uid="16" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\ServicoModel.cs" />
+        <File uid="17" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\StatusOSsClienteModel.cs" />
+        <File uid="18" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\UpdateClienteModel.cs" />
+        <File uid="19" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\UpdateItemEstoqueModel.cs" />
+        <File uid="20" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\UpdateServicoModel.cs" />
+        <File uid="21" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\UpdateVeiculoModel.cs" />
+        <File uid="22" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Aplication\Models\VeiculoModel.cs" />
       </Files>
       <Classes>
         <Class>
@@ -2167,24 +2167,24 @@
         </Class>
       </Classes>
     </Module>
-    <Module hash="BFD1C8C6-D38D-4A33-9EE6-9875567ABB6A">
+    <Module hash="3D76C1B4-CEC6-4256-884F-29306EDA964D">
       <ModulePath>Domain.dll</ModulePath>
-      <ModuleTime>2026-05-03T07:40:46</ModuleTime>
+      <ModuleTime>2026-06-30T02:51:31</ModuleTime>
       <ModuleName>Domain</ModuleName>
       <Files>
-        <File uid="23" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\CelularVO.cs" />
-        <File uid="24" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\DocumentoVO.cs" />
-        <File uid="25" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\EmailVO.cs" />
-        <File uid="26" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\VOs\PlacaVO.cs.cs" />
-        <File uid="27" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Exceptions\DomainException.cs" />
-        <File uid="28" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\IEntity.cs" />
-        <File uid="29" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\OrdemServicoItemEstoque.cs" />
-        <File uid="30" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\Servico.cs" />
-        <File uid="31" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Entidades\Veiculo.cs" />
-        <File uid="32" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\Cliente.cs" />
-        <File uid="33" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\ItemEstoque.cs" />
-        <File uid="34" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\Orcamento.cs" />
-        <File uid="35" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\Domain\Aggregates\OrdemServico.cs" />
+        <File uid="23" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\CelularVO.cs" />
+        <File uid="24" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\DocumentoVO.cs" />
+        <File uid="25" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\EmailVO.cs" />
+        <File uid="26" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\VOs\PlacaVO.cs.cs" />
+        <File uid="27" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Exceptions\DomainException.cs" />
+        <File uid="28" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\IEntity.cs" />
+        <File uid="29" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\OrdemServicoItemEstoque.cs" />
+        <File uid="30" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\Servico.cs" />
+        <File uid="31" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Entidades\Veiculo.cs" />
+        <File uid="32" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\Cliente.cs" />
+        <File uid="33" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\ItemEstoque.cs" />
+        <File uid="34" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\Orcamento.cs" />
+        <File uid="35" fullPath="C:\Users\kenne\OneDrive\Desktop\techchallengeone\app\Domain\Aggregates\OrdemServico.cs" />
       </Files>
       <Classes>
         <Class>

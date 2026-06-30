@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auto-repara-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auto-repara-api
+  template:
+    metadata:
+      labels:
+        app: auto-repara-api
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mysql-svc 3306; do echo waiting for mysql; sleep 5; done;']
+      containers:
+        - name: auto-repara-api
+          image: autorepara-api:local
+          envFrom:
+            - configMapRef:
+                name: appsettings-config
+            - secretRef:
+                name: app-secrets
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/appsettings.Production.json
+              subPath: appsettings.Production.json
+              readOnly: true
+      volumes:
+        - name: mysql-pv-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: config-volume
+          configMap:
+            name: appsettings-config
+            items:
+              - key: appsettings.Production.json
+                path: appsettings.Production.json
