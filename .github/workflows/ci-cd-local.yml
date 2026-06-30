@@ -36,7 +36,7 @@ jobs:
         working-directory: app
         run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
 
-  docker-and-deploy-local:
+  deploy-k8s-local:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'master')
@@ -52,18 +52,42 @@ jobs:
         working-directory: app
         run: docker build -t autorepara-api:local .
 
-      - name: Subir stack local com Docker Compose
-        working-directory: app
-        run: docker compose up -d --build
-
-      - name: Aguardar API subir
+      - name: Instalar kubectl
         run: |
-          for i in {1..30}; do
-            curl -sf http://localhost:5000/swagger/index.html >/dev/null 2>&1 && exit 0
-            sleep 5
-          done
-          echo "API não subiu corretamente" >&2
-          exit 1
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
 
-      - name: Verificar containers
-        run: docker compose -f app/docker-compose.yml ps
+      - name: Preparar cluster local
+        run: |
+          if ! command -v kind >/dev/null 2>&1; then
+            curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
+            chmod +x ./kind
+            sudo mv ./kind /usr/local/bin/kind
+          fi
+          if ! kind get clusters | grep -q '^kind$'; then
+            kind create cluster --name kind
+          fi
+          kubectl cluster-info
+
+      - name: Carregar imagem no cluster local
+        run: |
+          kind load docker-image autorepara-api:local --name kind
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Inicializar Terraform
+        working-directory: infra
+        run: terraform init
+
+      - name: Aplicar infraestrutura com Terraform
+        working-directory: infra
+        run: terraform apply -auto-approve
+
+      - name: Aguardar deploy do cluster
+        run: |
+          kubectl rollout status deployment/mysql --timeout=300s
+          kubectl rollout status deployment/auto-repara-deployment --timeout=300s

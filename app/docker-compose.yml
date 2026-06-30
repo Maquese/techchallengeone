@@ -1,7 +1,6 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: techchallengeone_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: example
@@ -20,7 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile   # se o Dockerfile está na raiz
-    container_name: techchallengeone_api
     #depends_on:
     #  mysql:
     #    condition: service_healthy
