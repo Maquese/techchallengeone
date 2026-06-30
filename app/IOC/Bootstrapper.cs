@@ -14,15 +14,22 @@ namespace IOC;
         {
             services.AddScoped<AuthService>();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection") 
-                ?? "Server=mysql;Port=3306;Database=auto_repara;User=root;Password=minha-senha;";
+            var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                ?? configuration["ConnectionStrings:DefaultConnection"]
+                ?? configuration.GetConnectionString("DefaultConnection");
 
-            Console.WriteLine($"Connection String: {connectionString}");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException("A connection string 'DefaultConnection' must be configured.");
+            }
             
             services.AddDbContext<EFContext>(options =>
                 options.UseMySQL(connectionString));
-            
-            services.BuildServiceProvider().GetService<EFContext>().Database.Migrate();
+
+            using var serviceProvider = services.BuildServiceProvider();
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<EFContext>();
+            dbContext.Database.Migrate();
 
 
             services.AddTransient<ItemEstoqueRepository, ItemEstoqueRepositoryImp>();

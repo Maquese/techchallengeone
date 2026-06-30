@@ -26,7 +26,6 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]AddClienteModel cliente)
         {
-            
             var id = await clienteAppService.CriarCliente(cliente);
             return Ok(id);
         }

@@ -22,10 +22,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: appsettings-config
+            - secretRef:
+                name: app-secrets
           volumeMounts:
             - name: config-volume
               mountPath: /app/appsettings.Production.json
               subPath: appsettings.Production.json
+              readOnly: true
       volumes:
         - name: mysql-pv-storage
           persistentVolumeClaim:
@@ -33,3 +36,6 @@ spec:
         - name: config-volume
           configMap:
             name: appsettings-config
+            items:
+              - key: appsettings.Production.json
+                path: appsettings.Production.json
