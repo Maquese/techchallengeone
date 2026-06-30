@@ -169,7 +169,7 @@ No arquivo `kub/secret.yaml` devem ficar os valores sensíveis:
 Esses valores não devem ser armazenados no `ConfigMap`.
 
 ---
-
+ 
 ## 📄 Collection de APIs
 - Swagger: `http://localhost:5000/swagger`
 - Postman Collection:  
