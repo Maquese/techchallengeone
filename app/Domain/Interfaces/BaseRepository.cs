@@ -1,6 +1,6 @@
 ﻿using Domain.Entidades;
 
-namespace Domain.InfraInterfaces;
+namespace Domain.Interfaces;
 
 public interface BaseRepository<T> where T : IEntity
 {

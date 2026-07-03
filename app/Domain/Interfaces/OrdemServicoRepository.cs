@@ -1,7 +1,7 @@
 ﻿using Domain.Aggregates;
 using Domain.Entidades;
 
-namespace Domain.InfraInterfaces;
+namespace Domain.Interfaces;
 
 public interface OrdemServicoRepository : BaseRepository<OrdemServico>
 {

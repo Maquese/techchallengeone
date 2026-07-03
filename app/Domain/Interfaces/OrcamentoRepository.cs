@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates;
 
-namespace Domain.InfraInterfaces;
+namespace Domain.Interfaces;
 
 public interface OrcamentoRepository : BaseRepository<Orcamento>
 {

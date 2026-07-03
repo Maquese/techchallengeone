@@ -1,6 +1,6 @@
 ﻿using Domain.Entidades;
 using Domain.Exceptions;
-using Domain.InfraInterfaces;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infra;

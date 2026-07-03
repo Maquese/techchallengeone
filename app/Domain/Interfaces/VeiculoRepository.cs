@@ -1,7 +1,6 @@
 ﻿using Domain.Entidades;
-using Domain.InfraInterfaces;
 
-namespace Domain.InfraInterfaces;
+namespace Domain.Interfaces;
 
 public interface VeiculoRepository : BaseRepository<Veiculo>
 {

@@ -6,7 +6,7 @@ using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Exceptions;
 using Domain.Entidades;
-using Domain.InfraInterfaces;
+using Domain.Interfaces;
 using Domain.VOs;
 
 namespace Aplication.Tests

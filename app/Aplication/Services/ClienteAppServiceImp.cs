@@ -2,7 +2,7 @@
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
-using Domain.InfraInterfaces;
+using Domain.Interfaces;
 using Domain.VOs;
 
 namespace Aplication.Services;

@@ -1,5 +1,5 @@
 ﻿using Domain.Entidades;
-using Domain.InfraInterfaces;
+using Domain.Interfaces;
 
 namespace Infra.Repository;
 
