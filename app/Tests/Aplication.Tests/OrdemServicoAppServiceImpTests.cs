@@ -12,6 +12,7 @@ using Domain.Entidades;
 using Domain.Exceptions;
 using Aplication.Interfaces;
 using Domain.VOs;
+using Aplication.UseCases.OrdensServico;
 
 namespace Aplication.Tests
 {
@@ -23,7 +24,20 @@ namespace Aplication.Tests
         private readonly Mock<OrcamentoRepository> _orcamentoRepoMock;
         private readonly Mock<ItemEstoqueRepository> _itemRepoMock;
         private readonly Mock<ClienteRepository> _clienteRepoMock;
-        private readonly OrdemServicoAppServiceImp _service;
+        private readonly AdicionarOrdemServicoHandler _adicionarOrdemServicoHandler;
+        private readonly AtribuirMecanicoDiagnosticoOSHandler _atribuirMecanicoDiagnosticoOSHandler;
+        private readonly AtribuirMecanicoExecucaoOSHandler _atribuirMecanicoExecucaoOSHandler;
+        private readonly FinalizarOrdemServicoHandler _finalizarOrdemServicoHandler;
+        private readonly FinalizarDiagnosticoOSHandler _finalizarDiagnosticoOSHandler;
+        private readonly AdicionarServicoHandler _adicionarServicoHandler;
+        private readonly BuscarServicoHandler _buscarServicoHandler;
+        private readonly InativarServicoHandler _inativarServicoHandler;
+        private readonly ListarServicosAtivosHandler _listarServicosAtivosHandler;
+        private readonly StatusAtualOSClienteHandler _statusAtualOrdensServicoHandler;
+        private readonly TempoMedioExecucaoOSHandler _tempoMedioExecucaoHandler;
+        private readonly AtualizarServicoHandler _atualizarServicoHandler; 
+        private readonly AtribuirMecanicoExecucaoOSHandler _atribuirMecanicoExecucaoHandler;
+        private readonly FinalizarDiagnosticoOSHandler _diagnosticoFinalizadoHandler;
 
         public OrdemServicoAppServiceImpTests()
         {
@@ -33,14 +47,57 @@ namespace Aplication.Tests
             _orcamentoRepoMock = new Mock<OrcamentoRepository>();
             _itemRepoMock = new Mock<ItemEstoqueRepository>();
             _clienteRepoMock = new Mock<ClienteRepository>();
-
-            _service = new OrdemServicoAppServiceImp(
+            _adicionarOrdemServicoHandler = new AdicionarOrdemServicoHandler(
+                _veiculoRepoMock.Object,
+                _servicoRepoMock.Object,
+                _ordemRepoMock.Object
+            );
+            _atribuirMecanicoDiagnosticoOSHandler = new AtribuirMecanicoDiagnosticoOSHandler(
+                _ordemRepoMock.Object
+            );
+            _atribuirMecanicoExecucaoOSHandler = new AtribuirMecanicoExecucaoOSHandler(
+                _ordemRepoMock.Object
+            );
+            _finalizarOrdemServicoHandler = new FinalizarOrdemServicoHandler(
+                _ordemRepoMock.Object,
+                _itemRepoMock.Object
+            );
+            _finalizarDiagnosticoOSHandler = new FinalizarDiagnosticoOSHandler(
                 _ordemRepoMock.Object,
                 _servicoRepoMock.Object,
-                _veiculoRepoMock.Object,
-                _orcamentoRepoMock.Object,
                 _itemRepoMock.Object,
+                _orcamentoRepoMock.Object
+            );
+            _adicionarServicoHandler = new AdicionarServicoHandler(
+                _servicoRepoMock.Object
+            );
+            _buscarServicoHandler = new BuscarServicoHandler(
+                _servicoRepoMock.Object
+            );
+            _inativarServicoHandler = new InativarServicoHandler(
+                _servicoRepoMock.Object
+            );
+            _listarServicosAtivosHandler = new ListarServicosAtivosHandler(
+                _servicoRepoMock.Object
+            );
+            _statusAtualOrdensServicoHandler = new StatusAtualOSClienteHandler(
+                _ordemRepoMock.Object,
                 _clienteRepoMock.Object
+            );
+            _tempoMedioExecucaoHandler = new TempoMedioExecucaoOSHandler(
+                _ordemRepoMock.Object
+            );
+            _atualizarServicoHandler = new AtualizarServicoHandler(
+                _servicoRepoMock.Object
+            );
+            _atribuirMecanicoExecucaoHandler = new AtribuirMecanicoExecucaoOSHandler(
+                _ordemRepoMock.Object
+            );
+            _finalizarDiagnosticoOSHandler = new FinalizarDiagnosticoOSHandler(
+                _ordemRepoMock.Object,
+                _servicoRepoMock.Object,
+                _itemRepoMock.Object,
+                _orcamentoRepoMock.Object
             );
         }
 
@@ -50,7 +107,7 @@ namespace Aplication.Tests
             var model = new AddOrdemServicoModel { VeiculoId = 1 };
             _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Veiculo?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AdicionarOrdemServico(model));
+            await Assert.ThrowsAsync<DomainException>(() => _adicionarOrdemServicoHandler.Handle(model));
         }
 
         [Fact]
@@ -66,7 +123,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.Adicionar(It.IsAny<OrdemServico>()))
                 .Returns(Task.CompletedTask);
 
-            var id = await _service.AdicionarOrdemServico(model);
+            var id = await _adicionarOrdemServicoHandler.Handle(model);
 
             _ordemRepoMock.Verify(r => r.Adicionar(It.IsAny<OrdemServico>()), Times.Once);
             Assert.True(id >= 0);
@@ -78,7 +135,7 @@ namespace Aplication.Tests
             var model = new AtribuiMecanicoModel { OrdemServicoId = 1, MecanicoAtribuido = "Carlos" };
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanico(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atribuirMecanicoDiagnosticoOSHandler.Handle(model));
         }
 
         [Fact]
@@ -90,7 +147,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
             _ordemRepoMock.Setup(r => r.Atualizar(ordem)).Returns(Task.CompletedTask);
 
-            var result = await _service.AtribuirMecanico(model);
+            var result = await _atribuirMecanicoDiagnosticoOSHandler.Handle(model);
 
             Assert.Contains("Carlos", result);
             Assert.Equal("Em diagnóstico", ordem.Status);
@@ -104,7 +161,7 @@ namespace Aplication.Tests
 
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanicoExecucao(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atribuirMecanicoExecucaoOSHandler.Handle(model));
         }
 
         [Fact]
@@ -114,7 +171,7 @@ namespace Aplication.Tests
 
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.FinalizarOrdemServico(1));
+            await Assert.ThrowsAsync<DomainException>(() => _finalizarOrdemServicoHandler.Handle(1));
         }
 
         [Fact]
@@ -123,7 +180,7 @@ namespace Aplication.Tests
             var model = new DiagnosticoFinalizadoModel { Id = 1, ItensEstoque = new List<AddItensOrdemServicoModel>() };
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.DiagnosticoFinalizado(model));
+            await Assert.ThrowsAsync<DomainException>(() => _finalizarDiagnosticoOSHandler.Handle(model));
         }
 
         [Fact]
@@ -134,7 +191,7 @@ namespace Aplication.Tests
 
             _servicoRepoMock.Setup(r => r.Adicionar(It.IsAny<Servico>())).Returns(Task.CompletedTask);
 
-            var result = await _service.AdicionarServico(servicoModel);
+            var result = await _adicionarServicoHandler.Handle(servicoModel);
 
             Assert.Equal(servicoModel.Descricao, result.Descricao);
             Assert.Equal(servicoModel.Valor, result.Valor);
@@ -146,7 +203,7 @@ namespace Aplication.Tests
         {
             _servicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Servico?)null);
 
-            var result = await _service.BuscarServico(1);
+            var result = await _buscarServicoHandler.Handle(1);
 
             Assert.Null(result);
         }
@@ -156,7 +213,7 @@ namespace Aplication.Tests
         {
             _servicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Servico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.InativarServico(1));
+            await Assert.ThrowsAsync<DomainException>(() => _inativarServicoHandler.Handle(1));
         }
 
         // -----------------------------
@@ -174,7 +231,7 @@ namespace Aplication.Tests
 
             _servicoRepoMock.Setup(r => r.ListarAtivos()).ReturnsAsync(servicos);
 
-            var result = await _service.ListarServicosAtivos();
+            var result = await _listarServicosAtivosHandler.Handle();
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
@@ -188,7 +245,7 @@ namespace Aplication.Tests
         {
             _clienteRepoMock.Setup(r => r.ObterPorId(10)).ReturnsAsync((Cliente?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.StatusAtualOrdensServico(10));
+            await Assert.ThrowsAsync<DomainException>(() => _statusAtualOrdensServicoHandler.Handle(10));
         }
 
         [Fact]
@@ -210,7 +267,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.ListarOrdensServicoPorCliente(It.IsAny<List<int>>()))
                 .ReturnsAsync(new List<OrdemServico> { ordem });
 
-            var result = await _service.StatusAtualOrdensServico(cliente.Id);
+            var result = await _statusAtualOrdensServicoHandler.Handle(cliente.Id);
 
             Assert.NotNull(result);
             Assert.Single(result);
@@ -227,7 +284,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.ListarOrdensServicoPorStatus(It.IsAny<List<string>>()))
                 .ReturnsAsync(new List<OrdemServico>());
 
-            var result = await _service.TempoMedioExecucao();
+            var result = await _tempoMedioExecucaoHandler.Handle();
 
             Assert.Equal(0, result);
         }
@@ -252,7 +309,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.ListarOrdensServicoPorStatus(It.IsAny<List<string>>()))
                 .ReturnsAsync(ordens);
 
-            var result = await _service.TempoMedioExecucao();
+            var result = await _tempoMedioExecucaoHandler.Handle();
 
             Assert.Equal(45, result);
         }
@@ -315,7 +372,7 @@ namespace Aplication.Tests
             _ordemRepoMock.Setup(r => r.Atualizar(ordem)).Returns(Task.CompletedTask);
             _orcamentoRepoMock.Setup(r => r.Adicionar(It.IsAny<Orcamento>())).Returns(Task.CompletedTask);
 
-            await _service.DiagnosticoFinalizado(diagnosticoModel);
+            await _diagnosticoFinalizadoHandler.Handle(diagnosticoModel);
 
             _ordemRepoMock.Verify(r => r.Atualizar(ordem), Times.Once);
             _orcamentoRepoMock.Verify(r => r.Adicionar(It.IsAny<Orcamento>()), Times.Once);
@@ -364,10 +421,10 @@ namespace Aplication.Tests
 
         private async Task InvokePrivateDeduzirItensEstoque(List<AddItensOrdemServicoModel> itens)
         {
-            var method = typeof(OrdemServicoAppServiceImp)
+            var method = typeof(FinalizarOrdemServicoHandler)
                 .GetMethod("DeduzirItensEstoque", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var task = (Task)method.Invoke(_service, new object[] { itens });
+            var task = (Task)method.Invoke(_finalizarOrdemServicoHandler, new object[] { itens });
             await task;
         }
 
@@ -384,7 +441,7 @@ namespace Aplication.Tests
 
             _servicoRepoMock.Setup(r => r.ObterPorId(99)).ReturnsAsync((Servico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtualizarServico(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atualizarServicoHandler.Handle(model));
         }
 
         [Fact]
@@ -404,7 +461,7 @@ namespace Aplication.Tests
             _servicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(servico);
             _servicoRepoMock.Setup(r => r.Atualizar(servico)).Returns(Task.CompletedTask);
 
-            await _service.AtualizarServico(model);
+            await _atualizarServicoHandler.Handle(model);
 
             Assert.Equal("Troca de óleo premium", servico.Descricao);
             Assert.Equal(150, servico.Valor);
@@ -424,7 +481,7 @@ namespace Aplication.Tests
             var model = new AtribuiMecanicoModel { OrdemServicoId = 1, MecanicoAtribuido = "Carlos" };
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanico(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atribuirMecanicoExecucaoHandler.Handle(model));
         }
 
         [Fact]
@@ -433,7 +490,7 @@ namespace Aplication.Tests
             var model = new AtribuiMecanicoModel { OrdemServicoId = 1, MecanicoAtribuido = "João" };
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtribuirMecanicoExecucao(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atribuirMecanicoExecucaoHandler.Handle(model));
         }
 
         [Fact]
@@ -441,7 +498,7 @@ namespace Aplication.Tests
         {
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.FinalizarOrdemServico(1));
+            await Assert.ThrowsAsync<DomainException>(() => _finalizarOrdemServicoHandler.Handle(1));
         }
 
         [Fact]
@@ -459,7 +516,7 @@ namespace Aplication.Tests
 
             _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordem);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.DiagnosticoFinalizado(model));
+            await Assert.ThrowsAsync<DomainException>(() => _diagnosticoFinalizadoHandler.Handle(model));
         }
     }
 }

@@ -40,7 +40,6 @@ namespace IOC;
             services.AddTransient<ServicoRepository, ServicoRepositoryImp>();
             services.AddTransient<OrcamentoRepository, OrcamentoRepositoryImp>();
 
-            services.AddTransient<OrdemServicoAppServiceImp>();
             services.AddTransient<OrcamentoAppServiceImp>();
 
             services.AddScoped<AdicionarClienteHandler>();

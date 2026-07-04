@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Aplication.Models;
 using Aplication.Services;
+using Aplication.UseCases.OrdensServico;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -17,51 +18,51 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AddOrdemServicoModel ordemServicoModel)
+        public async Task<IActionResult> CriarOrdemServico([FromServices]AdicionarOrdemServicoHandler adicionarOrdemServicoHandler, [FromBody] AddOrdemServicoModel ordemServicoModel)
         {
-            var id = await ordemServicoAppService.AdicionarOrdemServico(ordemServicoModel);
+            var id = await adicionarOrdemServicoHandler.Handle(ordemServicoModel);
             return Ok(id);
         }       
 
         [HttpPost]
-        public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)
+        public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]AtribuirMecanicoDiagnosticoOSHandler atribuirMecanicoEmDiagnosticoHandler, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)
         {
-            await ordemServicoAppService.AtribuirMecanico(atribuiEmDiagnostico);
+            await atribuirMecanicoEmDiagnosticoHandler.Handle(atribuiEmDiagnostico);
             return Ok("Mecânico atribuído ao diagnóstico");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiagnosticoFInalizado([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+        public async Task<IActionResult> DiagnosticoFInalizado([FromServices]FinalizarDiagnosticoOSHandler diagnosticoFinalizadoHandler, [FromBody] DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
         {
-            await ordemServicoAppService.DiagnosticoFinalizado(diagnosticoFinalizadoModel);
+            await diagnosticoFinalizadoHandler.Handle(diagnosticoFinalizadoModel);
             return Ok("Diagnóstico finalizado com sucesso");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
+        public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]AtribuirMecanicoExecucaoOSHandler atribuirMecanicoExecucaoOSHandler, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
         {
-            await ordemServicoAppService.AtribuirMecanicoExecucao(atribuiEmExecucao);
+            await atribuirMecanicoExecucaoOSHandler.Handle(atribuiEmExecucao);
             return Ok("Mecânico atribuído à execução");
         }
 
         [HttpPost]
-        public async Task<IActionResult> FinalizarOrdemServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] int ordemServicoId)
+        public async Task<IActionResult> FinalizarOrdemServico([FromServices]FinalizarOrdemServicoHandler finalizarOrdemServicoHandler, [FromBody] int ordemServicoId)
         {
-            await ordemServicoAppService.FinalizarOrdemServico(ordemServicoId);
+            await finalizarOrdemServicoHandler.Handle(ordemServicoId);
             return Ok("Ordem de serviço finalizada com sucesso");
         }
 
         [HttpGet]
-        public async Task<IActionResult> StatusAtualOrdensServicoCliente([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery] int clienteId)
+        public async Task<IActionResult> StatusAtualOrdensServicoCliente([FromServices]StatusAtualOSClienteHandler statusAtualOrdensServicoClienteHandler, [FromQuery] int clienteId)
         {
-            var status = await ordemServicoAppService.StatusAtualOrdensServico(clienteId);
+            var status = await statusAtualOrdensServicoClienteHandler.Handle(clienteId);
             return Ok(status);
         }
         
         [HttpGet]
-        public async Task<IActionResult> TempoMedioExecucaoMinutos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService)
+        public async Task<IActionResult> TempoMedioExecucaoMinutos([FromServices]TempoMedioExecucaoOSHandler tempoMedioExecucaoOSHandler)
         {
-            var tempoMedio = await ordemServicoAppService.TempoMedioExecucao();
+            var tempoMedio = await tempoMedioExecucaoOSHandler.Handle();
             return Ok(tempoMedio);
         }
 
@@ -69,37 +70,37 @@ namespace AutoReparaAPI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] ServicoModel servicoModel)
+        public async Task<IActionResult> AdicionarServico([FromServices]AdicionarServicoHandler adicionarServicoOSHandler, [FromBody] ServicoModel servicoModel)
         {
-            var id = await ordemServicoAppService.AdicionarServico(servicoModel);
+            var id = await adicionarServicoOSHandler.Handle(servicoModel);
             return Ok(id);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BuscarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery]int id)
+        public async Task<IActionResult> BuscarServico([FromServices]BuscarServicoHandler buscarServicoHandler, [FromQuery]int id)
         {
-            var servico = await ordemServicoAppService.BuscarServico(id);
+            var servico = await buscarServicoHandler.Handle(id);
             return Ok(servico);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromBody] UpdateServicoModel servicoModel)
+        public async Task<IActionResult> AtualizarServico([FromServices]AtualizarServicoHandler atualizarServicoHandler, [FromBody] UpdateServicoModel servicoModel)
         {
-            await ordemServicoAppService.AtualizarServico(servicoModel);
-            return Ok("Serviço atualizado com sucesso");    
+            await atualizarServicoHandler.Handle(servicoModel);
+            return Ok("Serviço atualizado com sucesso");
         }
 
         [HttpDelete]
-        public async Task<IActionResult> InativarServico([FromServices]OrdemServicoAppServiceImp ordemServicoAppService, [FromQuery]int id)
+        public async Task<IActionResult> InativarServico([FromServices]InativarServicoHandler inativarServicoHandler, [FromQuery]int id)
         {
-            await ordemServicoAppService.InativarServico(id);
+            await inativarServicoHandler.Handle(id);
             return Ok("Serviço inativado com sucesso");
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarServicosAtivos([FromServices]OrdemServicoAppServiceImp ordemServicoAppService)
+        public async Task<IActionResult> ListarServicosAtivos([FromServices]ListarServicosAtivosHandler listarServicosAtivosHandler)
         {
-            var servicos = await ordemServicoAppService.ListarServicosAtivos();
+            var servicos = await listarServicosAtivosHandler.Handle();
             return Ok(servicos);
         }
     }
