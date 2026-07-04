@@ -49,6 +49,24 @@ jobs:
         working-directory: app
         run: docker build -t autorepara-api:local .
 
+      - name: Usar o contexto padrão do cluster
+        run: |
+          kubectl config current-context
+          kubectl cluster-info
+
+      - name: Aplicar manifests no cluster padrão
+        run: |
+          kubectl apply -f k8s/volume.yaml
+          kubectl apply -f k8s/persistClaim.yaml
+          kubectl apply -f k8s/deployment-sql.yaml
+          kubectl apply -f k8s/service-sql.yaml
+          kubectl apply -f k8s/secret.yaml
+          kubectl apply -f k8s/environment.yaml
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/metrics.yaml
+          kubectl apply -f k8s/hpa.yaml
+
       - name: Aguardar deploy do cluster
         run: |
           kubectl rollout status deployment/mysql --timeout=300s
