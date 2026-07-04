@@ -38,7 +38,7 @@ jobs:
 
   deploy-k8s-local:
     needs: build-and-test
-    runs-on: [self-hosted, linux, wsl]
+    runs-on: [self-hosted, linux]
     if: github.ref_name == 'develop' || github.ref_name == 'main' || github.base_ref == 'develop' || github.base_ref == 'main' || github.base_ref == 'master'
 
     steps:
