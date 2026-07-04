@@ -6,16 +6,17 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/AutoReparaAPI/bin/Debug/net10.0/AutoReparaAPI.dll",
+            "program": "${workspaceFolder}/app/AutoReparaAPI/bin/Debug/net10.0/AutoReparaAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/app",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ConnectionStrings__DefaultConnection": "Server=mysql;Port=3306;Database=Tests;User=root;Password=minha-senha;"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

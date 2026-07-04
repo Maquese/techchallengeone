@@ -1,10 +1,11 @@
 ﻿using Aplication.Services;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 using Infra;
 using Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Aplication.UseCases.Clientes;
 
 namespace IOC;
 
@@ -43,6 +44,8 @@ namespace IOC;
             services.AddTransient<ClienteAppServiceImp>();
             services.AddTransient<OrdemServicoAppServiceImp>();
             services.AddTransient<OrcamentoAppServiceImp>();
+
+            services.AddScoped<AdicionarClienteHandler>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 

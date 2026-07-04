@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates;
 using Domain.Entidades;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Repository;

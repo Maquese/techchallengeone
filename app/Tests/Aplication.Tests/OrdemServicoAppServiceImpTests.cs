@@ -10,7 +10,7 @@ using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 using Domain.VOs;
 
 namespace Aplication.Tests

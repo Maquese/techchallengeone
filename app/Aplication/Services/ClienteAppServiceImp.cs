@@ -2,8 +2,8 @@
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
-using Domain.Interfaces;
 using Domain.VOs;
+using Aplication.Interfaces;
 
 namespace Aplication.Services;
 
@@ -17,85 +17,6 @@ public class ClienteAppServiceImp
         _clienteRepository = clienteRepository;
         _veiculoRepository = veiculoRepository;
     }
-
-    #region Cliente
-    public async Task<int> CriarCliente(AddClienteModel clienteModel)
-    {
-        try
-        {
-            var cliente = new Cliente
-            (
-                new DocumentoVO(clienteModel.Documento),
-                clienteModel.Nome,
-                new EmailVO(clienteModel.Email),
-                new CelularVO(clienteModel.Celular)
-            );
-
-            await _clienteRepository.Adicionar(cliente);
-            return cliente.Id;
-        }
-        catch (DomainException ex)
-        {
-            throw ex;
-        }
-    }
-
-    public async Task AtualizarCliente(UpdateClienteModel clienteModel)
-    {
-        var cliente = await _clienteRepository.ObterPorId(clienteModel.Id);
-        if (cliente == null)
-        {
-            throw new DomainException("Cliente não encontrado");
-        }
-
-        try
-        {
-            cliente.AtualizarComDocumento(
-                new DocumentoVO(clienteModel.Documento),
-                clienteModel.Nome,
-                new EmailVO(clienteModel.Email),
-                new CelularVO(clienteModel.Celular)
-            );
-
-            await _clienteRepository.Atualizar(cliente);
-        }
-        catch (DomainException ex)
-        {
-            throw ex;
-        }
-    }
-
-    public async Task InativarCliente(int id)
-    {
-        var cliente = await _clienteRepository.ObterPorId(id);
-        if (cliente == null)
-        {
-            throw new DomainException("Cliente não encontrado");
-        }
-
-        await _clienteRepository.Inativar(cliente);
-    }
-
-
-    public async Task<UpdateClienteModel> VerificaCadastroCliente(string documento)
-    {
-        var cliente = await _clienteRepository.ObterPorDocumento(documento);
-        if (cliente == null)
-        {
-            return null;
-        }
-
-        return new UpdateClienteModel
-        {
-            Id = cliente.Id,
-            Documento = cliente.Documento.Numero,
-            Nome = cliente.Nome,
-            Email = cliente.Email.Endereco,
-            Celular = cliente.Celular.Numero
-        };
-    }
-
-    #endregion
     
     #region Veiculo
     public async Task AdicionarVeiculo(VeiculoModel veiculoModel)

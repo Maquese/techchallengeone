@@ -6,8 +6,9 @@ using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Exceptions;
 using Domain.Entidades;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 using Domain.VOs;
+using Aplication.UseCases.Clientes;
 
 namespace Aplication.Tests
 {
@@ -16,12 +17,20 @@ namespace Aplication.Tests
         private readonly Mock<ClienteRepository> _clienteRepoMock;
         private readonly Mock<VeiculoRepository> _veiculoRepoMock;
         private readonly ClienteAppServiceImp _service;
+        private readonly AdicionarClienteHandler _adicionarClienteHandler;
+
+        private readonly AtualizarClienteHandler _atualizarClienteHandler;
+        private readonly InativarClienteHandler _inativarClienteHandler;
+        private readonly VerificaCadastroClienteHandler _verificaCadastroClienteHandler;
 
         public ClienteAppServiceImpTests()
         {
             _clienteRepoMock = new Mock<ClienteRepository>();
             _veiculoRepoMock = new Mock<VeiculoRepository>();
-            _service = new ClienteAppServiceImp(_clienteRepoMock.Object, _veiculoRepoMock.Object);
+            _adicionarClienteHandler = new AdicionarClienteHandler(_clienteRepoMock.Object);
+            _atualizarClienteHandler = new AtualizarClienteHandler(_clienteRepoMock.Object);
+            _inativarClienteHandler = new InativarClienteHandler(_clienteRepoMock.Object);
+            _verificaCadastroClienteHandler = new VerificaCadastroClienteHandler(_clienteRepoMock.Object);
         }
 
         [Fact]
@@ -38,7 +47,7 @@ namespace Aplication.Tests
             _clienteRepoMock.Setup(r => r.Adicionar(It.IsAny<Cliente>()))
                 .Returns(Task.CompletedTask);
 
-            var id = await _service.CriarCliente(model);
+            var id = await _adicionarClienteHandler.Handle(model);
 
             _clienteRepoMock.Verify(r => r.Adicionar(It.IsAny<Cliente>()), Times.Once);
             Assert.True(id >= 0);
@@ -50,7 +59,7 @@ namespace Aplication.Tests
             var model = new UpdateClienteModel { Id = 1 };
             _clienteRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Cliente)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AtualizarCliente(model));
+            await Assert.ThrowsAsync<DomainException>(() => _atualizarClienteHandler.Handle(model));
         }
 
         [Fact]
@@ -74,7 +83,7 @@ namespace Aplication.Tests
                 Celular = "11988888888" 
             };
 
-            await _service.AtualizarCliente(model);
+            await _atualizarClienteHandler.Handle(model);
 
             _clienteRepoMock.Verify(r => r.Atualizar(It.IsAny<Cliente>()), Times.Once);
         }
@@ -85,7 +94,7 @@ namespace Aplication.Tests
         {
             _clienteRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Cliente)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.InativarCliente(1));
+            await Assert.ThrowsAsync<DomainException>(() => _inativarClienteHandler.Handle(1));
         }
 
         [Fact]
@@ -94,7 +103,7 @@ namespace Aplication.Tests
             _clienteRepoMock.Setup(r => r.ObterPorDocumento("11144477735"))
                 .ReturnsAsync((Cliente)null);
 
-            var result = await _service.VerificaCadastroCliente("11144477735");
+            var result = await _verificaCadastroClienteHandler.Handle("11144477735");
 
             Assert.Null(result); // ajuste: agora verificamos null
         }
@@ -112,7 +121,7 @@ namespace Aplication.Tests
             _clienteRepoMock.Setup(r => r.ObterPorDocumento("11144477735"))
                 .ReturnsAsync(cliente);
 
-            var result = await _service.VerificaCadastroCliente("11144477735");
+            var result = await _verificaCadastroClienteHandler.Handle("11144477735");
 
             Assert.NotNull(result); // ajuste: verificamos objeto
             Assert.Equal(cliente.Id, result.Id);

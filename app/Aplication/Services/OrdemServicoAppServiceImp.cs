@@ -3,7 +3,7 @@ using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 
 namespace Aplication.Services;
 

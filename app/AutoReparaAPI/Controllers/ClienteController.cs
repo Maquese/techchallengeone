@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Aplication.Services;
 using Aplication.Models;
+using Aplication.UseCases.Clientes;
+using Aplication;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -15,34 +17,37 @@ namespace AutoReparaAPI.Controllers
         {
             
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CriarCliente([FromServices]AdicionarClienteHandler adicionarClienteHandler, [FromBody]AddClienteModel cliente)
+        {
+            var id = await adicionarClienteHandler.Handle(cliente);
+            return Ok(id);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> AtualizarCliente([FromServices]AtualizarClienteHandler clienteAppService, [FromBody]UpdateClienteModel cliente)
+        {
+            await clienteAppService.Handle(cliente);
+            return Ok("Cliente atualizado com sucesso");
+        }
         
         [HttpGet]
-        public async Task<IActionResult> BuscarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string cpf)
+        public async Task<IActionResult> BuscarCliente([FromServices]VerificaCadastroClienteHandler verificaCadastroClienteHandler, [FromQuery]string cpf)
         {            
-            var cliente = await clienteAppService.VerificaCadastroCliente(cpf);
+            var cliente = await verificaCadastroClienteHandler.Handle(cpf);
             return Ok(cliente);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CriarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]AddClienteModel cliente)
-        {
-            var id = await clienteAppService.CriarCliente(cliente);
-            return Ok(id);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AtualizarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]UpdateClienteModel cliente)
-        {
-            await clienteAppService.AtualizarCliente(cliente);
-            return Ok("Cliente atualizado com sucesso");
-        }
-
         [HttpDelete]
-        public async Task<IActionResult> InativarCliente([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]int id)
+        public async Task<IActionResult> InativarCliente([FromServices]InativarClienteHandler inativarClienteHandler, [FromQuery]int id)
         {
-            await clienteAppService.InativarCliente(id);
+            await inativarClienteHandler.Handle(id);
             return Ok("Cliente inativado com sucesso");
         }
+
+
+      
 
         [HttpPost]
         public async Task<IActionResult> AdicionarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]VeiculoModel veiculo)

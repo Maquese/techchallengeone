@@ -7,7 +7,7 @@ using Aplication.Services;
 using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Exceptions;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 
 namespace Aplication.Tests
 {

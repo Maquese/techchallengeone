@@ -1,7 +1,6 @@
 ﻿using Domain.Aggregates;
 
-namespace Domain.Interfaces;
-
+namespace Aplication.Interfaces;
 public interface ItemEstoqueRepository : BaseRepository<ItemEstoque>
 {
     

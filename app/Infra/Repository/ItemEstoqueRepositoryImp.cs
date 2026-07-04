@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces;
+﻿using Aplication.Interfaces;
 using Domain.Aggregates;
 namespace Infra.Repository;
 

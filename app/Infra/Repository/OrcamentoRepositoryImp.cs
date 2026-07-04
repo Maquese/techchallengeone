@@ -1,5 +1,5 @@
 ﻿using Domain.Aggregates;
-using Domain.Interfaces;
+using Aplication.Interfaces;
 
 namespace Infra.Repository;
 

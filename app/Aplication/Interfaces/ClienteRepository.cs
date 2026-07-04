@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates;
 
-namespace Domain.Interfaces;
+namespace Aplication.Interfaces;
 
 public interface ClienteRepository : BaseRepository<Cliente>
 {
