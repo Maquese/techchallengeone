@@ -24,7 +24,7 @@ namespace AutoReparaAPI.Controllers
             var id = await adicionarClienteHandler.Handle(cliente);
             return Ok(id);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> AtualizarCliente([FromServices]AtualizarClienteHandler clienteAppService, [FromBody]UpdateClienteModel cliente)
         {
@@ -44,36 +44,33 @@ namespace AutoReparaAPI.Controllers
         {
             await inativarClienteHandler.Handle(id);
             return Ok("Cliente inativado com sucesso");
-        }
-
-
-      
+        }      
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]VeiculoModel veiculo)
+        public async Task<IActionResult> AdicionarVeiculo([FromServices]AdicionarVeiculoClienteHandler adicionarVeiculoClienteHandler, [FromBody]VeiculoModel veiculo)
         {
-            await clienteAppService.AdicionarVeiculo(veiculo);
+            await adicionarVeiculoClienteHandler.Handle(veiculo);
             return Ok("Veículo adicionado com sucesso");
         }
 
         [HttpGet]
-        public async Task<IActionResult> BuscarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]string placa)
+        public async Task<IActionResult> BuscarVeiculo([FromServices]VerificaCadastroClienteHandler verificaCadastroVeiculoHandler, [FromQuery]string placa)
         {
-            var veiculo = await clienteAppService.BuscarVeiculo(placa);
+            var veiculo = await verificaCadastroVeiculoHandler.Handle(placa);
             return Ok(veiculo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromBody]UpdateVeiculoModel veiculo)
+        public async Task<IActionResult> AtualizarVeiculo([FromServices]AtualizarVeiculoClienteHandler atualizarVeiculoClienteHandler, [FromBody]UpdateVeiculoModel veiculo)
         {
-            await clienteAppService.AtualizarVeiculo(veiculo);
+            await atualizarVeiculoClienteHandler.Handle(veiculo);
             return Ok("Veículo atualizado com sucesso");
         }
 
         [HttpDelete]
-        public async Task<IActionResult> InativarVeiculo([FromServices]ClienteAppServiceImp clienteAppService, [FromQuery]int id)
+        public async Task<IActionResult> InativarVeiculo([FromServices]InativarVeiculoClienteHandler inativarVeiculoClienteHandler, [FromQuery]int id)
         {
-            await clienteAppService.InativarVeiculo(id);
+            await inativarVeiculoClienteHandler.Handle(id);
             return Ok("Veículo inativado com sucesso");
         }
     }

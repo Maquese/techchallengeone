@@ -16,12 +16,15 @@ namespace Aplication.Tests
     {
         private readonly Mock<ClienteRepository> _clienteRepoMock;
         private readonly Mock<VeiculoRepository> _veiculoRepoMock;
-        private readonly ClienteAppServiceImp _service;
         private readonly AdicionarClienteHandler _adicionarClienteHandler;
 
         private readonly AtualizarClienteHandler _atualizarClienteHandler;
         private readonly InativarClienteHandler _inativarClienteHandler;
         private readonly VerificaCadastroClienteHandler _verificaCadastroClienteHandler;
+        private readonly AdicionarVeiculoClienteHandler _adicionarVeiculoHandler;
+        private readonly AtualizarVeiculoClienteHandler _atualizarVeiculoHandler;
+        private readonly InativarVeiculoClienteHandler _inativarVeiculoHandler;
+        private readonly BuscarVeiculoPlacaClienteHandler _buscarVeiculoPlacaHandler;
 
         public ClienteAppServiceImpTests()
         {
@@ -31,6 +34,10 @@ namespace Aplication.Tests
             _atualizarClienteHandler = new AtualizarClienteHandler(_clienteRepoMock.Object);
             _inativarClienteHandler = new InativarClienteHandler(_clienteRepoMock.Object);
             _verificaCadastroClienteHandler = new VerificaCadastroClienteHandler(_clienteRepoMock.Object);
+            _adicionarVeiculoHandler = new AdicionarVeiculoClienteHandler(_veiculoRepoMock.Object, _clienteRepoMock.Object);
+            _atualizarVeiculoHandler = new AtualizarVeiculoClienteHandler(_veiculoRepoMock.Object);
+            _inativarVeiculoHandler = new InativarVeiculoClienteHandler(_veiculoRepoMock.Object);
+            _buscarVeiculoPlacaHandler = new BuscarVeiculoPlacaClienteHandler(_veiculoRepoMock.Object);
         }
 
         [Fact]
@@ -146,7 +153,7 @@ namespace Aplication.Tests
             _veiculoRepoMock.Setup(r => r.Adicionar(It.IsAny<Veiculo>()))
                 .Returns(Task.CompletedTask);
 
-            await _service.AdicionarVeiculo(model);
+            await _adicionarVeiculoHandler.Handle(model);
 
             _veiculoRepoMock.Verify(r => r.Adicionar(It.IsAny<Veiculo>()), Times.Once);
         }
@@ -157,7 +164,7 @@ namespace Aplication.Tests
             _veiculoRepoMock.Setup(r => r.BuscarPorPlaca("ABC-1234"))
                 .ReturnsAsync((Veiculo)null);
 
-            var result = await _service.BuscarVeiculo("ABC-1234");
+            var result = await _buscarVeiculoPlacaHandler.Handle("ABC-1234");
 
             Assert.Null(result);
         }
@@ -175,7 +182,7 @@ namespace Aplication.Tests
 
             _veiculoRepoMock.Setup(r => r.BuscarPorPlaca("ABC-1234")).ReturnsAsync(veiculo);
 
-            var result = await _service.BuscarVeiculo("ABC-1234");
+            var result = await _buscarVeiculoPlacaHandler.Handle("ABC-1234");
 
             Assert.NotNull(result);
             Assert.Equal("ABC-1234", result.Placa);
@@ -186,7 +193,7 @@ namespace Aplication.Tests
         {
             _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Veiculo)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.InativarVeiculo(1));
+            await Assert.ThrowsAsync<DomainException>(() => _inativarVeiculoHandler.Handle(1));
         }
 
         [Fact]
@@ -203,7 +210,7 @@ namespace Aplication.Tests
             _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(veiculo);
 
             var model = new UpdateVeiculoModel { Id = 1, Modelo = "Novo", Marca = "Ford", Ano = 2022, Placa = "XYZ-9876" };
-            await _service.AtualizarVeiculo(model);
+            await _atualizarVeiculoHandler.Handle(model);
 
             _veiculoRepoMock.Verify(r => r.Atualizar(It.IsAny<Veiculo>()), Times.Once);
         }

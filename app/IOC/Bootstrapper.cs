@@ -41,11 +41,17 @@ namespace IOC;
             services.AddTransient<OrcamentoRepository, OrcamentoRepositoryImp>();
 
             services.AddTransient<ItemEstoqueAppServiceImp>();
-            services.AddTransient<ClienteAppServiceImp>();
             services.AddTransient<OrdemServicoAppServiceImp>();
             services.AddTransient<OrcamentoAppServiceImp>();
 
             services.AddScoped<AdicionarClienteHandler>();
+            services.AddScoped<AdicionarVeiculoClienteHandler>();            
+            services.AddScoped<AtualizarClienteHandler>();
+            services.AddScoped<AtualizarVeiculoClienteHandler>();
+            services.AddScoped<BuscarVeiculoPlacaClienteHandler>();
+            services.AddScoped<InativarClienteHandler>();
+            services.AddScoped<InativarVeiculoClienteHandler>();
+            services.AddScoped<VerificaCadastroClienteHandler>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 
