@@ -3,6 +3,8 @@ using Aplication.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Aplication;
+using Aplication.UseCases.ItensEstoque;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -17,44 +19,44 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromBody] AddItemEstoqueModel itemEstoqueModel)
+        public async Task<IActionResult> AdicionarItemEstoque([FromServices]AdicionarItemEstoqueHandler itemEstoqueAppService, [FromBody] AddItemEstoqueModel itemEstoqueModel)
         {
-            var id = await itemEstoqueAppService.AdicionarItemEstoque(itemEstoqueModel);
+            var id = await itemEstoqueAppService.Handle(itemEstoqueModel);
             return Ok($"Item de estoque adicionado com sucesso. ID: {id}");
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarItensEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService)
+        public async Task<IActionResult> ListarItensEstoque([FromServices]ListarItemEstoqueHandler itemEstoqueAppService)
         {
-            var itensEstoque = await itemEstoqueAppService.ListarItensEstoque();
+            var itensEstoque = await itemEstoqueAppService.Handle();
             return Ok(itensEstoque);
         }
 
          [HttpGet]
-        public async Task<IActionResult> ObterItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService,[FromQuery] int id)
+        public async Task<IActionResult> ObterItemEstoque([FromServices]ObterItemEstoqueHandler itemEstoqueAppService,[FromQuery] int id)
         {
-            var itemEstoque = await itemEstoqueAppService.ObterItemEstoque(id);
+            var itemEstoque = await itemEstoqueAppService.Handle(id);
             return Ok(itemEstoque);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromBody] UpdateItemEstoqueModel itemEstoqueModel)
+        public async Task<IActionResult> AtualizarItemEstoque([FromServices]AtualizarItemEstoqueHandler itemEstoqueAppService, [FromBody] UpdateItemEstoqueModel itemEstoqueModel)
         {
-            await itemEstoqueAppService.AtualizarItemEstoque(itemEstoqueModel);
+            await itemEstoqueAppService.Handle(itemEstoqueModel);
             return Ok("Item de estoque atualizado com sucesso.");
         }
 
         [HttpDelete]
-        public async Task<IActionResult> InativarItemEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromQuery] int id)
+        public async Task<IActionResult> InativarItemEstoque([FromServices]InativarItemEstoqueHandler itemEstoqueAppService, [FromQuery] int id)
         {
-            await itemEstoqueAppService.InativarItemEstoque(id);
+            await itemEstoqueAppService.Handle(id);
             return Ok("Item de estoque inativado com sucesso.");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarQuantidadeEstoque([FromServices]ItemEstoqueAppServiceImp itemEstoqueAppService, [FromBody] AddQuantidadeItemEstoqueModel adicionarQuantidadeModel)
+        public async Task<IActionResult> AdicionarQuantidadeEstoque([FromServices]AdicionarQtdEstoqueItemEstoqueHandler itemEstoqueAppService, [FromBody] AddQuantidadeItemEstoqueModel adicionarQuantidadeModel)
         {
-            await itemEstoqueAppService.AdicionarQuantidadeEstoque(adicionarQuantidadeModel);
+            await itemEstoqueAppService.Handle(adicionarQuantidadeModel);
             return Ok("Quantidade adicionada ao estoque com sucesso.");
         }
     }
