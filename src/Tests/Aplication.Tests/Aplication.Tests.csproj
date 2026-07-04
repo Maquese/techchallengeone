@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Aplication\Aplication.csproj" />
+    <ProjectReference Include="..\..\Application\Application.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

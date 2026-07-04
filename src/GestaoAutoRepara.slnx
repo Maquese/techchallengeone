@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Tests/" />
-  <Project Path="Aplication/Aplication.csproj" />
+  <Project Path="Application/Application.csproj" />
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infra/Infra.csproj" />
   <Project Path="IOC/IOC.csproj" />

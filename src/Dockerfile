@@ -3,7 +3,7 @@ WORKDIR /src
 
 # Copia todos os csproj
 COPY ["AutoReparaAPI/AutoReparaAPI.csproj", "AutoReparaAPI/"]
-COPY ["Aplication/Aplication.csproj", "Aplication/"]
+COPY ["Application/Application.csproj", "Application/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["Infra/Infra.csproj", "Infra/"]
 COPY ["IOC/IOC.csproj", "IOC/"]
