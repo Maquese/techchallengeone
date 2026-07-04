@@ -49,23 +49,6 @@ jobs:
         working-directory: app
         run: docker build -t autorepara-api:local .
 
-      - name: Preparar cluster local
-        run: |
-          if ! command -v kind >/dev/null 2>&1; then
-            curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
-            chmod +x ./kind
-            sudo mv ./kind /usr/local/bin/kind
-          fi
-          if ! kind get clusters | grep -q '^kind$'; then
-            kind create cluster --name kind
-          fi
-          kubectl cluster-info
-
-      - name: Carregar imagem no cluster local
-        run: |
-          kind load docker-image autorepara-api:local --name kind
-
-
       - name: Aguardar deploy do cluster
         run: |
           kubectl rollout status deployment/mysql --timeout=300s
