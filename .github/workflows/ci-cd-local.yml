@@ -6,9 +6,9 @@ permissions:
 
 on:
   push:
-    branches: [ 'feature/**' ]
+    branches: [ 'feature/**', 'develop', 'main' ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ develop, main, master ]
   workflow_dispatch:
 
 jobs:
@@ -38,8 +38,8 @@ jobs:
 
   deploy-k8s-local:
     needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'master')
+    runs-on: [self-hosted, linux, wsl]
+    if: github.ref_name == 'develop' || github.ref_name == 'main' || github.base_ref == 'develop' || github.base_ref == 'main' || github.base_ref == 'master'
 
     steps:
       - name: Checkout do código
