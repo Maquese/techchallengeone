@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Aplication.UseCases.Clientes;
+using Aplication.UseCases.Orcamentos;
 
 namespace IOC;
 
@@ -40,8 +41,10 @@ namespace IOC;
             services.AddTransient<ServicoRepository, ServicoRepositoryImp>();
             services.AddTransient<OrcamentoRepository, OrcamentoRepositoryImp>();
 
-            services.AddTransient<OrcamentoAppServiceImp>();
-
+            services.AddScoped<AdicionarOrcamentoHandler>();
+            services.AddScoped<AprovarOrcamentoHandler>();
+            services.AddScoped<PagarOrcamentoHandler>();
+            services.AddScoped<ListarOrcamentoHandler>();
             services.AddScoped<AdicionarClienteHandler>();
             services.AddScoped<AdicionarVeiculoClienteHandler>();            
             services.AddScoped<AtualizarClienteHandler>();

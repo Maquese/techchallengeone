@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/app/AutoReparaAPI/bin/Debug/net10.0/AutoReparaAPI.dll",
+            "program": "${workspaceFolder}/src/AutoReparaAPI/bin/Debug/net10.0/AutoReparaAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/app",
+            "cwd": "${workspaceFolder}/src",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

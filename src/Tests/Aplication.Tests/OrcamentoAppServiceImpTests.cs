@@ -10,6 +10,7 @@ using Aplication.Interfaces;
 using Domain.Entidades;
 using Domain.Exceptions;
 using System.Reflection;
+using Aplication.UseCases.Orcamentos;
 
 namespace Aplication.Tests
 {
@@ -17,13 +18,17 @@ namespace Aplication.Tests
     {
         private readonly Mock<OrcamentoRepository> _orcamentoRepoMock;
         private readonly Mock<OrdemServicoRepository> _ordemServicoRepoMock;
-        private readonly OrcamentoAppServiceImp _service;
+        private readonly AdicionarOrcamentoHandler _adicionarOrcamentoHandler;
+        private readonly AprovarOrcamentoHandler _aprovarOrcamentoHandler;
+        private readonly PagarOrcamentoHandler _pagarOrcamentoHandler;
 
         public OrcamentoAppServiceImpTests()
         {
             _orcamentoRepoMock = new Mock<OrcamentoRepository>();
             _ordemServicoRepoMock = new Mock<OrdemServicoRepository>();
-            _service = new OrcamentoAppServiceImp(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
+            _adicionarOrcamentoHandler = new AdicionarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
+            _aprovarOrcamentoHandler = new AprovarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
+            _pagarOrcamentoHandler = new PagarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
         }
 
         [Fact]
@@ -32,7 +37,7 @@ namespace Aplication.Tests
             var model = new AddOrcamentoModel { OrdemServicoId = 1 };
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AddOrcamento(model));
+            await Assert.ThrowsAsync<DomainException>(() => _adicionarOrcamentoHandler.Handle(model));
         }
 
         [Fact]
@@ -45,7 +50,7 @@ namespace Aplication.Tests
             _orcamentoRepoMock.Setup(r => r.Adicionar(It.IsAny<Orcamento>()))
                 .Returns(Task.CompletedTask);
 
-            var id = await _service.AddOrcamento(model);
+            var id = await _adicionarOrcamentoHandler.Handle(model);
 
             _orcamentoRepoMock.Verify(r => r.Adicionar(It.IsAny<Orcamento>()), Times.Once);
             Assert.True(id >= 0);
@@ -56,7 +61,7 @@ namespace Aplication.Tests
         {
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Orcamento?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _aprovarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -66,7 +71,7 @@ namespace Aplication.Tests
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _aprovarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -78,7 +83,7 @@ namespace Aplication.Tests
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _aprovarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -92,7 +97,7 @@ namespace Aplication.Tests
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
             _orcamentoRepoMock.Setup(r => r.Atualizar(orcamento)).Returns(Task.CompletedTask);
 
-            await _service.AprovarOrcamento(1);
+            await _aprovarOrcamentoHandler.Handle(1);
 
             Assert.True(orcamento.OrcamentoAprovado);
             Assert.Equal("Aprovada", ordemServico.Status);
@@ -104,7 +109,7 @@ namespace Aplication.Tests
         {
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Orcamento?)null);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _pagarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -119,7 +124,7 @@ namespace Aplication.Tests
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
             _orcamentoRepoMock.Setup(r => r.Atualizar(orcamento)).Returns(Task.CompletedTask);
 
-            await _service.PagarOrcamento(1);
+            await _pagarOrcamentoHandler.Handle(1);
 
             Assert.True(orcamento.OrcamentoPago);
             Assert.Equal("Entregue", ordemServico.Status);
@@ -144,7 +149,7 @@ namespace Aplication.Tests
 
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _aprovarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -156,7 +161,7 @@ namespace Aplication.Tests
 
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.AprovarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _aprovarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -168,7 +173,7 @@ namespace Aplication.Tests
 
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _pagarOrcamentoHandler.Handle(1));
         }
 
         [Fact]
@@ -182,7 +187,7 @@ namespace Aplication.Tests
             _orcamentoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(orcamento);
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
 
-            await Assert.ThrowsAsync<DomainException>(() => _service.PagarOrcamento(1));
+            await Assert.ThrowsAsync<DomainException>(() => _pagarOrcamentoHandler.Handle(1));
         }
 
     }
