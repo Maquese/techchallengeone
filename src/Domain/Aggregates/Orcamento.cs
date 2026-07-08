@@ -35,6 +35,13 @@ public class Orcamento : IEntity
         DataDecisaoClienteAprovacao = DateTime.Now;
     }
 
+     public void NegarOrcamento()
+    {
+        OrcamentoAprovado = false;
+        DataDecisaoClienteAprovacao = DateTime.Now;
+    }
+
+
     public void ReprovarOrcamento()
     {
         OrcamentoAprovado = false;

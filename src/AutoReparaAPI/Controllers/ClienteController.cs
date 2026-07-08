@@ -5,6 +5,7 @@ using Aplication.Services;
 using Aplication.Models;
 using Aplication.UseCases.Clientes;
 using Aplication;
+using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -19,7 +20,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarCliente([FromServices]AdicionarClienteHandler adicionarClienteHandler, [FromBody]AddClienteModel cliente)
+        public async Task<IActionResult> CriarCliente([FromServices]AdicionarClienteHandler adicionarClienteHandler, [FromBody]AddClienteRequest cliente)
         {
             var id = await adicionarClienteHandler.Handle(cliente);
             return Ok(id);
@@ -47,7 +48,7 @@ namespace AutoReparaAPI.Controllers
         }      
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarVeiculo([FromServices]AdicionarVeiculoClienteHandler adicionarVeiculoClienteHandler, [FromBody]VeiculoModel veiculo)
+        public async Task<IActionResult> AdicionarVeiculo([FromServices]AdicionarVeiculoClienteHandler adicionarVeiculoClienteHandler, [FromBody]AddVeiculoRequest veiculo)
         {
             await adicionarVeiculoClienteHandler.Handle(veiculo);
             return Ok("Veículo adicionado com sucesso");

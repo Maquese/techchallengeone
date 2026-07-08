@@ -13,6 +13,7 @@ using Domain.Exceptions;
 using Aplication.Interfaces;
 using Domain.VOs;
 using Aplication.UseCases.OrdensServico;
+using Application.UseCases.OrdensServico;
 
 namespace Aplication.Tests
 {
@@ -108,6 +109,15 @@ namespace Aplication.Tests
             _veiculoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((Veiculo?)null);
 
             await Assert.ThrowsAsync<DomainException>(() => _adicionarOrdemServicoHandler.Handle(model));
+        }
+
+        [Fact]
+        public async Task ConsultarStatusOrdemServico_OrdemNaoEncontrada_DeveLancarDomainException()
+        {
+            var handler = new ConsutaStatusOSHandler(_ordemRepoMock.Object);
+            _ordemRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
+
+            await Assert.ThrowsAsync<DomainException>(() => handler.Handle(1));
         }
 
         [Fact]

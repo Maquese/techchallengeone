@@ -52,6 +52,11 @@ public class OrdemServico : IEntity
     {
         Status = "Aprovada";
     }
+    
+    public void OSNegada()
+    {
+        Status = "Negada";
+    }
 
     public void EmExecucao(string mecanico)
     {

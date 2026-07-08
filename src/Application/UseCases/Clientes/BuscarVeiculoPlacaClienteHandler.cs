@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Aplication.Models;
+using Application.Models.Requests;
 
 namespace Aplication.UseCases.Clientes;
 
@@ -12,7 +13,7 @@ public class BuscarVeiculoPlacaClienteHandler
         _veiculoRepository = veiculoRepository; 
     }
 
-    public async Task<VeiculoModel> Handle(string placa)
+    public async Task<AddVeiculoRequest> Handle(string placa)
     {
         var veiculo = await _veiculoRepository.BuscarPorPlaca(placa);
         if (veiculo == null)
@@ -20,7 +21,7 @@ public class BuscarVeiculoPlacaClienteHandler
             return null;
         }
 
-        return new VeiculoModel
+        return new AddVeiculoRequest
         {
             Id = veiculo.Id,
             Placa = veiculo.Placa.Valor,

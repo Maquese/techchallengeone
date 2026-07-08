@@ -1,5 +1,5 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Entidades;
 using Domain.VOs;
 
@@ -15,15 +15,15 @@ public class AdicionarVeiculoClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-     public async Task Handle(VeiculoModel veiculoModel)
+     public async Task Handle(AddVeiculoRequest veiculoRequest)
     {
         var veiculo = new Veiculo
         (
-            new PlacaVO(veiculoModel.Placa),
-            veiculoModel.Modelo,
-            veiculoModel.Marca,
-            veiculoModel.Ano,
-            veiculoModel.ClienteId
+            new PlacaVO(veiculoRequest.Placa),
+            veiculoRequest.Modelo,
+            veiculoRequest.Marca,
+            veiculoRequest.Ano,
+            veiculoRequest.ClienteId
         );
 
         await _veiculoRepository.Adicionar(veiculo);

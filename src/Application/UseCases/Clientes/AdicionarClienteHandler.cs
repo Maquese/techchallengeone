@@ -1,8 +1,7 @@
 ﻿
 using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Aggregates;
-using Domain.Entidades;
 using Domain.Exceptions;
 using Domain.VOs;
 
@@ -18,16 +17,16 @@ public class AdicionarClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-    public async Task<int> Handle(AddClienteModel clienteModel)
+    public async Task<int> Handle(AddClienteRequest clienteRequest)
     {
         try
         {
             var cliente = new Cliente
             (
-                new DocumentoVO(clienteModel.Documento),
-                clienteModel.Nome,
-                new EmailVO(clienteModel.Email),
-                new CelularVO(clienteModel.Celular)
+                new DocumentoVO(clienteRequest.Documento),
+                clienteRequest.Nome,
+                new EmailVO(clienteRequest.Email),
+                new CelularVO(clienteRequest.Celular)
             );
 
             await _clienteRepository.Adicionar(cliente);

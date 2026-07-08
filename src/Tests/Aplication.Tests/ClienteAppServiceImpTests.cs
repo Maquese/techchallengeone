@@ -9,6 +9,7 @@ using Domain.Entidades;
 using Aplication.Interfaces;
 using Domain.VOs;
 using Aplication.UseCases.Clientes;
+using Application.Models.Requests;
 
 namespace Aplication.Tests
 {
@@ -43,7 +44,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task CriarCliente_DeveAdicionarClienteERetornarId()
         {
-            var model = new AddClienteModel
+            var model = new AddClienteRequest
             {
                 Documento = "11144477735",
                 Nome = "João",
@@ -141,7 +142,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AdicionarVeiculo_DeveAdicionarVeiculo()
         {
-            var model = new VeiculoModel
+            var model = new AddVeiculoRequest
             {
                 Placa = "ABC-1234",
                 Modelo = "Civic",

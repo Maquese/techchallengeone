@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Aplication.UseCases.Clientes;
 using Aplication.UseCases.Orcamentos;
+using Application.UseCases.OrdensServico;
+using Application.UseCases.Orcamentos;
 
 namespace IOC;
 
@@ -53,6 +55,10 @@ namespace IOC;
             services.AddScoped<InativarClienteHandler>();
             services.AddScoped<InativarVeiculoClienteHandler>();
             services.AddScoped<VerificaCadastroClienteHandler>();
+
+            services.AddScoped<ConsutaStatusOSHandler>();
+            services.AddScoped<NegarOrcamentoHandler>();
+            services.AddScoped<ListarOrdensServicoOrdenadoHandler>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 

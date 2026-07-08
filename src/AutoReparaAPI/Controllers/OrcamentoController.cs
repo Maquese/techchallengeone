@@ -31,6 +31,13 @@ namespace AutoReparaAPI.Controllers
             return Ok("Orçamento aprovado com sucesso");
         }
 
+            [HttpPost]
+        public async Task<IActionResult> NegarOrcamento([FromServices] AprovarOrcamentoHandler aprovarOrcamentoHandler, [FromBody] int orcamentoId)
+        {
+            await aprovarOrcamentoHandler.Handle(orcamentoId);
+            return Ok("Orçamento negado com sucesso");
+        }
+
         [HttpPost]
         public async Task<IActionResult> PagamentoEfetuado([FromServices] PagarOrcamentoHandler pagarOrcamentoHandler, [FromBody] int orcamentoId)
         {

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Aplication.Models;
 using Aplication.Services;
 using Aplication.UseCases.OrdensServico;
+using Application.Models.Requests;
+using Application.UseCases.OrdensServico;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -66,6 +68,13 @@ namespace AutoReparaAPI.Controllers
             return Ok(tempoMedio);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ListarOrdensServicoPorStatus([FromServices]ListarOrdensServicoOrdenadoHandler listarOrdensServicoPorStatusHandler)
+        {
+            var ordensServico = await listarOrdensServicoPorStatusHandler.Handle();
+            return Ok(ordensServico);
+        }
+
         
 
 
@@ -102,6 +111,13 @@ namespace AutoReparaAPI.Controllers
         {
             var servicos = await listarServicosAtivosHandler.Handle();
             return Ok(servicos);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultaStatusOrdemServico([FromServices]ConsutaStatusOSHandler consultaStatusOSHandler, [FromQuery]int ordemServicoId)
+        {
+            var status = await consultaStatusOSHandler.Handle(ordemServicoId);
+            return Ok(status);
         }
     }
 }
