@@ -23,6 +23,9 @@ public class AtualizarVeiculoClienteHandler
             throw new DomainException("Veículo não encontrado");
         }
 
+        if(!veiculo.EstaAtivo())
+            throw new Exception("Veiculo inativo");
+
         veiculo.Atualizar(new PlacaVO(veiculoModel.Placa), veiculoModel.Modelo, veiculoModel.Marca, veiculoModel.Ano);
 
         await _veiculoRepository.Atualizar(veiculo);

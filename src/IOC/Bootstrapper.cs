@@ -56,12 +56,13 @@ namespace IOC;
             services.AddScoped<InativarClienteHandler>();
             services.AddScoped<InativarVeiculoClienteHandler>();
             services.AddScoped<VerificaCadastroClienteHandler>();
+            services.AddScoped<AdicionarOrdemServicoHandler>();
 
             services.AddScoped<ConsutaStatusOSHandler>();
             services.AddScoped<NegarOrcamentoHandler>();
             services.AddScoped<ListarOrdensServicoOrdenadoHandler>();
 
-            services.AddScoped<OrdemServicoAppController>();
+            services.AddTransient<OrdemServicoAppController>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 

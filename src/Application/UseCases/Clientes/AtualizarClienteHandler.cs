@@ -22,6 +22,10 @@ public class AtualizarClienteHandler
         {
             throw new DomainException("Cliente não encontrado");
         }
+
+        if(!cliente.EstaAtivo())
+            throw new Exception("Cliente inativo");
+
         try
         {
             cliente.AtualizarComDocumento(

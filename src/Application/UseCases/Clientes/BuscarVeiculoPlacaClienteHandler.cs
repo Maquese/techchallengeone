@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 
 namespace Aplication.UseCases.Clientes;
 
@@ -12,22 +13,29 @@ public class BuscarVeiculoPlacaClienteHandler
         _veiculoRepository = veiculoRepository; 
     }
 
-    public async Task<AddVeiculoRequest> Handle(string placa)
+    public async Task<BaseResponse> Handle(string placa)
     {
         var veiculo = await _veiculoRepository.BuscarPorPlaca(placa);
         if (veiculo == null)
         {
-            return null;
+            throw new Exception("Veiculo não encontrado");
         }
 
-        return new AddVeiculoRequest
+        if(!veiculo.EstaAtivo())
+            throw new Exception("Veiculo inativo");
+
+        return new BaseResponse
         {
-            Id = veiculo.Id,
-            Placa = veiculo.Placa.Valor,
-            Modelo = veiculo.Modelo,
-            Marca = veiculo.Marca,
-            Ano = veiculo.Ano,
-            ClienteId = veiculo.ClienteId
+            Message = "Veiculo encontrado com sucesso",
+            Success = true,
+            Data = new
+            {
+                Id = veiculo.Id,
+                Placa = veiculo.Placa.Valor,
+                Modelo = veiculo.Modelo,
+                Marca = veiculo.Marca,
+                Ano = veiculo.Ano
+            }
         };
     }
 }

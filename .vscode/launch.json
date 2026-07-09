@@ -16,7 +16,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ConnectionStrings__DefaultConnection": "Server=mysql;Port=3306;Database=Tests;User=root;Password=minha-senha;"
+                "ConnectionStrings__DefaultConnection": "Server=localhost;Port=3306;Database=Tests;User=root;Password=example;"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

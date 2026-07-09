@@ -39,6 +39,8 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
 
         if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Celular"))
             return new DomainException("Celular já cadastrado");
+        if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Placa"))
+            return new DomainException("Placa já cadastrado");
 
         if (mensagem.Contains("Duplicate entry"))
             return new DomainException("Dados duplicados no banco de dados");

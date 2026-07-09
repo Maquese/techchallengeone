@@ -28,7 +28,7 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro inesperado capturado pelo middleware.");
-            await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, "Ocorreu um erro inesperado. Tente novamente mais tarde.", null);
+            await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, ex.Message, null);
         }
     }
 

@@ -18,6 +18,15 @@ public class AdicionarVeiculoClienteHandler
 
      public async Task<BaseResponse> Handle(AddVeiculoRequest veiculoRequest)
     {
+        var cliente  = await _clienteRepository.ObterPorId(veiculoRequest.ClienteId);
+
+        if(cliente == null)
+            throw new Exception("Cliente não encontrado");
+
+        if (!cliente.EstaAtivo())
+            throw new Exception ("Cliente inativo");
+
+
         var veiculo = new Veiculo
         (
             new PlacaVO(veiculoRequest.Placa),

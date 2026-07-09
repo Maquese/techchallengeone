@@ -1,4 +1,5 @@
 ﻿using Aplication.Interfaces;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Aplication.UseCases.Clientes;
@@ -12,7 +13,7 @@ public class InativarVeiculoClienteHandler
         _veiculoRepository = veiculoRepository;
     }   
 
-    public async Task Handle(int id)
+    public async Task<BaseResponse> Handle(int id)
     {
         var veiculo = await _veiculoRepository.ObterPorId(id);
         if (veiculo == null)
@@ -21,5 +22,11 @@ public class InativarVeiculoClienteHandler
         }
 
         await _veiculoRepository.Inativar(veiculo);
+        return new BaseResponse
+        {
+            Message = "Veiculo inativado com sucesso",
+            Success = true,
+            Data = veiculo.Id
+        };
     }
 }

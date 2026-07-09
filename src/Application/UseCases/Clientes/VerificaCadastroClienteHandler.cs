@@ -17,12 +17,17 @@ public class VerificaCadastroClienteHandler
         var cliente = await _clienteRepository.ObterPorDocumento(documento);
         if (cliente == null)
         {
-            return null;
+            throw new Exception("Cliente não encontrado");
+        }
+
+        if(!cliente.EstaAtivo())
+        {
+            throw new Exception("Cliente inativo");
         }
 
         return new BaseResponse
         {
-            Message = "Atualizado com sucesso",
+            Message = "Encontrado com sucesso",
             Success = true,
             Data = cliente.Id
         };
