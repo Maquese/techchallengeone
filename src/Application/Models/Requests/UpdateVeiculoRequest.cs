@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class UpdateVeiculoModel
+public class UpdateVeiculoRequest
 {
     public int Id { get;  set; }
     public string Placa { get; set; }

@@ -1,5 +1,4 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
 using Application.Models.Requests;
 
 namespace Aplication.UseCases.Clientes;

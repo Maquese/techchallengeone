@@ -9,6 +9,7 @@ using Aplication.UseCases.Clientes;
 using Aplication.UseCases.Orcamentos;
 using Application.UseCases.OrdensServico;
 using Application.UseCases.Orcamentos;
+using Application.Controllers;
 
 namespace IOC;
 
@@ -59,6 +60,8 @@ namespace IOC;
             services.AddScoped<ConsutaStatusOSHandler>();
             services.AddScoped<NegarOrcamentoHandler>();
             services.AddScoped<ListarOrdensServicoOrdenadoHandler>();
+
+            services.AddScoped<OrdemServicoAppController>();
 
             // services.AddTransient<RotaRepository, RotaRepositoryImp>();
 

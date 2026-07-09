@@ -1,10 +1,10 @@
-using Aplication.Models;
-using Aplication.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Aplication;
 using Aplication.UseCases.ItensEstoque;
+using Application.Models.Requests;
+using Application.UseCases.ItensEstoque;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -19,7 +19,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarItemEstoque([FromServices]AdicionarItemEstoqueHandler itemEstoqueAppService, [FromBody] AddItemEstoqueModel itemEstoqueModel)
+        public async Task<IActionResult> AdicionarItemEstoque([FromServices]AdicionarItemEstoqueHandler itemEstoqueAppService, [FromBody] AddItemEstoqueRequest itemEstoqueModel)
         {
             var id = await itemEstoqueAppService.Handle(itemEstoqueModel);
             return Ok($"Item de estoque adicionado com sucesso. ID: {id}");
@@ -40,7 +40,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarItemEstoque([FromServices]AtualizarItemEstoqueHandler itemEstoqueAppService, [FromBody] UpdateItemEstoqueModel itemEstoqueModel)
+        public async Task<IActionResult> AtualizarItemEstoque([FromServices]AtualizarItemEstoqueHandler itemEstoqueAppService, [FromBody] UpdateItemEstoqueRequest itemEstoqueModel)
         {
             await itemEstoqueAppService.Handle(itemEstoqueModel);
             return Ok("Item de estoque atualizado com sucesso.");
@@ -54,7 +54,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarQuantidadeEstoque([FromServices]AdicionarQtdEstoqueItemEstoqueHandler itemEstoqueAppService, [FromBody] AddQuantidadeItemEstoqueModel adicionarQuantidadeModel)
+        public async Task<IActionResult> AdicionarQuantidadeEstoque([FromServices]AdicionarQtdEstoqueItemEstoqueHandler itemEstoqueAppService, [FromBody] AddQuantidadeItemEstoqueRequest adicionarQuantidadeModel)
         {
             await itemEstoqueAppService.Handle(adicionarQuantidadeModel);
             return Ok("Quantidade adicionada ao estoque com sucesso.");

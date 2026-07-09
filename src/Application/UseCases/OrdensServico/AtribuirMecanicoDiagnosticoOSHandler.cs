@@ -1,8 +1,8 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class AtribuirMecanicoDiagnosticoOSHandler
 {
@@ -13,7 +13,7 @@ public class AtribuirMecanicoDiagnosticoOSHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
 
-    public async Task<string> Handle(AtribuiMecanicoModel atribuiEmDiagnostico)
+    public async Task<string> Handle(AtribuiMecanicoRequest atribuiEmDiagnostico)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmDiagnostico.OrdemServicoId);
         if (ordemServico == null)

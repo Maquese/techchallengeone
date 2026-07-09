@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Responses;
 
-public class ListOrcamentoModel
+public class ListOrcamentoResponse
 {
     public int OrdemServicoId { get; set; }
     public decimal Valor { get; set; }

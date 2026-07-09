@@ -1,5 +1,5 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Responses;
 
 namespace Aplication.UseCases.Clientes;
 
@@ -12,7 +12,7 @@ public class VerificaCadastroClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-    public async Task<UpdateClienteModel> Handle(string documento)
+    public async Task<BaseResponse> Handle(string documento)
     {
         var cliente = await _clienteRepository.ObterPorDocumento(documento);
         if (cliente == null)
@@ -20,13 +20,11 @@ public class VerificaCadastroClienteHandler
             return null;
         }
 
-        return new UpdateClienteModel
+        return new BaseResponse
         {
-            Id = cliente.Id,
-            Documento = cliente.Documento.Numero,
-            Nome = cliente.Nome,
-            Email = cliente.Email.Endereco,
-            Celular = cliente.Celular.Numero
+            Message = "Atualizado com sucesso",
+            Success = true,
+            Data = cliente.Id
         };
     }
 }

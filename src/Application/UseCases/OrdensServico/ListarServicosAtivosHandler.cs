@@ -1,5 +1,5 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Responses;
 
 namespace Aplication.UseCases.OrdensServico;
 
@@ -11,16 +11,20 @@ public class ListarServicosAtivosHandler
     {
         _servicoRepository = servicoRepository;
     }
-    public async Task<List<ServicoModel>> Handle()
+    public async Task<BaseResponse> Handle()
     {
         var servicos = await _servicoRepository.ListarAtivos();
-        return servicos.Select(s => new ServicoModel
+        return new BaseResponse
         {
-            Id = s.Id,
-            Descricao = s.Descricao,
-            Valor = s.Valor,
-            TempoEstimado = s.TempoEstimado
-        }).ToList();
+          Message = "Ok",
+          Success = true,
+          Data =  servicos.Select(s => new ServicoResponse
+            {
+                Id = s.Id,
+                Descricao = s.Descricao,
+                Valor = s.Valor,
+                TempoEstimado = s.TempoEstimado
+            }).ToList()
+        };
     }
-
 }

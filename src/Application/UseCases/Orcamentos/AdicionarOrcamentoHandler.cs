@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models;
+using Application.Models.Requests;
 using Domain.Aggregates;
 using Domain.Exceptions;
 
@@ -16,7 +17,7 @@ public class AdicionarOrcamentoHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
     
-    public async Task<int> Handle(AddOrcamentoModel model)
+    public async Task<int> Handle(AddOrcamentoRequest model)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(model.OrdemServicoId);
         if (ordemServico == null)

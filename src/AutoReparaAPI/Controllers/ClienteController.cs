@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Aplication.Services;
-using Aplication.Models;
 using Aplication.UseCases.Clientes;
 using Aplication;
 using Application.Models.Requests;
@@ -27,7 +25,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarCliente([FromServices]AtualizarClienteHandler clienteAppService, [FromBody]UpdateClienteModel cliente)
+        public async Task<IActionResult> AtualizarCliente([FromServices]AtualizarClienteHandler clienteAppService, [FromBody]UpdateClienteRequest cliente)
         {
             await clienteAppService.Handle(cliente);
             return Ok("Cliente atualizado com sucesso");
@@ -62,7 +60,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarVeiculo([FromServices]AtualizarVeiculoClienteHandler atualizarVeiculoClienteHandler, [FromBody]UpdateVeiculoModel veiculo)
+        public async Task<IActionResult> AtualizarVeiculo([FromServices]AtualizarVeiculoClienteHandler atualizarVeiculoClienteHandler, [FromBody]UpdateVeiculoRequest veiculo)
         {
             await atualizarVeiculoClienteHandler.Handle(veiculo);
             return Ok("Veículo atualizado com sucesso");

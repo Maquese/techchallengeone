@@ -1,6 +1,6 @@
-namespace Aplication.Models;
+namespace Application.Models.Requests;
 
-public class LoginModel
+public class LoginRequest
 {
     public string Username { get; set; }
     public string Password { get; set; }

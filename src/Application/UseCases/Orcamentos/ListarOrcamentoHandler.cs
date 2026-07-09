@@ -1,5 +1,5 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Responses;
 
 namespace Aplication.UseCases.Orcamentos;
 
@@ -11,17 +11,23 @@ public class ListarOrcamentoHandler
     {
         _orcamentoRepository = orcamentoRepository;
     }
-    public async Task<List<ListOrcamentoModel>> Handle()
+    public async Task<BaseResponse> Handle()
     {
         var orcamentos = await _orcamentoRepository.ListarAtivos();
-        return orcamentos.Select(o => new ListOrcamentoModel
+
+        return new BaseResponse
         {
-            Id = o.Id,
-            OrdemServicoId = o.OrdemServicoId,
-            Valor = o.ValorTotal,
-            OrcamentoAprovado = o.OrcamentoAprovado,
-            OrcamentoPago = o.OrcamentoPago,
-            DataCadastro = o.DataCadastro
-        }).ToList();
+            Success = true,
+            Message = "Listado com sucesso",
+            Data = orcamentos.Select(o => new ListOrcamentoResponse
+            {
+                Id = o.Id,
+                OrdemServicoId = o.OrdemServicoId,
+                Valor = o.ValorTotal,
+                OrcamentoAprovado = o.OrcamentoAprovado,
+                OrcamentoPago = o.OrcamentoPago,
+                DataCadastro = o.DataCadastro
+            }).ToList()
+        };
     }
 }

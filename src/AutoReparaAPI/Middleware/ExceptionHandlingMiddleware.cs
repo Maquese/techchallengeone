@@ -1,4 +1,4 @@
-using Application.Responses;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace AutoReparaAPI.Middleware;

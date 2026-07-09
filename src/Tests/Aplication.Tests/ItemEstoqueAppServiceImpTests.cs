@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using Aplication.Services;
-using Aplication.Models;
 using Domain.Aggregates;
 using Domain.Exceptions;
 using Aplication.Interfaces;
 using Aplication.UseCases.ItensEstoque;
+using Application.Models.Requests;
+using Application.UseCases.ItensEstoque;
 
 namespace Aplication.Tests
 {
@@ -36,7 +36,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AdicionarItemEstoque_DeveAdicionarItemERetornarId()
         {
-            var model = new AddItemEstoqueModel
+            var model = new AddItemEstoqueRequest
             {
                 Tipo = "Peça",
                 Nome = "Filtro de óleo",
@@ -85,7 +85,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AtualizarItemEstoque_ItemNaoEncontrado_DeveLancarExcecao()
         {
-            var model = new UpdateItemEstoqueModel { Id = 1 };
+            var model = new UpdateItemEstoqueRequest { Id = 1 };
             _repoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((ItemEstoque)null);
 
             await Assert.ThrowsAsync<DomainException>(() => atualizarItemEstoqueHandler.Handle(model));
@@ -102,7 +102,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AdicionarQuantidadeEstoque_ItemNaoEncontrado_DeveLancarExcecao()
         {
-            var model = new AddQuantidadeItemEstoqueModel { Id = 1, Quantidade = 5 };
+            var model = new AddQuantidadeItemEstoqueRequest { Id = 1, Quantidade = 5 };
             _repoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((ItemEstoque)null);
 
             await Assert.ThrowsAsync<DomainException>(() => adicionarQtdEstoqueItemEstoqueHandler.Handle(model));
@@ -115,7 +115,7 @@ namespace Aplication.Tests
             _repoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(item);
             _repoMock.Setup(r => r.Atualizar(item)).Returns(Task.CompletedTask);
 
-            var model = new AddQuantidadeItemEstoqueModel { Id = 1, Quantidade = 10 };
+            var model = new AddQuantidadeItemEstoqueRequest { Id = 1, Quantidade = 10 };
 
             await adicionarQtdEstoqueItemEstoqueHandler.Handle(model);
 

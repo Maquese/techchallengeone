@@ -1,8 +1,9 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class AtualizarServicoHandler
 {
@@ -13,7 +14,7 @@ public class AtualizarServicoHandler
         _servicoRepository = servicoRepository;
     }
     
-    public async Task Handle(UpdateServicoModel servicoModel)
+    public async Task<BaseResponse> Handle(UpdateServicoRequest servicoModel)
     {
         var servico = await _servicoRepository.ObterPorId(servicoModel.Id);
         if (servico == null)
@@ -24,6 +25,12 @@ public class AtualizarServicoHandler
         servico.Atualizar(servicoModel.Descricao, servicoModel.Valor, servicoModel.TempoEstimado);
 
         await _servicoRepository.Atualizar(servico);
+
+        return new BaseResponse
+        {
+            Message = "Atualizado com sucesso",
+            Success = true
+        };
     }
 
 }

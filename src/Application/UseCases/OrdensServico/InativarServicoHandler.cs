@@ -1,4 +1,5 @@
 ﻿using Aplication.Interfaces;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Aplication.UseCases.OrdensServico;
@@ -12,7 +13,7 @@ public class InativarServicoHandler
         _servicoRepository = servicoRepository;
     }
 
-    public async Task Handle(int id)
+    public async Task<BaseResponse> Handle(int id)
     {
         var servico = await _servicoRepository.ObterPorId(id);
         if (servico == null)
@@ -21,5 +22,10 @@ public class InativarServicoHandler
         }
 
         await _servicoRepository.Inativar(servico);
+        return new BaseResponse
+        {
+            Message = "Inativado com sucesso",
+            Success = true
+        };
     }
 }

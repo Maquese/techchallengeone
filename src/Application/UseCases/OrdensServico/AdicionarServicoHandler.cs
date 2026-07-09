@@ -1,8 +1,9 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Entidades;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class AdicionarServicoHandler
 {
@@ -12,7 +13,7 @@ public class AdicionarServicoHandler
     {
         _servicoRepository = servicoRepository; 
     }
-     public async Task<ServicoModel> Handle(ServicoModel servico)
+     public async Task<BaseResponse> Handle(AddServicoRequest servico)
     {
         var servicoEntity = new Servico
         (
@@ -22,6 +23,11 @@ public class AdicionarServicoHandler
         );
         
         await _servicoRepository.Adicionar(servicoEntity);
-        return servico;
+        return new BaseResponse
+        {
+            Message = "Adicionado com sucesso",
+            Data = servicoEntity.Id,
+            Success = true
+        };
     }
 }

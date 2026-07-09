@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class AddItemEstoqueModel
+public class AddItemEstoqueRequest
 {
     public string Tipo { get;  set; }
     public string Nome { get; set; }

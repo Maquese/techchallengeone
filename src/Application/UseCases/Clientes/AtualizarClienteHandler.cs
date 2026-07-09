@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 using Domain.VOs;
 
@@ -14,7 +15,7 @@ public class AtualizarClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-    public async Task Handle(UpdateClienteModel clienteModel)
+    public async Task<BaseResponse> Handle(UpdateClienteRequest clienteModel)
     {
         var cliente = await _clienteRepository.ObterPorId(clienteModel.Id);
         if (cliente == null)
@@ -36,5 +37,12 @@ public class AtualizarClienteHandler
         {
             throw ex;
         }
+
+        return new BaseResponse
+        {
+            Data = cliente.Id,
+            Message = "Atualizado com sucesso",
+            Success = true
+        };
     }
 }

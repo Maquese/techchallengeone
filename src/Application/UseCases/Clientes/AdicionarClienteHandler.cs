@@ -1,6 +1,7 @@
 ﻿
 using Aplication.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Aggregates;
 using Domain.Exceptions;
 using Domain.VOs;
@@ -17,7 +18,7 @@ public class AdicionarClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-    public async Task<int> Handle(AddClienteRequest clienteRequest)
+    public async Task<BaseResponse> Handle(AddClienteRequest clienteRequest)
     {
         try
         {
@@ -30,7 +31,12 @@ public class AdicionarClienteHandler
             );
 
             await _clienteRepository.Adicionar(cliente);
-            return cliente.Id;
+            return new BaseResponse
+            {
+                Success = true,
+                Message = "Cliente adicionado com sucesso.",
+                Data = cliente.Id
+            };
         }
         catch (DomainException ex)
         {

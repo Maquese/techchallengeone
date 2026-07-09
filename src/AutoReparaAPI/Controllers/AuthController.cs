@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Aplication.Models;
 using Aplication.Services;
+using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -18,7 +18,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel model)
+        public IActionResult Login([FromBody] LoginRequest model)
         {
             if (!_authService.ValidarCredenciais(model.Username, model.Password))
                 return Unauthorized(new { message = "Credenciais inválidas" });

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Aplication.Models;
-using Aplication.Services;
 using Aplication.UseCases.OrdensServico;
 using Application.Models.Requests;
 using Application.UseCases.OrdensServico;
@@ -20,28 +18,28 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarOrdemServico([FromServices]AdicionarOrdemServicoHandler adicionarOrdemServicoHandler, [FromBody] AddOrdemServicoModel ordemServicoModel)
+        public async Task<IActionResult> CriarOrdemServico([FromServices]AdicionarOrdemServicoHandler adicionarOrdemServicoHandler, [FromBody] AddOrdemServicoRequest ordemServicoModel)
         {
             var id = await adicionarOrdemServicoHandler.Handle(ordemServicoModel);
             return Ok(id);
         }       
 
         [HttpPost]
-        public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]AtribuirMecanicoDiagnosticoOSHandler atribuirMecanicoEmDiagnosticoHandler, [FromBody] AtribuiMecanicoModel atribuiEmDiagnostico)
+        public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]AtribuirMecanicoDiagnosticoOSHandler atribuirMecanicoEmDiagnosticoHandler, [FromBody] AtribuiMecanicoRequest atribuiEmDiagnostico)
         {
             await atribuirMecanicoEmDiagnosticoHandler.Handle(atribuiEmDiagnostico);
             return Ok("Mecânico atribuído ao diagnóstico");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiagnosticoFInalizado([FromServices]FinalizarDiagnosticoOSHandler diagnosticoFinalizadoHandler, [FromBody] DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+        public async Task<IActionResult> DiagnosticoFInalizado([FromServices]FinalizarDiagnosticoOSHandler diagnosticoFinalizadoHandler, [FromBody] DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
         {
             await diagnosticoFinalizadoHandler.Handle(diagnosticoFinalizadoModel);
             return Ok("Diagnóstico finalizado com sucesso");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]AtribuirMecanicoExecucaoOSHandler atribuirMecanicoExecucaoOSHandler, [FromBody] AtribuiMecanicoModel atribuiEmExecucao)
+        public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]AtribuirMecanicoExecucaoOSHandler atribuirMecanicoExecucaoOSHandler, [FromBody] AtribuiMecanicoRequest atribuiEmExecucao)
         {
             await atribuirMecanicoExecucaoOSHandler.Handle(atribuiEmExecucao);
             return Ok("Mecânico atribuído à execução");
@@ -79,7 +77,7 @@ namespace AutoReparaAPI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AdicionarServico([FromServices]AdicionarServicoHandler adicionarServicoOSHandler, [FromBody] ServicoModel servicoModel)
+        public async Task<IActionResult> AdicionarServico([FromServices]AdicionarServicoHandler adicionarServicoOSHandler, [FromBody] AddServicoRequest servicoModel)
         {
             var id = await adicionarServicoOSHandler.Handle(servicoModel);
             return Ok(id);
@@ -93,7 +91,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarServico([FromServices]AtualizarServicoHandler atualizarServicoHandler, [FromBody] UpdateServicoModel servicoModel)
+        public async Task<IActionResult> AtualizarServico([FromServices]AtualizarServicoHandler atualizarServicoHandler, [FromBody] UpdateServicoRequest servicoModel)
         {
             await atualizarServicoHandler.Handle(servicoModel);
             return Ok("Serviço atualizado com sucesso");

@@ -1,8 +1,8 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Aggregates;
 
-namespace Aplication.UseCases.ItensEstoque;
+namespace Application.UseCases.ItensEstoque;
 
 public class AdicionarItemEstoqueHandler
 {
@@ -13,7 +13,7 @@ public class AdicionarItemEstoqueHandler
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-    public async Task<int> Handle(AddItemEstoqueModel itemEstoqueModel)
+    public async Task<int> Handle(AddItemEstoqueRequest itemEstoqueModel)
     {
         var novaPeca = new ItemEstoque
         (

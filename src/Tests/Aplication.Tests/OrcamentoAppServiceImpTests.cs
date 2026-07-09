@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using Aplication.Services;
-using Aplication.Models;
 using Domain.Aggregates;
 using Aplication.Interfaces;
 using Domain.Entidades;
 using Domain.Exceptions;
 using System.Reflection;
 using Aplication.UseCases.Orcamentos;
+using Application.Models;
+using Application.Models.Requests;
 
 namespace Aplication.Tests
 {
@@ -34,7 +34,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AddOrcamento_OrdemServicoNaoEncontrada_DeveLancarDomainException()
         {
-            var model = new AddOrcamentoModel { OrdemServicoId = 1 };
+            var model = new AddOrcamentoRequest { OrdemServicoId = 1 };
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync((OrdemServico?)null);
 
             await Assert.ThrowsAsync<DomainException>(() => _adicionarOrcamentoHandler.Handle(model));
@@ -43,7 +43,7 @@ namespace Aplication.Tests
         [Fact]
         public async Task AddOrcamento_DeveAdicionarOrcamentoERetornarId()
         {
-            var model = new AddOrcamentoModel { OrdemServicoId = 1 };
+            var model = new AddOrcamentoRequest { OrdemServicoId = 1 };
             var ordemServico = new OrdemServico(1);
 
             _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);

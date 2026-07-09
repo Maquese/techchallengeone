@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Aplication.UseCases.ItensEstoque;
@@ -13,7 +14,7 @@ public class AtualizarItemEstoqueHandler
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-     public async Task Handle(UpdateItemEstoqueModel itemEstoqueModel)
+     public async Task<BaseResponse> Handle(UpdateItemEstoqueRequest itemEstoqueModel)
     {
         var itemExistente = await _itemEstoqueRepository.ObterPorId(itemEstoqueModel.Id);
         if (itemExistente == null)
@@ -30,5 +31,11 @@ public class AtualizarItemEstoqueHandler
             itemEstoqueModel.DataValidade
         );
         await _itemEstoqueRepository.Atualizar(itemExistente);
+
+        return new BaseResponse
+        {
+            Message = "Atualizado com sucesso",
+            Success = true
+        };
     }
 }

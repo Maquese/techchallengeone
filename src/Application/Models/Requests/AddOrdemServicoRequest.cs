@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class AddOrdemServicoModel
+public class AddOrdemServicoRequest
 {
     public int VeiculoId { get; set; }
     public List<int> ServicosIds { get; set; }

@@ -1,8 +1,8 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class StatusAtualOSClienteHandler
 {
@@ -15,20 +15,25 @@ public class StatusAtualOSClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-    public async Task<IList<StatusOSsClienteModel>> Handle(int clienteId)
+    public async Task<BaseResponse> Handle(int clienteId)
     {
         var cliente = await _clienteRepository.ObterPorId(clienteId);
         if (cliente == null)        {
             throw new DomainException($"Cliente com ID {clienteId} não encontrado.");
         }
         var ordensServico = await _ordemServicoRepository.ListarOrdensServicoPorCliente(cliente.Veiculos.Select(v => v.Id).ToList());
-        return ordensServico.Select(os => new StatusOSsClienteModel
-        {
-            Id = os.Id,
-            Status = os.Status,
-            DataCriacao = os.DataAbertura,
-            PlacaVeiculo = os.Veiculo.Placa.Valor
-        }).ToList();
-    }
 
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Listado com sucesso",
+            Data = ordensServico.Select(os => new StatusOSsClienteResponse
+            {
+                Id = os.Id,
+                Status = os.Status,
+                DataCriacao = os.DataAbertura,
+                PlacaVeiculo = os.Veiculo.Placa.Valor
+            }).ToList()
+        };
+    }
 }

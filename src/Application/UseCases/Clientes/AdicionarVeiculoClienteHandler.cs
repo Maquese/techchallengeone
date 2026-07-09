@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Entidades;
 using Domain.VOs;
 
@@ -15,7 +16,7 @@ public class AdicionarVeiculoClienteHandler
         _clienteRepository = clienteRepository;
     }
 
-     public async Task Handle(AddVeiculoRequest veiculoRequest)
+     public async Task<BaseResponse> Handle(AddVeiculoRequest veiculoRequest)
     {
         var veiculo = new Veiculo
         (
@@ -27,6 +28,12 @@ public class AdicionarVeiculoClienteHandler
         );
 
         await _veiculoRepository.Adicionar(veiculo);
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Veículo adicionado com sucesso.",
+            Data = veiculo.Id
+        };
     }
 
 }

@@ -1,8 +1,8 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class FinalizarOrdemServicoHandler
 {
@@ -28,7 +28,7 @@ public class FinalizarOrdemServicoHandler
             throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em execução' para finalização.");
         }
 
-        await DeduzirItensEstoque(ordemServico.OrdemServicoItensEstoque?.Select(i => new AddItensOrdemServicoModel { id = i.ItemEstoqueId, quantidade = i.Quantidade }).ToList() ?? new List<AddItensOrdemServicoModel>());
+        await DeduzirItensEstoque(ordemServico.OrdemServicoItensEstoque?.Select(i => new AddItensOrdemServicoRequest { id = i.ItemEstoqueId, quantidade = i.Quantidade }).ToList() ?? new List<AddItensOrdemServicoRequest>());
 
         ordemServico.FinalizarOrdemServico();
         await _ordemServicoRepository.Atualizar(ordemServico);
@@ -36,7 +36,7 @@ public class FinalizarOrdemServicoHandler
         return $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.";
     }
 
-    private async Task DeduzirItensEstoque(List<AddItensOrdemServicoModel> itensEstoque)
+    private async Task DeduzirItensEstoque(List<AddItensOrdemServicoRequest> itensEstoque)
     {   
         foreach (var item in itensEstoque)
         {

@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class UpdateItemEstoqueModel
+public class UpdateItemEstoqueRequest
 {
     public int Id { get; set; }
     public string Tipo { get;  set; }

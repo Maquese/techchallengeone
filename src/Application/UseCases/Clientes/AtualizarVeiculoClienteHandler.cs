@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 using Domain.VOs;
 
@@ -14,7 +15,7 @@ public class AtualizarVeiculoClienteHandler
         _veiculoRepository = veiculoRepository;
     }    
 
-    public async Task Handle(UpdateVeiculoModel veiculoModel)
+    public async Task<BaseResponse> Handle(UpdateVeiculoRequest veiculoModel)
     {
         var veiculo = await _veiculoRepository.ObterPorId(veiculoModel.Id);
         if (veiculo == null)
@@ -25,5 +26,12 @@ public class AtualizarVeiculoClienteHandler
         veiculo.Atualizar(new PlacaVO(veiculoModel.Placa), veiculoModel.Modelo, veiculoModel.Marca, veiculoModel.Ano);
 
         await _veiculoRepository.Atualizar(veiculo);
+
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Veiculo atualizado com sucesso",
+            Data  = veiculo.Id
+        };
     }
 }

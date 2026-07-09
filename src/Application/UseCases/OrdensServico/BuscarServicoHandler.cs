@@ -1,5 +1,5 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Responses;
 
 namespace Aplication.UseCases.OrdensServico;
 
@@ -12,7 +12,7 @@ public class BuscarServicoHandler
         _servicoRepository = servicoRepository;
     }
 
-    public async Task<ServicoModel> Handle(int id)
+    public async Task<BaseResponse> Handle(int id)
     {
         var servico = await _servicoRepository.ObterPorId(id);
         if (servico == null)
@@ -20,13 +20,17 @@ public class BuscarServicoHandler
             return null;
         }
 
-        return new ServicoModel
+        return new BaseResponse
         {
-            Id = servico.Id,
-            Descricao = servico.Descricao,
-            Valor = servico.Valor,
-            TempoEstimado = servico.TempoEstimado
+           Message = "Buscado com sucesso",
+           Success = true,
+           Data = new ServicoResponse
+            {
+                Id = servico.Id,
+                Descricao = servico.Descricao,
+                Valor = servico.Valor,
+                TempoEstimado = servico.TempoEstimado
+            }
         };
     }
-
 }

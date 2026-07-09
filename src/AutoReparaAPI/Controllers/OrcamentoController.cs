@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Aplication.Services;
-using Aplication.Models;
 using Aplication.UseCases.Orcamentos;
+using Application.Models;
+using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -18,7 +19,7 @@ namespace AutoReparaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarOrcamento([FromServices] AdicionarOrcamentoHandler adicionarOrcamentoHandler, [FromBody] AddOrcamentoModel model)
+        public async Task<IActionResult> CriarOrcamento([FromServices] AdicionarOrcamentoHandler adicionarOrcamentoHandler, [FromBody] AddOrcamentoRequest model)
         {
             var id = await adicionarOrcamentoHandler.Handle(model);
             return Ok(id);

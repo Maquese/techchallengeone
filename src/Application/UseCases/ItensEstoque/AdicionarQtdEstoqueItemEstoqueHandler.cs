@@ -1,8 +1,8 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.ItensEstoque;
+namespace Application.UseCases.ItensEstoque;
 
 public class AdicionarQtdEstoqueItemEstoqueHandler
 {
@@ -13,7 +13,7 @@ public class AdicionarQtdEstoqueItemEstoqueHandler
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-    public async Task Handle(AddQuantidadeItemEstoqueModel adicionarQuantidadeModel)
+    public async Task Handle(AddQuantidadeItemEstoqueRequest adicionarQuantidadeModel)
     {
         var itemExistente = await _itemEstoqueRepository.ObterPorId(adicionarQuantidadeModel.Id);
         if (itemExistente == null)

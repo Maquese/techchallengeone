@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class AddOrcamentoModel
+public class AddOrcamentoRequest
 {
     public int OrdemServicoId { get; set; }
     public string Observacao { get; set; }

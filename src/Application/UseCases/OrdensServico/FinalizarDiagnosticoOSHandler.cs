@@ -1,10 +1,10 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class FinalizarDiagnosticoOSHandler
 {
@@ -21,7 +21,7 @@ public class FinalizarDiagnosticoOSHandler
         _orcamentoRepository = orcamentoRepository; 
     }
 
-      public async Task Handle(DiagnosticoFinalizadoModel diagnosticoFinalizadoModel)
+      public async Task Handle(DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(diagnosticoFinalizadoModel.Id);
         if (ordemServico == null)
@@ -46,7 +46,7 @@ public class FinalizarDiagnosticoOSHandler
         await _orcamentoRepository.Adicionar(orcamento);
     }
 
-    private async Task<decimal> CalcularValorTotalOrcamento(List<AddItensOrdemServicoModel> itensEstoque, List<int> servicosIds)
+    private async Task<decimal> CalcularValorTotalOrcamento(List<AddItensOrdemServicoRequest> itensEstoque, List<int> servicosIds)
     {
         var servicos = await _servicoRepository.ListarPorIds(servicosIds);
 

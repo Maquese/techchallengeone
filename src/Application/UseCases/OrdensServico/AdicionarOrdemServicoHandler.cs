@@ -1,10 +1,11 @@
 ﻿using Aplication.Interfaces;
-using Aplication.Models;
+using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class AdicionarOrdemServicoHandler
 {
@@ -19,7 +20,7 @@ public class AdicionarOrdemServicoHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
     
-    public async Task<int> Handle(AddOrdemServicoModel ordemServico)
+    public async Task<BaseResponse> Handle(AddOrdemServicoRequest ordemServico)
     {
         var veiculo = await _veiculoRepository.ObterPorId(ordemServico.VeiculoId);
         if (veiculo == null)        {
@@ -33,6 +34,11 @@ public class AdicionarOrdemServicoHandler
                 : new List<Servico>()
         );
         await _ordemServicoRepository.Adicionar(ordemServicoEntity); 
-        return ordemServicoEntity.Id;
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Ordem de serviço adicionada com sucesso.",
+            Data = ordemServicoEntity.Id
+        };
     }
 }

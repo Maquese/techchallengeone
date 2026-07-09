@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Responses;
 
-public class StatusOSsClienteModel
+public class StatusOSsClienteResponse
 {
     public int Id { get; set; }
     public string Status { get; set; }

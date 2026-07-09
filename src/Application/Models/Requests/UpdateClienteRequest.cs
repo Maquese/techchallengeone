@@ -1,6 +1,6 @@
-﻿namespace Aplication.Models;
+﻿namespace Application.Models.Requests;
 
-public class UpdateClienteModel
+public class UpdateClienteRequest
 {
     public int Id { get; set; }
     public string Documento { get; set; }
