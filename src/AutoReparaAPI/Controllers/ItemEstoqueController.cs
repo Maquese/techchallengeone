@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Aplication;
-using Aplication.UseCases.ItensEstoque;
+using Application.UseCases.ItensEstoque;
 using Application.Models.Requests;
 using Application.UseCases.ItensEstoque;
 

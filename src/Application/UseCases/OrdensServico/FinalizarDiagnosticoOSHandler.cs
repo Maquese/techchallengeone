@@ -1,8 +1,9 @@
-﻿using Aplication.Interfaces;
+﻿
 using Application.Models.Requests;
 using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
+using Application.Interfaces;
 
 namespace Application.UseCases.OrdensServico;
 

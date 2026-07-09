@@ -1,4 +1,4 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Requests;
 using Domain.Exceptions;
 

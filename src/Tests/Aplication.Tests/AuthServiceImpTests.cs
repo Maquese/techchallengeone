@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Xunit;
-using Aplication.Services;
+using Application.Services;
 using System.Security.Claims;
 
 namespace Aplication.Tests

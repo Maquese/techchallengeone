@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Aplication.UseCases.OrdensServico;
-using Application.Models.Requests;
 using Application.UseCases.OrdensServico;
+using Application.Models.Requests;
 using Application.Controllers;
 
 namespace AutoReparaAPI.Controllers
@@ -101,15 +100,15 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AtualizarServico([FromServices]AtualizarServicoHandler atualizarServicoHandler, [FromBody] UpdateServicoRequest servicoModel)
         {
-            await atualizarServicoHandler.Handle(servicoModel);
-            return Ok("Serviço atualizado com sucesso");
+            
+            return Ok(await atualizarServicoHandler.Handle(servicoModel));
         }
 
         [HttpDelete]
         public async Task<IActionResult> InativarServico([FromServices]InativarServicoHandler inativarServicoHandler, [FromQuery]int id)
         {
-            await inativarServicoHandler.Handle(id);
-            return Ok("Serviço inativado com sucesso");
+           
+            return Ok( await inativarServicoHandler.Handle(id));
         }
 
         [HttpGet]

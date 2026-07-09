@@ -5,10 +5,9 @@ using Xunit;
 using Moq;
 using Domain.Aggregates;
 using Domain.Exceptions;
-using Aplication.Interfaces;
-using Aplication.UseCases.ItensEstoque;
-using Application.Models.Requests;
+using Application.Interfaces;
 using Application.UseCases.ItensEstoque;
+using Application.Models.Requests;
 using Application.Models.Responses;
 
 namespace Aplication.Tests

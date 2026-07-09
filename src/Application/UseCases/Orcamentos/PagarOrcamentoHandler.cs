@@ -1,7 +1,8 @@
-﻿using Aplication.Interfaces;
+﻿
 using Domain.Exceptions;
+using Application.Interfaces;
 
-namespace Aplication.UseCases.Orcamentos;
+namespace Application.UseCases.Orcamentos;
 
 public class PagarOrcamentoHandler
 {

@@ -1,6 +1,7 @@
-﻿using Aplication.Interfaces;
+﻿
 using Application.Models.Requests;
 using Domain.Exceptions;
+using Application.Interfaces;
 
 namespace Application.UseCases.OrdensServico;
 

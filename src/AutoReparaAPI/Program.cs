@@ -3,7 +3,6 @@ using Microsoft.OpenApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Aplication.Services;
 using AutoReparaAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);

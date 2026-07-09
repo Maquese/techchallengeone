@@ -1,6 +1,6 @@
 ﻿using Domain.Entidades;
 
-namespace Aplication.Interfaces;
+namespace Application.Interfaces; 
 
 public interface ServicoRepository : BaseRepository<Servico>
 {

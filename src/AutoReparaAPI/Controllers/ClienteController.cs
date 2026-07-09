@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Aplication.UseCases.Clientes;
-using Aplication;
+using Application.UseCases.Clientes;
 using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers

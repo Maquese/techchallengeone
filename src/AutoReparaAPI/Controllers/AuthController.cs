@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Aplication.Services;
+using Application.Services;
 using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers

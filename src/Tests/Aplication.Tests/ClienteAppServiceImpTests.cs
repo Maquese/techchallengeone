@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Xunit;
 using Moq;
-using Aplication.Services;
+using Application.Services;
 using Domain.Aggregates;
 using Domain.Exceptions;
 using Domain.Entidades;
-using Aplication.Interfaces;
+using Application.Interfaces;
 using Domain.VOs;
-using Aplication.UseCases.Clientes;
+using Application.UseCases.Clientes;
 using Application.Models.Requests;
 
 namespace Aplication.Tests

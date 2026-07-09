@@ -1,7 +1,8 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Responses;
+using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class BuscarServicoHandler
 {
@@ -16,9 +17,9 @@ public class BuscarServicoHandler
     {
         var servico = await _servicoRepository.ObterPorId(id);
         if (servico == null)
-        {
-            return null;
-        }
+            throw new DomainException("Servico não encontrado");
+        if(!servico.EstaAtivo())
+            throw new DomainException("Servico inativo");
 
         return new BaseResponse
         {

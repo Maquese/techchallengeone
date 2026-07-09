@@ -1,9 +1,9 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Models.Responses;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.ItensEstoque;
+namespace Application.UseCases.ItensEstoque;
 
 public class AtualizarItemEstoqueHandler
 {

@@ -1,7 +1,8 @@
-﻿using Aplication.Interfaces;
+﻿
 using Application.Models.Requests;
 using Application.Models.Responses;
 using Domain.Exceptions;
+using Application.Interfaces;
 
 namespace Application.UseCases.OrdensServico;
 
@@ -21,6 +22,8 @@ public class AtualizarServicoHandler
         {
             throw new DomainException("Serviço não encontrado");
         }
+        if(!servico.EstaAtivo())
+            throw new DomainException("Servico inativo");
 
         servico.Atualizar(servicoModel.Descricao, servicoModel.Valor, servicoModel.TempoEstimado);
 
@@ -29,7 +32,8 @@ public class AtualizarServicoHandler
         return new BaseResponse
         {
             Message = "Atualizado com sucesso",
-            Success = true
+            Success = true,
+            Data = servico.Id
         };
     }
 

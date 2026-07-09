@@ -1,6 +1,6 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class TempoMedioExecucaoOSHandler
 {

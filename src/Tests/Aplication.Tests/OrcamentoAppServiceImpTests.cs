@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Xunit;
 using Moq;
 using Domain.Aggregates;
-using Aplication.Interfaces;
+using Application.Interfaces;
 using Domain.Entidades;
 using Domain.Exceptions;
 using System.Reflection;
-using Aplication.UseCases.Orcamentos;
+using Application.UseCases.Orcamentos;
 using Application.Models;
 using Application.Models.Requests;
 

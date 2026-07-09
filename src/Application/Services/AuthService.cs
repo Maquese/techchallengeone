@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Aplication.Services;
+namespace Application.Services;
 
 public class AuthService
 {

@@ -1,6 +1,6 @@
-﻿using Aplication.Interfaces;
+﻿
 using Application.Models.Responses;
-
+using Application.Interfaces;
 namespace Application.UseCases.OrdensServico;
 
 public class ListarOrdensServicoOrdenadoHandler

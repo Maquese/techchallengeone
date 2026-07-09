@@ -1,7 +1,7 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Responses;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class ListarServicosAtivosHandler
 {

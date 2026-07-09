@@ -1,4 +1,5 @@
 ﻿using Domain.Aggregates;
+using Domain.Exceptions;
 
 namespace Domain.Entidades;
 
@@ -10,6 +11,8 @@ public class Servico: IEntity
         Valor = valor;
         TempoEstimado = tempoEstimado;
          Ativo = true;
+        if (Valor <= 0)
+            throw new DomainException("Valor do serviço deve ser maior que zero.");
     }
 
     protected Servico() { }

@@ -1,17 +1,15 @@
-﻿using Aplication.Services;
-using Aplication.Interfaces;
+﻿using Application.Services;
+using Application.Interfaces;
 using Infra;
 using Infra.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Aplication.UseCases.Clientes;
-using Aplication.UseCases.Orcamentos;
-using Application.UseCases.OrdensServico;
+using Application.UseCases.Clientes;
 using Application.UseCases.Orcamentos;
+using Application.UseCases.OrdensServico;
 using Application.Controllers;
 using Application.UseCases.ItensEstoque;
-using Aplication.UseCases.ItensEstoque;
 
 namespace IOC;
 
@@ -69,6 +67,11 @@ namespace IOC;
             services.AddScoped<AdicionarQtdEstoqueItemEstoqueHandler>();
             services.AddScoped<InativarItemEstoqueHandler>();
             services.AddScoped<AtualizarItemEstoqueHandler>();
+            services.AddScoped<AdicionarServicoHandler>();
+            services.AddScoped<BuscarServicoHandler>();
+            services.AddScoped<AtualizarServicoHandler>();
+            services.AddScoped<InativarServicoHandler>();
+            services.AddScoped<ListarServicosAtivosHandler>();
 
             services.AddTransient<OrdemServicoAppController>();
 

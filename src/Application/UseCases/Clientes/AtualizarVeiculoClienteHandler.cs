@@ -1,10 +1,10 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Requests;
 using Application.Models.Responses;
 using Domain.Exceptions;
 using Domain.VOs;
 
-namespace Aplication.UseCases.Clientes;
+namespace Application.UseCases.Clientes;
 
 public class AtualizarVeiculoClienteHandler
 {

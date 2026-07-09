@@ -1,10 +1,10 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
 using Domain.Aggregates;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.Orcamentos;
+namespace Application.UseCases.Orcamentos;
 
 public class AdicionarOrcamentoHandler
 {

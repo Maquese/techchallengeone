@@ -1,9 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using Aplication.Interfaces;
+using Application.Interfaces;
 using Application.Models.Responses;
 using Domain.Aggregates;
 
-namespace Aplication.UseCases.ItensEstoque;
+namespace Application.UseCases.ItensEstoque;
 
 public class ListarItemEstoqueHandler
 {

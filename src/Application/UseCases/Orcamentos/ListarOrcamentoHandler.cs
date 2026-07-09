@@ -1,7 +1,7 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Responses;
 
-namespace Aplication.UseCases.Orcamentos;
+namespace Application.UseCases.Orcamentos;
 
 public class ListarOrcamentoHandler
 {

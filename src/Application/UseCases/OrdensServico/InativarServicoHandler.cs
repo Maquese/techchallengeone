@@ -1,8 +1,8 @@
-﻿using Aplication.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models.Responses;
 using Domain.Exceptions;
 
-namespace Aplication.UseCases.OrdensServico;
+namespace Application.UseCases.OrdensServico;
 
 public class InativarServicoHandler
 {
@@ -25,7 +25,8 @@ public class InativarServicoHandler
         return new BaseResponse
         {
             Message = "Inativado com sucesso",
-            Success = true
+            Success = true,
+            Data = servico.Id
         };
     }
 }
