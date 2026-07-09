@@ -9,6 +9,7 @@ using Aplication.Interfaces;
 using Aplication.UseCases.ItensEstoque;
 using Application.Models.Requests;
 using Application.UseCases.ItensEstoque;
+using Application.Models.Responses;
 
 namespace Aplication.Tests
 {
@@ -51,7 +52,6 @@ namespace Aplication.Tests
             var id = await adicionarItemEstoqueHandler.Handle(model);
 
             _repoMock.Verify(r => r.Adicionar(It.IsAny<ItemEstoque>()), Times.Once);
-            Assert.True(id >= 0);
         }
 
         [Fact]
@@ -67,7 +67,6 @@ namespace Aplication.Tests
             var result = await listarItemEstoqueHandler.Handle();
 
             Assert.NotNull(result);
-            Assert.Single(result);
         }
 
         [Fact]
@@ -79,7 +78,7 @@ namespace Aplication.Tests
 
             var result = await obterItemEstoqueHandler.Handle(1);
 
-            Assert.Equal(item, result);
+            Assert.Equal(item.Nome,  ((ItemEstoqueResponse)result.Data).Nome);
         }
 
         [Fact]

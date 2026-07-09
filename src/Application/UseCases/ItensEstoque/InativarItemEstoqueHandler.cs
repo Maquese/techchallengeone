@@ -1,4 +1,5 @@
 ﻿using Aplication.Interfaces;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Aplication.UseCases.ItensEstoque;
@@ -11,7 +12,7 @@ public class InativarItemEstoqueHandler
     {
         _itemEstoqueRepository = itemEstoqueRepository;
     }    
-    public async Task Handle(int id)
+    public async Task<BaseResponse> Handle(int id)
     {
         var itemExistente = await _itemEstoqueRepository.ObterPorId(id);
         if (itemExistente == null)
@@ -21,6 +22,12 @@ public class InativarItemEstoqueHandler
 
         itemExistente.Inativar();
         await _itemEstoqueRepository.Atualizar(itemExistente);
+        return new BaseResponse
+        {
+            Message = "Item inativado com sucesso",
+            Success = true,
+            Data = itemExistente.Id
+        };
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Application.UseCases.ItensEstoque;
@@ -13,7 +14,7 @@ public class AdicionarQtdEstoqueItemEstoqueHandler
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-    public async Task Handle(AddQuantidadeItemEstoqueRequest adicionarQuantidadeModel)
+    public async Task<BaseResponse> Handle(AddQuantidadeItemEstoqueRequest adicionarQuantidadeModel)
     {
         var itemExistente = await _itemEstoqueRepository.ObterPorId(adicionarQuantidadeModel.Id);
         if (itemExistente == null)
@@ -21,7 +22,17 @@ public class AdicionarQtdEstoqueItemEstoqueHandler
             throw new DomainException("Item de estoque não encontrado para adicionar quantidade.");
         }
 
+        if(!itemExistente.EstaAtivo())
+            throw new DomainException("Item inativo");
+
         itemExistente.AdicionarQuantidadeEstoque(adicionarQuantidadeModel.Quantidade);
         await _itemEstoqueRepository.Atualizar(itemExistente);
+
+        return new BaseResponse
+        {
+            Message = "Quantidade ajustada com sucesso",
+            Success = true, 
+            Data = itemExistente.Id
+        };
     }
 }

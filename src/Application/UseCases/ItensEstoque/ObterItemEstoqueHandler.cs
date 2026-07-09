@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
-using Domain.Aggregates;
+using Application.Models.Responses;
+using Domain.Exceptions;
 
 namespace Aplication.UseCases.ItensEstoque;
 public class ObterItemEstoqueHandler
@@ -10,9 +11,27 @@ public class ObterItemEstoqueHandler
     {
         _itemEstoqueRepository = itemEstoqueRepository;
     }    
-    public async Task<ItemEstoque> Handle(int id)
+    public async Task<BaseResponse> Handle(int id)
     {
-        return await _itemEstoqueRepository.ObterPorId(id);
+        var item = await _itemEstoqueRepository.ObterPorId(id);
+        if (item == null)
+            throw new DomainException ("Não encontrado");
+        if(!item.EstaAtivo())
+            throw new  DomainException("Item inativo");
+
+        return new BaseResponse
+        {
+            Message = "Item estoque encontrado",
+            Success = true, 
+            Data = new ItemEstoqueResponse
+            {
+                Id = item.Id,
+                Nome = item.Nome,
+                Descricao = item.Descricao,
+                Valor = item.Valor,
+                Quantidade = item.QuantidadeEmEstoque
+            }
+        };
     }
 
 }

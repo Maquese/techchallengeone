@@ -2,6 +2,7 @@
 using Application.Models.Requests;
 using Application.Models.Responses;
 using Application.UseCases.OrdensServico;
+using Domain.Exceptions;
 
 namespace Application.Controllers;
 
@@ -31,7 +32,7 @@ public class OrdemServicoAppController
 
         if((int)data.Data <= 0)
         {
-            throw new Exception("Erro ao criar cliente.");
+            throw new DomainException("Erro ao criar cliente.");
         }
 
         var dataVeiculo = await _adicionarVeiculoClienteHandler.Handle(new AddVeiculoRequest
@@ -45,7 +46,7 @@ public class OrdemServicoAppController
 
         if((int)dataVeiculo.Data <= 0)
         {
-            throw new Exception("Erro ao criar veículo.");
+            throw new DomainException("Erro ao criar veículo.");
         } 
 
         var dataOrdemServico = await _adicionarOrdemServicoHandler.Handle(new AddOrdemServicoRequest
@@ -56,7 +57,7 @@ public class OrdemServicoAppController
 
         if((int)dataOrdemServico.Data <= 0)
         {
-            throw new Exception("Erro ao criar ordem de serviço.");
+            throw new DomainException("Erro ao criar ordem de serviço.");
         }
 
         

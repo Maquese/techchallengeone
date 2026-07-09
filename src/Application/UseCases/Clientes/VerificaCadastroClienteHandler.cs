@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Responses;
+using Domain.Exceptions;
 
 namespace Aplication.UseCases.Clientes;
 
@@ -17,12 +18,12 @@ public class VerificaCadastroClienteHandler
         var cliente = await _clienteRepository.ObterPorDocumento(documento);
         if (cliente == null)
         {
-            throw new Exception("Cliente não encontrado");
+            throw new DomainException("Cliente não encontrado");
         }
 
         if(!cliente.EstaAtivo())
         {
-            throw new Exception("Cliente inativo");
+            throw new DomainException("Cliente inativo");
         }
 
         return new BaseResponse

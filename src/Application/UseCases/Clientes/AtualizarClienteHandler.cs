@@ -24,7 +24,7 @@ public class AtualizarClienteHandler
         }
 
         if(!cliente.EstaAtivo())
-            throw new Exception("Cliente inativo");
+            throw new DomainException("Cliente inativo");
 
         try
         {

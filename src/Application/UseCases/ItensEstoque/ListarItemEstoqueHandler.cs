@@ -1,4 +1,6 @@
-﻿using Aplication.Interfaces;
+﻿using System.Security.Cryptography.X509Certificates;
+using Aplication.Interfaces;
+using Application.Models.Responses;
 using Domain.Aggregates;
 
 namespace Aplication.UseCases.ItensEstoque;
@@ -11,9 +13,14 @@ public class ListarItemEstoqueHandler
     {
         _itemEstoqueRepository = itemEstoqueRepository;
     }    
-    public async Task<IEnumerable<ItemEstoque>> Handle()
+    public async Task<BaseResponse> Handle()
     {
-        return await _itemEstoqueRepository.ListarAtivos();
+        return new BaseResponse
+        {
+            Message = "Listado com sucesso",
+            Success = true,
+            Data  = (await _itemEstoqueRepository.ListarAtivos()).Select(x => new ItemEstoqueResponse { Id = x. Id, Nome =  x.Nome, Descricao =  x.Descricao, Valor =  x.Valor, Quantidade = x.QuantidadeEmEstoque})
+        };
     }
 
 }

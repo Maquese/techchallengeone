@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Responses;
+using Domain.Exceptions;
 
 namespace Application.UseCases.Orcamentos;
 
@@ -19,23 +20,23 @@ public class NegarOrcamentoHandler
         var orcamento = await _orcamentoRepository.ObterPorId(orcamentoId);
         if (orcamento == null)
         {
-            throw new Exception($"Orçamento com ID {orcamentoId} não encontrado.");
+            throw new DomainException($"Orçamento com ID {orcamentoId} não encontrado.");
         }
 
         if(orcamento.DataDecisaoClientePagamento != null)
         {
-            throw new Exception($"Orçamento com ID {orcamentoId} já foi decidido pelo cliente.");
+            throw new DomainException($"Orçamento com ID {orcamentoId} já foi decidido pelo cliente.");
         }
 
         if(orcamento.DataDecisaoClienteAprovacao != null)
         {
-            throw new Exception($"Orçamento com ID {orcamentoId} já decidida.");
+            throw new DomainException($"Orçamento com ID {orcamentoId} já decidida.");
         }
 
         var ordemServico = await _ordemServicoRepository.ObterPorId(orcamento.OrdemServicoId);
         if (ordemServico == null)
         {
-            throw new Exception($"Ordem de serviço com ID {orcamento.OrdemServicoId} não encontrada.");
+            throw new DomainException($"Ordem de serviço com ID {orcamento.OrdemServicoId} não encontrada.");
         }
 
         orcamento.NegarOrcamento();
@@ -46,7 +47,7 @@ public class NegarOrcamentoHandler
         }
         catch (Exception ex)
         {
-            throw new Exception($"Erro ao atualizar a ordem de serviço com ID {ordemServico.Id}: {ex.Message}");
+            throw new DomainException($"Erro ao atualizar a ordem de serviço com ID {ordemServico.Id}: {ex.Message}");
         }
         await _orcamentoRepository.Atualizar(orcamento);
         return new BaseResponse

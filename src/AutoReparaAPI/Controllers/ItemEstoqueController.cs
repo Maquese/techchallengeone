@@ -21,43 +21,38 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AdicionarItemEstoque([FromServices]AdicionarItemEstoqueHandler itemEstoqueAppService, [FromBody] AddItemEstoqueRequest itemEstoqueModel)
         {
-            var id = await itemEstoqueAppService.Handle(itemEstoqueModel);
-            return Ok($"Item de estoque adicionado com sucesso. ID: {id}");
+            return Ok(await itemEstoqueAppService.Handle(itemEstoqueModel));
         }
 
         [HttpGet]
         public async Task<IActionResult> ListarItensEstoque([FromServices]ListarItemEstoqueHandler itemEstoqueAppService)
         {
-            var itensEstoque = await itemEstoqueAppService.Handle();
-            return Ok(itensEstoque);
+            return Ok(await itemEstoqueAppService.Handle());
         }
 
          [HttpGet]
         public async Task<IActionResult> ObterItemEstoque([FromServices]ObterItemEstoqueHandler itemEstoqueAppService,[FromQuery] int id)
         {
-            var itemEstoque = await itemEstoqueAppService.Handle(id);
-            return Ok(itemEstoque);
+            return Ok(await itemEstoqueAppService.Handle(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> AtualizarItemEstoque([FromServices]AtualizarItemEstoqueHandler itemEstoqueAppService, [FromBody] UpdateItemEstoqueRequest itemEstoqueModel)
         {
-            await itemEstoqueAppService.Handle(itemEstoqueModel);
-            return Ok("Item de estoque atualizado com sucesso.");
+            return Ok( await itemEstoqueAppService.Handle(itemEstoqueModel));
         }
 
         [HttpDelete]
         public async Task<IActionResult> InativarItemEstoque([FromServices]InativarItemEstoqueHandler itemEstoqueAppService, [FromQuery] int id)
         {
-            await itemEstoqueAppService.Handle(id);
-            return Ok("Item de estoque inativado com sucesso.");
+            return Ok(await itemEstoqueAppService.Handle(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> AdicionarQuantidadeEstoque([FromServices]AdicionarQtdEstoqueItemEstoqueHandler itemEstoqueAppService, [FromBody] AddQuantidadeItemEstoqueRequest adicionarQuantidadeModel)
         {
-            await itemEstoqueAppService.Handle(adicionarQuantidadeModel);
-            return Ok("Quantidade adicionada ao estoque com sucesso.");
+            
+            return Ok(await itemEstoqueAppService.Handle(adicionarQuantidadeModel));
         }
     }
 }

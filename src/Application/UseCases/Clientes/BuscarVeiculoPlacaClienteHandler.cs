@@ -1,6 +1,7 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Requests;
 using Application.Models.Responses;
+using Domain.Exceptions;
 
 namespace Aplication.UseCases.Clientes;
 
@@ -18,11 +19,11 @@ public class BuscarVeiculoPlacaClienteHandler
         var veiculo = await _veiculoRepository.BuscarPorPlaca(placa);
         if (veiculo == null)
         {
-            throw new Exception("Veiculo não encontrado");
+            throw new DomainException("Veiculo não encontrado");
         }
 
         if(!veiculo.EstaAtivo())
-            throw new Exception("Veiculo inativo");
+            throw new DomainException("Veiculo inativo");
 
         return new BaseResponse
         {

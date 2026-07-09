@@ -24,7 +24,7 @@ public class AtualizarVeiculoClienteHandler
         }
 
         if(!veiculo.EstaAtivo())
-            throw new Exception("Veiculo inativo");
+            throw new DomainException("Veiculo inativo");
 
         veiculo.Atualizar(new PlacaVO(veiculoModel.Placa), veiculoModel.Modelo, veiculoModel.Marca, veiculoModel.Ano);
 

@@ -11,7 +11,6 @@ public class ItemEstoque : IEntity
     public DateTime DataCadastro { get; private set; }
     public DateTime DataAtualizacao { get; private set; }    
     public DateTime? Datavalidade { get; private set; }
-    public bool Ativo { get; private set; }
     public int QuantidadeEmEstoque { get; private set; }
     public ICollection<OrdemServicoItemEstoque> OrdemServicoItensEstoque { get; private set; }
     public string Tipo { get; private set; }

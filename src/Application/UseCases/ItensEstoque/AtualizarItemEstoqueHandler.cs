@@ -22,6 +22,9 @@ public class AtualizarItemEstoqueHandler
             throw new DomainException("Item de estoque não encontrado para atualização.");
         }
 
+        if(!itemExistente.EstaAtivo())
+            throw new DomainException("Item inativo");
+
         itemExistente.Atualizar(
             itemEstoqueModel.Nome,
             itemEstoqueModel.Descricao,

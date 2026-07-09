@@ -2,6 +2,7 @@
 using Application.Models.Requests;
 using Application.Models.Responses;
 using Domain.Entidades;
+using Domain.Exceptions;
 using Domain.VOs;
 
 namespace Aplication.UseCases.Clientes;
@@ -21,10 +22,10 @@ public class AdicionarVeiculoClienteHandler
         var cliente  = await _clienteRepository.ObterPorId(veiculoRequest.ClienteId);
 
         if(cliente == null)
-            throw new Exception("Cliente não encontrado");
+            throw new DomainException("Cliente não encontrado");
 
         if (!cliente.EstaAtivo())
-            throw new Exception ("Cliente inativo");
+            throw new DomainException("Cliente inativo");
 
 
         var veiculo = new Veiculo

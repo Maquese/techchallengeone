@@ -1,5 +1,6 @@
 ﻿using Aplication.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Aggregates;
 
 namespace Application.UseCases.ItensEstoque;
@@ -13,7 +14,7 @@ public class AdicionarItemEstoqueHandler
         _itemEstoqueRepository = itemEstoqueRepository;
     }
 
-    public async Task<int> Handle(AddItemEstoqueRequest itemEstoqueModel)
+    public async Task<BaseResponse> Handle(AddItemEstoqueRequest itemEstoqueModel)
     {
         var novaPeca = new ItemEstoque
         (
@@ -25,7 +26,13 @@ public class AdicionarItemEstoqueHandler
             itemEstoqueModel.DataValidade
         );
         await _itemEstoqueRepository.Adicionar(novaPeca);
-        return novaPeca.Id;
+
+        return new BaseResponse
+        {
+            Message = "Item de estoque adicionado com sucesso",
+            Success = true,
+            Data = novaPeca.Id
+        };
     }
 
 }

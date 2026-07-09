@@ -10,6 +10,8 @@ using Aplication.UseCases.Orcamentos;
 using Application.UseCases.OrdensServico;
 using Application.UseCases.Orcamentos;
 using Application.Controllers;
+using Application.UseCases.ItensEstoque;
+using Aplication.UseCases.ItensEstoque;
 
 namespace IOC;
 
@@ -57,10 +59,16 @@ namespace IOC;
             services.AddScoped<InativarVeiculoClienteHandler>();
             services.AddScoped<VerificaCadastroClienteHandler>();
             services.AddScoped<AdicionarOrdemServicoHandler>();
+            services.AddScoped<AdicionarItemEstoqueHandler>();
 
             services.AddScoped<ConsutaStatusOSHandler>();
             services.AddScoped<NegarOrcamentoHandler>();
             services.AddScoped<ListarOrdensServicoOrdenadoHandler>();
+            services.AddScoped<ObterItemEstoqueHandler>();
+            services.AddScoped<ListarItemEstoqueHandler>();
+            services.AddScoped<AdicionarQtdEstoqueItemEstoqueHandler>();
+            services.AddScoped<InativarItemEstoqueHandler>();
+            services.AddScoped<AtualizarItemEstoqueHandler>();
 
             services.AddTransient<OrdemServicoAppController>();
 
