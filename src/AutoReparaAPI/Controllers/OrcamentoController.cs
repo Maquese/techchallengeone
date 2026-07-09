@@ -5,6 +5,7 @@ using Aplication.Services;
 using Aplication.UseCases.Orcamentos;
 using Application.Models;
 using Application.Models.Requests;
+using Application.UseCases.Orcamentos;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -33,9 +34,9 @@ namespace AutoReparaAPI.Controllers
         }
 
             [HttpPost]
-        public async Task<IActionResult> NegarOrcamento([FromServices] AprovarOrcamentoHandler aprovarOrcamentoHandler, [FromBody] int orcamentoId)
+        public async Task<IActionResult> NegarOrcamento([FromServices] NegarOrcamentoHandler negarOrcamentoHandler, [FromBody] int orcamentoId)
         {
-            await aprovarOrcamentoHandler.Handle(orcamentoId);
+            await negarOrcamentoHandler.Handle(orcamentoId);
             return Ok("Orçamento negado com sucesso");
         }
 

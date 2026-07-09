@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Aplication.UseCases.OrdensServico;
 using Application.Models.Requests;
 using Application.UseCases.OrdensServico;
+using Application.Controllers;
 
 namespace AutoReparaAPI.Controllers
 {
@@ -23,6 +24,13 @@ namespace AutoReparaAPI.Controllers
             var id = await adicionarOrdemServicoHandler.Handle(ordemServicoModel);
             return Ok(id);
         }       
+
+        [HttpPost]
+        public  async Task<IActionResult> AberturaOS([FromServices]OrdemServicoAppController ordemServicoAppController,[FromBody] AberturaOSRequest request)
+        {
+            var response = await ordemServicoAppController.AbrirOrdemServico(request);
+            return Ok(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]AtribuirMecanicoDiagnosticoOSHandler atribuirMecanicoEmDiagnosticoHandler, [FromBody] AtribuiMecanicoRequest atribuiEmDiagnostico)
