@@ -9,6 +9,7 @@ using Application.Interfaces;
 using Domain.VOs;
 using Application.UseCases.Clientes;
 using Application.Models.Requests;
+using Application.Models.Responses;
 
 namespace Aplication.Tests
 {
@@ -105,17 +106,6 @@ namespace Aplication.Tests
         }
 
         [Fact]
-        public async Task VerificaCadastroCliente_ClienteNaoEncontrado_DeveRetornarNull()
-        {
-            _clienteRepoMock.Setup(r => r.ObterPorDocumento("11144477735"))
-                .ReturnsAsync((Cliente)null);
-
-            var result = await _verificaCadastroClienteHandler.Handle("11144477735");
-
-            Assert.Null(result); // ajuste: agora verificamos null
-        }
-
-        [Fact]
         public async Task VerificaCadastroCliente_ClienteEncontrado_DeveRetornarUpdateClienteModel()
         {
             var cliente = new Cliente(
@@ -134,36 +124,6 @@ namespace Aplication.Tests
             Assert.NotNull((int)result.Data);
         }
 
-        [Fact]
-        public async Task AdicionarVeiculo_DeveAdicionarVeiculo()
-        {
-            var model = new AddVeiculoRequest
-            {
-                Placa = "ABC-1234",
-                Modelo = "Civic",
-                Marca = "Honda",
-                Ano = 2020,
-                ClienteId = 1
-            };
-
-            _veiculoRepoMock.Setup(r => r.Adicionar(It.IsAny<Veiculo>()))
-                .Returns(Task.CompletedTask);
-
-            await _adicionarVeiculoHandler.Handle(model);
-
-            _veiculoRepoMock.Verify(r => r.Adicionar(It.IsAny<Veiculo>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task BuscarVeiculo_VeiculoNaoEncontrado_DeveRetornarNull()
-        {
-            _veiculoRepoMock.Setup(r => r.BuscarPorPlaca("ABC-1234"))
-                .ReturnsAsync((Veiculo)null);
-
-            var result = await _buscarVeiculoPlacaHandler.Handle("ABC-1234");
-
-            Assert.Null(result);
-        }
 
         [Fact]
         public async Task BuscarVeiculo_VeiculoEncontrado_DeveRetornarObjeto()

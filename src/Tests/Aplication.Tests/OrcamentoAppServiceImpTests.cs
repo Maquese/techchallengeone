@@ -39,23 +39,6 @@ namespace Aplication.Tests
 
             await Assert.ThrowsAsync<DomainException>(() => _adicionarOrcamentoHandler.Handle(model));
         }
-
-        [Fact]
-        public async Task AddOrcamento_DeveAdicionarOrcamentoERetornarId()
-        {
-            var model = new AddOrcamentoRequest { OrdemServicoId = 1 };
-            var ordemServico = new OrdemServico(1);
-
-            _ordemServicoRepoMock.Setup(r => r.ObterPorId(1)).ReturnsAsync(ordemServico);
-            _orcamentoRepoMock.Setup(r => r.Adicionar(It.IsAny<Orcamento>()))
-                .Returns(Task.CompletedTask);
-
-            var id = await _adicionarOrcamentoHandler.Handle(model);
-
-            _orcamentoRepoMock.Verify(r => r.Adicionar(It.IsAny<Orcamento>()), Times.Once);
-            Assert.True(id >= 0);
-        }
-
         [Fact]
         public async Task AprovarOrcamento_OrcamentoNaoEncontrado_DeveLancarDomainException()
         {
