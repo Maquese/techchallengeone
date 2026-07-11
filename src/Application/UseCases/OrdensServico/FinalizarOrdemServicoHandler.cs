@@ -2,6 +2,7 @@
 using Application.Models.Requests;
 using Domain.Exceptions;
 using Application.Interfaces;
+using Application.Models.Responses;
 
 namespace Application.UseCases.OrdensServico;
 
@@ -16,7 +17,7 @@ public class FinalizarOrdemServicoHandler
         _itensEstoqueRepository = itensEstoqueRepository;
     }
     
-    public async Task<string> Handle(int ordemServicoId)
+    public async Task<BaseResponse> Handle(int ordemServicoId)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(ordemServicoId);
         if (ordemServico == null)
@@ -34,7 +35,11 @@ public class FinalizarOrdemServicoHandler
         ordemServico.FinalizarOrdemServico();
         await _ordemServicoRepository.Atualizar(ordemServico);
 
-        return $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.";
+        return new BaseResponse{
+            Message = $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.",
+            Success = true,
+            Data = ordemServico.Id
+        };
     }
 
     private async Task DeduzirItensEstoque(List<AddItensOrdemServicoRequest> itensEstoque)

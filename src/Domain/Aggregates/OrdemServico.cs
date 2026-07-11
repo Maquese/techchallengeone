@@ -76,4 +76,9 @@ public class OrdemServico : IEntity
         Status = "Entregue";
         DataFechamento = DateTime.Now;
     }
+
+    public decimal? CalcularValorOrdemServico()
+    {
+        return Servicos?.Sum(x => x.Valor) + OrdemServicoItensEstoque?.Sum(x => x.Quantidade * x.ItemEstoque.Valor);
+    }
 }

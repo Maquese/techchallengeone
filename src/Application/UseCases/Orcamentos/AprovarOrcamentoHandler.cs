@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Application.UseCases.Orcamentos;
@@ -14,24 +15,14 @@ public class AprovarOrcamentoHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
     
-     public async Task Handle(int orcamentoId)
+     public async Task<BaseResponse> Handle(int orcamentoId)
     {
         var orcamento = await _orcamentoRepository.ObterPorId(orcamentoId);
         if (orcamento == null)
         {
             throw new DomainException($"Orçamento com ID {orcamentoId} não encontrado.");
         }
-
-        if(orcamento.DataDecisaoClientePagamento != null)
-        {
-            throw new DomainException($"Orçamento com ID {orcamentoId} já foi decidido pelo cliente.");
-        }
-
-        if(orcamento.DataDecisaoClienteAprovacao != null)
-        {
-            throw new DomainException($"Orçamento com ID {orcamentoId} aprovação já decidida.");
-        }
-
+        
         var ordemServico = await _ordemServicoRepository.ObterPorId(orcamento.OrdemServicoId);
         if (ordemServico == null)
         {
@@ -43,8 +34,27 @@ public class AprovarOrcamentoHandler
             throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Aguardando aprovação' para aprovação de orçamento.");
         }
 
+        if(!orcamento.EstaAtivo())
+            throw new  DomainException("Orcamento inativo");
+
+        if(orcamento.DataDecisaoClientePagamento != null)
+        {
+            throw new DomainException($"Orçamento com ID {orcamentoId} já foi decidido pelo cliente.");
+        }
+
+        if(orcamento.DataDecisaoClienteAprovacao != null)
+        {
+            throw new DomainException($"Orçamento com ID {orcamentoId} aprovação já decidida.");
+        }
+                
         orcamento.AprovarOrcamento();
         ordemServico.OSAprovada();
         await _orcamentoRepository.Atualizar(orcamento);
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Orcamento Aprovado com sucesso",
+            Data = orcamento.Id
+        };
     }
 }

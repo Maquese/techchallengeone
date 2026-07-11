@@ -72,6 +72,12 @@ namespace IOC;
             services.AddScoped<AtualizarServicoHandler>();
             services.AddScoped<InativarServicoHandler>();
             services.AddScoped<ListarServicosAtivosHandler>();
+            services.AddScoped<AtribuirMecanicoDiagnosticoOSHandler>();
+            services.AddScoped<FinalizarDiagnosticoOSHandler>();
+            services.AddScoped<AtribuirMecanicoExecucaoOSHandler>();
+            services.AddScoped<FinalizarOrdemServicoHandler>();
+            services.AddScoped<StatusAtualOSClienteHandler>();
+            services.AddScoped<TempoMedioExecucaoOSHandler>();
 
             services.AddTransient<OrdemServicoAppController>();
 

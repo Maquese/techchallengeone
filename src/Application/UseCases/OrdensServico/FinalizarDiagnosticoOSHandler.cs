@@ -4,6 +4,7 @@ using Domain.Aggregates;
 using Domain.Entidades;
 using Domain.Exceptions;
 using Application.Interfaces;
+using Application.Models.Responses;
 
 namespace Application.UseCases.OrdensServico;
 
@@ -22,7 +23,7 @@ public class FinalizarDiagnosticoOSHandler
         _orcamentoRepository = orcamentoRepository; 
     }
 
-      public async Task Handle(DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
+      public async Task<BaseResponse> Handle(DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(diagnosticoFinalizadoModel.Id);
         if (ordemServico == null)
@@ -37,7 +38,14 @@ public class FinalizarDiagnosticoOSHandler
 
         var itensEstoque = diagnosticoFinalizadoModel.ItensEstoque.Select(item => new OrdemServicoItemEstoque
         (diagnosticoFinalizadoModel.Id, item.id, item.quantidade)).ToList();
-       
+
+        var itensEstoqueBase = await _itensEstoqueRepository.ListarPorIds(itensEstoque.Select(x => x.ItemEstoqueId).ToList());
+
+        if(itensEstoqueBase.Count != itensEstoque.Count)
+        {
+            throw new DomainException($"Um ou mais itens de estoque informados não estão mais disponíveis.");
+        }
+
         ordemServico.OSDiagnosticada(itensEstoque);
         var orcamento = new Orcamento(
             diagnosticoFinalizadoModel.Id, 
@@ -45,6 +53,12 @@ public class FinalizarDiagnosticoOSHandler
             "obs");
         await _ordemServicoRepository.Atualizar(ordemServico);
         await _orcamentoRepository.Adicionar(orcamento);
+        return new BaseResponse
+        {
+            Success = true,
+            Message = $"Ordem de servico id:{ordemServico.Id} status aguardando aprovação, orçamento id:{orcamento.Id} cridado",
+            Data = orcamento.Id
+        };
     }
 
     private async Task<decimal> CalcularValorTotalOrcamento(List<AddItensOrdemServicoRequest> itensEstoque, List<int> servicosIds)

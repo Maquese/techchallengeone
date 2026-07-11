@@ -10,4 +10,5 @@ public interface BaseRepository<T> where T : IEntity
     Task<List<T>> ListarAtivos();
     Task<T> ObterPorId(int id);
     Task<List<T>> ListarPorIds(List<int> ids);
+    Task Remover(T entity);
 }

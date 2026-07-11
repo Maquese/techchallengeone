@@ -41,6 +41,8 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
             return new DomainException("Celular já cadastrado");
         if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Placa"))
             return new DomainException("Placa já cadastrado");
+        if (mensagem.Contains("Duplicate entry") && mensagem.Contains("Documento"))
+            return new DomainException("Documento já cadastrado");
 
         if (mensagem.Contains("Duplicate entry"))
             return new DomainException("Dados duplicados no banco de dados");
@@ -74,5 +76,11 @@ public class BaseRepositoryImp<T> : BaseRepository<T> where T : IEntity
     public async Task<List<T>> ListarPorIds(List<int> ids)
     {
         return await _context.Set<T>().Where(e => ids.Contains(e.Id) && e.Ativo).ToListAsync();
+    }
+
+    public async Task Remover(T entity)
+    {
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

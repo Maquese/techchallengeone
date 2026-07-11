@@ -25,10 +25,20 @@ public class ExceptionHandlingMiddleware
             _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
             await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
         }
+         catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
+            await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
+        }
+         catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
+            await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro inesperado capturado pelo middleware.");
-            await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, ex.Message, null);
+            await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, "OOPs algo errado aconteceu, tente novamente mais tarde ou entre em contato", null);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Aggregates;
 using Domain.Exceptions;
 
@@ -17,16 +18,27 @@ public class AdicionarOrcamentoHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
     
-    public async Task<int> Handle(AddOrcamentoRequest model)
+    public async Task<BaseResponse> Handle(AddOrcamentoRequest model)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(model.OrdemServicoId);
         if (ordemServico == null)
         {
             throw new DomainException($"Ordem de serviço com ID {model.OrdemServicoId} não encontrada.");
         }
-        var orcamento = new Orcamento
-        (model.OrdemServicoId, 100,"obs");
+
+        if(!ordemServico.EstaAtivo())
+            throw new DomainException("Ordem de serviço inativa");
+
+        if(ordemServico.Status != "Aguardando aprovação")
+            throw new DomainException($"Ordem de servico no status incorreto {ordemServico.Status}");
+
+        var orcamento = new Orcamento(model.OrdemServicoId, ordemServico.CalcularValorOrdemServico().Value,model.Observacao);
         await _orcamentoRepository.Adicionar(orcamento);
-        return orcamento.Id;
+        return new BaseResponse
+        {
+            Success = true,
+            Message = "Criando com sucesso",
+            Data = orcamento.Id
+        };
     }
 }

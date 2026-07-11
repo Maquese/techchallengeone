@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models.Requests;
+using Application.Models.Responses;
 using Domain.Exceptions;
 
 namespace Application.UseCases.OrdensServico;
@@ -13,7 +14,7 @@ public class AtribuirMecanicoExecucaoOSHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
 
-    public async Task<string> Handle(AtribuiMecanicoRequest atribuiEmReparo)
+    public async Task<BaseResponse> Handle(AtribuiMecanicoRequest atribuiEmReparo)
     {
         var ordemServico = await _ordemServicoRepository.ObterPorId(atribuiEmReparo.OrdemServicoId);
         if (ordemServico == null)
@@ -29,7 +30,12 @@ public class AtribuirMecanicoExecucaoOSHandler
         ordemServico.EmExecucao(atribuiEmReparo.MecanicoAtribuido);
         await _ordemServicoRepository.Atualizar(ordemServico);
 
-        return $"Mecânico '{atribuiEmReparo.MecanicoAtribuido}' atribuído à ordem de serviço ID {atribuiEmReparo.OrdemServicoId}.";
+        return new BaseResponse
+        {
+            Success = true,
+            Message = $"Mecânico '{atribuiEmReparo.MecanicoAtribuido}' atribuído à ordem de serviço ID {atribuiEmReparo.OrdemServicoId}.",
+            Data = ordemServico.Id
+        };
     }
 
 }

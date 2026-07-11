@@ -25,45 +25,33 @@ namespace AutoReparaAPI.Controllers
         }       
 
         [HttpPost]
-        public  async Task<IActionResult> AberturaOS([FromServices]OrdemServicoAppController ordemServicoAppController,[FromBody] AberturaOSRequest request)
-        {
-            var response = await ordemServicoAppController.AbrirOrdemServico(request);
-            return Ok(response);
-        }
-
-        [HttpPost]
         public async Task<IActionResult> AtribuirMecanicoEmDiagnostico([FromServices]AtribuirMecanicoDiagnosticoOSHandler atribuirMecanicoEmDiagnosticoHandler, [FromBody] AtribuiMecanicoRequest atribuiEmDiagnostico)
         {
-            await atribuirMecanicoEmDiagnosticoHandler.Handle(atribuiEmDiagnostico);
-            return Ok("Mecânico atribuído ao diagnóstico");
+            return Ok(await atribuirMecanicoEmDiagnosticoHandler.Handle(atribuiEmDiagnostico));
         }
 
         [HttpPost]
         public async Task<IActionResult> DiagnosticoFInalizado([FromServices]FinalizarDiagnosticoOSHandler diagnosticoFinalizadoHandler, [FromBody] DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
         {
-            await diagnosticoFinalizadoHandler.Handle(diagnosticoFinalizadoModel);
-            return Ok("Diagnóstico finalizado com sucesso");
+            return Ok(await diagnosticoFinalizadoHandler.Handle(diagnosticoFinalizadoModel));
         }
 
         [HttpPost]
         public async Task<IActionResult> AtribuirMecanicoEmExecucao([FromServices]AtribuirMecanicoExecucaoOSHandler atribuirMecanicoExecucaoOSHandler, [FromBody] AtribuiMecanicoRequest atribuiEmExecucao)
-        {
-            await atribuirMecanicoExecucaoOSHandler.Handle(atribuiEmExecucao);
-            return Ok("Mecânico atribuído à execução");
+        {            
+            return Ok(await atribuirMecanicoExecucaoOSHandler.Handle(atribuiEmExecucao));
         }
 
         [HttpPost]
         public async Task<IActionResult> FinalizarOrdemServico([FromServices]FinalizarOrdemServicoHandler finalizarOrdemServicoHandler, [FromBody] int ordemServicoId)
         {
-            await finalizarOrdemServicoHandler.Handle(ordemServicoId);
-            return Ok("Ordem de serviço finalizada com sucesso");
+            return Ok( await finalizarOrdemServicoHandler.Handle(ordemServicoId));
         }
 
         [HttpGet]
         public async Task<IActionResult> StatusAtualOrdensServicoCliente([FromServices]StatusAtualOSClienteHandler statusAtualOrdensServicoClienteHandler, [FromQuery] int clienteId)
         {
-            var status = await statusAtualOrdensServicoClienteHandler.Handle(clienteId);
-            return Ok(status);
+            return Ok(await statusAtualOrdensServicoClienteHandler.Handle(clienteId));
         }
         
         [HttpGet]
@@ -78,6 +66,22 @@ namespace AutoReparaAPI.Controllers
         {
             var ordensServico = await listarOrdensServicoPorStatusHandler.Handle();
             return Ok(ordensServico);
+        }
+
+        
+        [HttpPost]
+        public  async Task<IActionResult> AberturaOS([FromServices]OrdemServicoAppController ordemServicoAppController,[FromBody] AberturaOSRequest request)
+        {
+            var response = await ordemServicoAppController.AbrirOrdemServico(request);
+            return Ok(response);
+        }
+        
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultaStatusOrdemServico([FromServices]ConsutaStatusOSHandler consultaStatusOSHandler, [FromQuery]int ordemServicoId)
+        {
+            var status = await consultaStatusOSHandler.Handle(ordemServicoId);
+            return Ok(status);
         }
 
         
@@ -116,13 +120,6 @@ namespace AutoReparaAPI.Controllers
         {
             var servicos = await listarServicosAtivosHandler.Handle();
             return Ok(servicos);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ConsultaStatusOrdemServico([FromServices]ConsutaStatusOSHandler consultaStatusOSHandler, [FromQuery]int ordemServicoId)
-        {
-            var status = await consultaStatusOSHandler.Handle(ordemServicoId);
-            return Ok(status);
         }
     }
 }

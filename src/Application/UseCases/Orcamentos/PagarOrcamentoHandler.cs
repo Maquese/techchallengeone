@@ -1,6 +1,7 @@
 ﻿
 using Domain.Exceptions;
 using Application.Interfaces;
+using Application.Models.Responses;
 
 namespace Application.UseCases.Orcamentos;
 
@@ -15,7 +16,7 @@ public class PagarOrcamentoHandler
         _ordemServicoRepository = ordemServicoRepository;
     }
 
-    public async Task Handle(int orcamentoId)
+    public async Task<BaseResponse> Handle(int orcamentoId)
     {
         var orcamento = await _orcamentoRepository.ObterPorId(orcamentoId);
         if (orcamento == null)
@@ -42,5 +43,11 @@ public class PagarOrcamentoHandler
         orcamento.MarcarOrcamentoPago();
         ordemServico.OrdemServicoEntregue();
         await _orcamentoRepository.Atualizar(orcamento);
+        return new BaseResponse
+        {
+            Success = true, 
+            Message = "Orcamento pago com sucesso",
+            Data = orcamento.Id
+        };
     }
 }

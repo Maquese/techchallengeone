@@ -26,8 +26,8 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AprovarOrcamento([FromServices] AprovarOrcamentoHandler aprovarOrcamentoHandler, [FromBody] int orcamentoId)
         {
-            await aprovarOrcamentoHandler.Handle(orcamentoId);
-            return Ok("Orçamento aprovado com sucesso");
+            
+            return Ok(await aprovarOrcamentoHandler.Handle(orcamentoId));
         }
 
             [HttpPost]
@@ -40,8 +40,8 @@ namespace AutoReparaAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PagamentoEfetuado([FromServices] PagarOrcamentoHandler pagarOrcamentoHandler, [FromBody] int orcamentoId)
         {
-            await pagarOrcamentoHandler.Handle(orcamentoId);
-            return Ok("Orçamento pago com sucesso");
+            
+            return Ok(await pagarOrcamentoHandler.Handle(orcamentoId));
         }
 
         [HttpGet]

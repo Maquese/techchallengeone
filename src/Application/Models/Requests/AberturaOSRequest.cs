@@ -10,7 +10,6 @@ public class AberturaOSRequest
     public string Modelo { get; set; }
     public string Marca { get; set; }
     public int Ano { get; set; }
-    public int ClienteId { get; set; }
     public List<int> ServicosIds { get; set; }
     
 }
