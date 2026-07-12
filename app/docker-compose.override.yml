@@ -1,6 +1,0 @@
-services:
-  autoreparaapi:
-    image: autorepara-api:local
-    build:
-      context: .
-      dockerfile: Dockerfile

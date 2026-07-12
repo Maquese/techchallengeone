@@ -6,9 +6,9 @@ permissions:
 
 on:
   push:
-    branches: [ 'feature/**' ]
+    branches: [ 'feature/**', 'develop', 'main' ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -25,67 +25,47 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restaurar dependências
-        working-directory: app
+        working-directory: src
         run: dotnet restore GestaoAutoRepara.slnx
 
       - name: Build da solução
-        working-directory: app
+        working-directory: src
         run: dotnet build GestaoAutoRepara.slnx --no-restore --configuration Release
 
       - name: Executar testes
-        working-directory: app
+        working-directory: src
         run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
 
   deploy-k8s-local:
     needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'master')
+    runs-on: [self-hosted, linux, x64]
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build da imagem Docker
-        working-directory: app
+        working-directory: src
         run: docker build -t autorepara-api:local .
 
-      - name: Instalar kubectl
+      - name: Usar o contexto padrão do cluster
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Preparar cluster local
-        run: |
-          if ! command -v kind >/dev/null 2>&1; then
-            curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
-            chmod +x ./kind
-            sudo mv ./kind /usr/local/bin/kind
-          fi
-          if ! kind get clusters | grep -q '^kind$'; then
-            kind create cluster --name kind
-          fi
+          kubectl config current-context
           kubectl cluster-info
 
-      - name: Carregar imagem no cluster local
+      - name: Aplicar manifests no cluster padrão
         run: |
-          kind load docker-image autorepara-api:local --name kind
-
-      - name: Instalar Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.8.5
-
-      - name: Inicializar Terraform
-        working-directory: infra
-        run: terraform init
-
-      - name: Aplicar infraestrutura com Terraform
-        working-directory: infra
-        run: terraform apply -auto-approve
+          kubectl apply -f k8s/volume.yaml
+          kubectl apply -f k8s/persistClaim.yaml
+          kubectl apply -f k8s/deployment-sql.yaml
+          kubectl apply -f k8s/service-sql.yaml
+          kubectl apply -f k8s/secret.yaml
+          kubectl apply -f k8s/environment.yaml
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/metrics.yaml
+          kubectl apply -f k8s/hpa.yaml
 
       - name: Aguardar deploy do cluster
         run: |

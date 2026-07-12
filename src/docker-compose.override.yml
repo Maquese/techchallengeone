@@ -1,0 +1,6 @@
+services:
+  autoreparaapi:
+    image: auto:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
