@@ -1,62 +1,88 @@
-# 🚗 Sistema Integrado de Atendimento e Execução de Serviços – Oficina Mecânica
+﻿# 🚗 Sistema Integrado de Atendimento e Execução de Serviços – Oficina Mecânica
 
-## 📌 Objetivo
-Este projeto é o MVP do back-end de um sistema para gestão de ordens de serviço, clientes, veículos e peças de uma oficina mecânica.  
-Seguindo a proposta da fase 2 foi implementado em cima da arquitetura em camadas a clean architecture para deixara ainda mais robusto e resiliente a aplicação, alem de adicionar alguns endpoints e também ter melhorias como: ci/cd, terraform, k8s com auto scale etc
-
----
-
-## ⚙️ Funcionalidades
-- Criação e acompanhamento de **Ordens de Serviço (OS)** com status automatizados:
-  - Recebida, Em diagnóstico, Aguardando aprovação,aprovada, Em execução, Finalizada, Entregue.
-- Cadastro e gestão de **clientes, veículos, serviços e peças**.
-- Controle de **estoque de peças e insumos**.
-- Geração automática de **orçamentos** e envio para aprovação do cliente.
-- Autenticação via **JWT** para APIs administrativas.
-- APIs RESTful documentadas com **Swagger**.
+## 📌 Objetivo desta fase
+Esta fase entrega a evolução do MVP para um backend preparado para produção e orquestração em Kubernetes. O foco foi:
+- estruturar a solução em Clean Architecture;
+- documentar as APIs com OpenAPI/Swagger;
+- habilitar execução local com Docker Compose;
+- provisionar infraestrutura Kubernetes local via Terraform;
+- adicionar deploy em Kubernetes com persistência e autoscaling;
+- garantir testes automatizados e CI/CD básico.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
-- **Linguagem:** C#  
-- **Framework:** dotnet core  
-- **Banco de Dados:** MySQL 8.0  
-- **Containerização:** Docker + Docker Compose  
-- **Testes:** Unitários e de integração com cobertura mínima de 80%
+## 🧩 Descrição da solução
+O sistema gerencia ordens de serviço, clientes, veículos, serviços e controle de estoque para uma oficina mecânica. A API oferece endpoints REST para:
+- cadastro de clientes, veículos, serviços e peças;
+- cadastro e acompanhamento de ordens de serviço;
+- controle de estoque e orçamentos;
+- autenticação JWT para rotas administrativas;
+- documentação e testes automatizados.
 
 ---
-
-## 📂 Estrutura do Projeto - Mantive a estrutura base(as pastas) mas dentro de cada estrutura estruturei a clean architecture ex: dentro de application temos os usecases, dentro de domain temos as entidades e assim sucessivamente.
-.github
-k8s/*yamls
-infra/*terraform
-src/Application
-src/AutoReparaAPI
-src/Domain
-src/Infra
-src/IOC
-src/Tests
-src/Dockerfile
-src/docker-compose.yml
-src/GestaoAutoRepara.slnx
-README.md
-
 
 ## 🏗️ Arquitetura Proposta
 ![alt text](images/c4-lv1.png)
 ![alt text](images/c4-lv2.png)
 ![alt text](images/c4-lv3.png)
 ![alt text](images/infra-fluxodeploy.png)
+
+
+## 🏗️ Arquitetura proposta
+A solução segue uma arquitetura em Clean Architecture:
+- `AutoReparaAPI`: API ASP.NET Core que expõe os endpoints.
+- `Application`: regras de orquestração e casos de uso.
+- `Domain`: entidades, VO, exceções e lógica de negócio.
+- `Infra`: persistência, repositórios e acesso ao banco.
+- `IOC`: bootstrap e injeção de dependência.
+
+
+### Componentes da aplicação
+- `AutoReparaAPI`: camada (WEB) de exposição HTTP e configuração de middleware.
+- `Application`: camada(USECASE) serviços de aplicação, handlers e validações.
+- `Domain`:camada (ENTIDADES) modelos de negócio e regras de domínio.
+- `Infra`: camada (DB)implementações de repositório, ORM e acesso a dados.
+- `IOC`: registro de dependências e configuração de serviços.
+- `Tests`: testes unitários e de integração.
+
+### Infraestrutura provisionada
+- Kubernetes local:
+  - `Deployment` da API (`auto-repara-deployment`)
+  - `Service` da API (`auto-repara-svc`, tipo `LoadBalancer`)
+  - `Deployment` do MySQL (`mysql`)
+  - `Service` do MySQL (`mysql-svc`, tipo `NodePort`, porta `30306`)
+  - `ConfigMap` `appsettings-config`
+  - `Secret` `app-secrets`
+  - `PersistentVolumeClaim` `mysql-pvc`
+  - `HorizontalPodAutoscaler` `auto-repara-hpa`
+  - `metrics-server`
+- `Dockerfile` para build da imagem da API.
+- `docker-compose.yml` para execução local com MySQL e API.
+- `infra/main.tf` para aplicar os manifests Kubernetes locais via Terraform.
+
+### Fluxo de deploy
+1. Build da imagem Docker da API usando `Dockerfile`.
+2. Deploy local com `docker compose` para API + MySQL.
+3. Deploy Kubernetes local aplicando os manifests em `k8s/`.
+4. Configuração e segredos carregados via `ConfigMap` e `Secret`.
+5. `HorizontalPodAutoscaler` escalará a API com base em CPU/Memoria.
+6. Documentação e OpenAPI disponíveis via Swagger.
+
 ---
 
-## 🚀 Como Executar Localmente
+## 🚀 Execução local
+### Pré-requisitos
+- Docker instalado
+- Docker Compose disponível
+
+### Passos
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/Maquese/techchallengeone
+   git clone https://github.com/Maquese/techchallengeone.git
    ```
-2. Acesse a pasta:
+2. Entre no diretório da aplicação:
    ```bash
-   cd techchallengeone/app
+   cd techchallengeone/src
    ```
 3. Suba os containers:
    ```bash
@@ -66,63 +92,73 @@ README.md
    ```text
    http://localhost:5000
    ```
-5. Acesse a documentação Swagger:
+5. Abra a documentação:
    ```text
    http://localhost:5000/swagger
    ```
-6. Para derrubar o ambiente:
+6. Encerrar o ambiente:
    ```bash
    docker compose down
    ```
 
-## 🔁 CI/CD local
-O repositório já conta com um workflow em `.github/workflows/ci-cd-local.yml` que executa:
-- build da solução .NET
-- execução dos testes
-- build da imagem Docker
-- subida do stack local com Docker Compose
-
-Para executar manualmente no GitHub Actions, use a opção "Run workflow" no painel do repositório.
-
----
-
----
-
-## 🏗️ Arquitetura Proposta
-### Componentes da aplicação
-- `AutoReparaAPI`: serviço ASP.NET Core que expõe APIs REST para clientes, ordens de serviço, veículos e estoque.
-- `Aplication`, `Domain`, `Infra`, `IOC`: camadas da aplicação que suportam lógica de negócio, entidades, repositórios e injeção de dependências.
-- MySQL: banco relacional para persistência dos dados.
-
-### Infraestrutura provisionada
-- Kubernetes local (cluster existente via `kubectl`): executa os deployments da API e do MySQL.
-- `Deployment` da API e `Deployment` do MySQL.
-- `Service` da API (`LoadBalancer` local) e `Service` do MySQL (`NodePort`).
-- `ConfigMap` para configurações públicas de ambiente.
-- `Secret` para dados sensíveis (senha do MySQL, string de conexão e JWT secret).
-- `PersistentVolume` e `PersistentVolumeClaim` para armazenamento persistente do MySQL.
-- `metrics-server` para métricas de cluster e HPA.
-- `HorizontalPodAutoscaler` para escalar o deployment da API com base em CPU.
-
-### Fluxo de deploy
-1. Construir a imagem Docker da API com o `Dockerfile`.
-2. Para desenvolvimento local, usar `docker-compose` para garantir API + MySQL.
-3. Para deploy Kubernetes local, usar Terraform para aplicar os manifestos em `kub/`.
-4. O `Secret` é aplicado antes do deployment da API para injetar valores sensíveis.
-5. O HPA monitora uso de CPU e escala réplicas do deployment da API.
+> A API roda na porta `5000` localmente, mapeada para a porta `80` do container.
 
 ---
 
 ## ☸️ Deploy em Kubernetes
 ### Pré-requisitos
-- Cluster Kubernetes local disponível (`minikube`, `kind`, Docker Desktop Kubernetes, etc.).
-- `kubectl` configurado para o cluster.
-- `terraform` instalado.
+- Cluster Kubernetes local disponível (`minikube`, `kind`, Docker Desktop Kubernetes, etc.)
+- `kubectl` configurado para o cluster
+- `docker` instalado
+- `terraform` instalado (opcional para este fluxo)
+
+### Passo a passo com kubectl
+1. Verifique o contexto do cluster:
+   ```bash
+   kubectl config current-context
+   kubectl cluster-info
+   ```
+2. Construa a imagem Docker da API:
+   ```bash
+   cd techchallengeone/src
+   docker build -t auto:latest .
+   ```
+3. Aplique os manifestos Kubernetes:
+   ```bash
+   cd ..
+   kubectl apply -f k8s/volume.yaml
+   kubectl apply -f k8s/persistClaim.yaml
+   kubectl apply -f k8s/deployment-sql.yaml
+   kubectl apply -f k8s/service-sql.yaml
+   kubectl apply -f k8s/secret.yaml
+   kubectl apply -f k8s/environment.yaml
+   kubectl apply -f k8s/deployment.yaml
+   kubectl apply -f k8s/service.yaml
+   kubectl apply -f k8s/metrics.yaml
+   kubectl apply -f k8s/hpa.yaml
+   ```
+4. Aguarde o rollout dos deployments:
+   ```bash
+   kubectl rollout status deployment/mysql --timeout=300s
+   kubectl rollout status deployment/auto-repara-deployment --timeout=300s
+   ```
+
+### Resultados esperados
+- API disponível via `auto-repara-svc`
+- MySQL em execução via `mysql-svc`
+- Dados persistindo em `mysql-pvc`
+- HPA ativo entre 2 e 10 réplicas
+- Metrics server habilitado para cálculo de escalonamento
+
+---
+
+## ⚙️ Provisionamento da infraestrutura com Terraform
+O Terraform em `infra/main.tf` aplica os manifestos locais em `k8s/` usando `kubectl`. Ele não cria o cluster Kubernetes, apenas provisiona os recursos declarados.
 
 ### Passos
-1. Navegue até o diretório Terraform:
+1. Entre na pasta do Terraform:
    ```bash
-   cd terraform
+   cd techchallengeone/infra
    ```
 2. Inicialize o Terraform:
    ```bash
@@ -132,62 +168,49 @@ Para executar manualmente no GitHub Actions, use a opção "Run workflow" no pai
    ```bash
    terraform apply
    ```
-4. O processo aplica os manifestos em `kub/` na ordem:
-   - `volume.yaml`
-   - `persistClaim.yaml`
-   - `deployment-sql.yaml`
-   - `service-sql.yaml`
-   - `secret.yaml`
-   - `environment.yaml`
-   - `deployment.yaml`
-   - `service.yaml`
-   - `metrics.yaml`
-   - `hpa.yaml`
+4. Confirme e aguarde o término.
 
-### Resultado esperado
-- MySQL em execução no cluster
-- API ASP.NET Core acessível via Service
-- Dados persistidos em volume
-- HPA pronto para escalar com base em CPU
+### O que é aplicado
+- `k8s/volume.yaml`
+- `k8s/persistClaim.yaml`
+- `k8s/deployment-sql.yaml`
+- `k8s/service-sql.yaml`
+- `k8s/secret.yaml`
+- `k8s/environment.yaml`
+- `k8s/deployment.yaml`
+- `k8s/service.yaml`
+- `k8s/metrics.yaml`
+- `k8s/hpa.yaml`
 
 ---
 
-## ⚙️ Provisionamento da infraestrutura com Terraform
-O Terraform atual não cria o cluster Kubernetes nem um banco de dados em nuvem; ele executa `kubectl apply` nos manifestos locais.
-Use-o para aplicar a infraestrutura Kubernetes local já modelada nos arquivos YAML.
-
----
-
-## 🔐 Uso de Secrets
-No arquivo `kub/secret.yaml` devem ficar os valores sensíveis:
-- `MYSQL_ROOT_PASSWORD`
-- `ConnectionStrings__DefaultConnection`
-- `Jwt__SecretKey`
-
-Esses valores não devem ser armazenados no `ConfigMap`.
-
----
- 
 ## 📄 Collection de APIs
-- Swagger: `http://localhost:5000/swagger`
-- Postman Collection:  
-- Collection completa:  
+- Swagger UI: `http://localhost:5000/swagger`
+- OpenAPI JSON: `http://localhost:5000/openapi/v1.json`
+- Postman / Collection completa: exportar a partir do OpenAPI ou inserir link adicional.
+
+---
+
+## 📽️ Vídeo demonstrativo do ambiente
+- Link do vídeo demonstrativo: `https://link-do-video-demo-aqui`
 
 ---
 
 ## 🧪 Testes
+Execute os testes:
 ```bash
+cd techchallengeone/src
 dotnet test
 ```
 
 ---
 
-## 🔒 Segurança
-Autenticação JWT para rotas administrativas.
-Validação de dados sensíveis (CPF, CNPJ, placa de veículo).
+## 🔐 Segurança
+- Autenticação JWT configurada via `Jwt:SecretKey`, `Jwt:Issuer` e `Jwt:Audience`.
+- Segredos de banco e conexão no Kubernetes em `app-secrets`.
+- Configuração de ambiente em `appsettings-config`.
 
 ---
-
 
 ## 👥 Equipe
 Kenney Maquese
@@ -195,14 +218,11 @@ Discord: Kenney - rm374177
 
 ---
 
-## 📎 Links
-📘 Documentação DDD : https://drive.google.com/file/d/1SiuB8-Hso8AXvtbeRIW2V1-Y8_mfmyWc/view?usp=sharing
-📘 Toda a documentação: https://drive.google.com/drive/folders/17s-o27T-Lx22VP-ce8oVhZQR15ROc96a?usp=sharing
+## 📎 Links úteis
+- Documentação DDD: https://drive.google.com/file/d/1SiuB8-Hso8AXvtbeRIW2V1-Y8_mfmyWc/view?usp=sharing
+- Documentação completa: https://drive.google.com/drive/folders/17s-o27T-Lx22VP-ce8oVhZQR15ROc96a?usp=sharing
 
 ---
 
-## Considerações 
-Tive vários pontos que gostaria de fazer melhor mas me segurei devido a ser um MVP, segurança, estoque, cliente e outras coisas que devem 
-ser melhoradas na continuidade do projeto.
-Me debrucei muito mais no processo de entendimento do DDD que é o que de fato eu não tinha muito conhecimento e o que eu queria me aprofundar. 
-Não manjo muito de OWASPZAP então pode não ter ficado tão bom quanto deveria, o meu processo foi chamar as api via insominia com proxy e depois atacar.
+## Considerações finais
+Esta entrega consolida a base do backend com clean archtecture, deploy local e Kubernetes, documentação e infraestrutura de apoio. O próximo passo é evoluir a automação de CI/CD e completar eventuais gaps na orquestração do cluster mas na AWS.
