@@ -1,6 +1,7 @@
 ﻿
 using Application.Models.Responses;
 using Application.Interfaces;
+using static Application.Models.Responses.OrdensServicoOrdeandoResponse;
 namespace Application.UseCases.OrdensServico;
 
 public class ListarOrdensServicoOrdenadoHandler
@@ -23,22 +24,22 @@ public class ListarOrdensServicoOrdenadoHandler
         var data = new List<OrdensServicoOrdeandoResponse> { new OrdensServicoOrdeandoResponse {
             Status = "Em execução",
             quantidade = ordensEmExecucao.Count.ToString(),
-            OrdemServicoIds = ordensEmExecucao.Select(o => o.Id).ToList()
+            OrdemServico = ordensEmExecucao.Select(o => new OrdemServicoListResponse {ID = o.Id, Data = o.DataAbertura}).ToList()
         },
         new OrdensServicoOrdeandoResponse {
             Status = "Aguardando aprovação",
             quantidade = ordensAguardandoAprovacao.Count.ToString(),
-            OrdemServicoIds = ordensAguardandoAprovacao.Select(o => o.Id).ToList()
+            OrdemServico = ordensAguardandoAprovacao.Select(o => new OrdemServicoListResponse {ID = o.Id, Data = o.DataAbertura}).ToList()
         },
         new OrdensServicoOrdeandoResponse {
             Status = "Em diagnóstico",
             quantidade = onrdensEmDiagnostico.Count.ToString(),
-            OrdemServicoIds = onrdensEmDiagnostico.Select(o => o.Id).ToList()
+            OrdemServico = onrdensEmDiagnostico.Select(o => new OrdemServicoListResponse {ID = o.Id, Data = o.DataAbertura}).ToList()
         },
         new OrdensServicoOrdeandoResponse {
             Status = "Recebida",
             quantidade = ordensAprovadas.Count.ToString(),
-            OrdemServicoIds = ordensAprovadas.Select(o => o.Id).ToList()
+            OrdemServico = ordensAprovadas.Select(o => new OrdemServicoListResponse {ID = o.Id, Data = o.DataAbertura}).ToList()
         }};
 
 

@@ -2,13 +2,13 @@
 
 ## 📌 Objetivo
 Este projeto é o MVP do back-end de um sistema para gestão de ordens de serviço, clientes, veículos e peças de uma oficina mecânica.  
-O sistema foi desenvolvido aplicando **Domain-Driven Design (DDD)**, boas práticas de qualidade e segurança, e arquitetura em camadas.
+Seguindo a proposta da fase 2 foi implementado em cima da arquitetura em camadas a clean architecture para deixara ainda mais robusto e resiliente a aplicação, alem de adicionar alguns endpoints e também ter melhorias como: ci/cd, terraform, k8s com auto scale etc
 
 ---
 
 ## ⚙️ Funcionalidades
 - Criação e acompanhamento de **Ordens de Serviço (OS)** com status automatizados:
-  - Recebida, Em diagnóstico, Aguardando aprovação, Em execução, Finalizada, Entregue.
+  - Recebida, Em diagnóstico, Aguardando aprovação,aprovada, Em execução, Finalizada, Entregue.
 - Cadastro e gestão de **clientes, veículos, serviços e peças**.
 - Controle de **estoque de peças e insumos**.
 - Geração automática de **orçamentos** e envio para aprovação do cliente.
@@ -19,28 +19,34 @@ O sistema foi desenvolvido aplicando **Domain-Driven Design (DDD)**, boas práti
 
 ## 🛠️ Tecnologias Utilizadas
 - **Linguagem:** C#  
-- **Framework:** ASP.NET Core  
+- **Framework:** dotnet core  
 - **Banco de Dados:** MySQL 8.0  
 - **Containerização:** Docker + Docker Compose  
 - **Testes:** Unitários e de integração com cobertura mínima de 80%
 
-### 🎯 Justificativa da escolha do MySQL
-O **MySQL** banco de dados relacional foi escolhido porque o sistema é simples e bem estruturado além que tem transações um pouco mais complexas que envolve algumas relações de dados e que precisam ser ACID porém no futuro existe a possibilidade de alguns micro serviços usarem outro tipo de banco de dados.
-
 ---
 
-## 📂 Estrutura do Projeto
-/Aplication
-/AutoReparaAPI
-/Domain
-/Infra
-/IOC
-/Tests
-Dockerfile
-docker-compose.yml
-GestaoAutoRepara.slnx
+## 📂 Estrutura do Projeto - Mantive a estrutura base(as pastas) mas dentro de cada estrutura estruturei a clean architecture ex: dentro de application temos os usecases, dentro de domain temos as entidades e assim sucessivamente.
+.github
+k8s/*yamls
+infra/*terraform
+src/Application
+src/AutoReparaAPI
+src/Domain
+src/Infra
+src/IOC
+src/Tests
+src/Dockerfile
+src/docker-compose.yml
+src/GestaoAutoRepara.slnx
 README.md
 
+
+## 🏗️ Arquitetura Proposta
+![alt text](images/c4-lv1.png)
+![alt text](images/c4-lv2.png)
+![alt text](images/c4-lv3.png)
+![alt text](images/infra-fluxodeploy.png)
 ---
 
 ## 🚀 Como Executar Localmente
@@ -79,14 +85,6 @@ O repositório já conta com um workflow em `.github/workflows/ci-cd-local.yml` 
 Para executar manualmente no GitHub Actions, use a opção "Run workflow" no painel do repositório.
 
 ---
-
-## 📘 Descrição da Solução desta Fase
-Este projeto entrega um back-end ASP.NET Core containerizado para gestão de oficina mecânica com orquestração local em Docker Compose e deploy de infraestrutura via Kubernetes.
-A fase atual foca em:
-- Containerização da aplicação e do banco MySQL
-- Orquestração em Kubernetes com Deployments, Services, ConfigMap, Secret e HPA
-- Infraestrutura como código local usando Terraform para aplicar os manifestos Kubernetes
-- Documentação do fluxo de deploy e dos componentes
 
 ---
 
