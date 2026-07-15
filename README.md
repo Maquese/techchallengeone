@@ -25,11 +25,11 @@ O sistema gerencia ordens de serviço, clientes, veículos, serviços e controle
 ![alt text](images/c4-lv1.png)
 ![alt text](images/c4-lv2.png)
 ![alt text](images/c4-lv3.png)
-![alt text](images/infra-fluxodeploy.png)
+![alt text](images/infra-fluxo-deploy.png)
 
 
 ## 🏗️ Arquitetura proposta
-A solução segue uma arquitetura em Clean Architecture:
+A solução segue uma arquitetura em Clean Architecture mantendo as dlls inicias do DDD:
 - `AutoReparaAPI`: API ASP.NET Core que expõe os endpoints.
 - `Application`: regras de orquestração e casos de uso.
 - `Domain`: entidades, VO, exceções e lógica de negócio.
@@ -76,7 +76,7 @@ A solução segue uma arquitetura em Clean Architecture:
 - Docker Compose disponível
 
 ### Passos
-1. Clone o repositório:
+1. Clone o repositório e use a main:
    ```bash
    git clone https://github.com/Maquese/techchallengeone.git
    ```
@@ -134,6 +134,7 @@ A solução segue uma arquitetura em Clean Architecture:
    kubectl apply -f k8s/environment.yaml
    kubectl apply -f k8s/deployment.yaml
    kubectl apply -f k8s/service.yaml
+   kubectl apply -f k8s/components.yaml
    kubectl apply -f k8s/metrics.yaml
    kubectl apply -f k8s/hpa.yaml
    ```
@@ -179,6 +180,7 @@ O Terraform em `infra/main.tf` aplica os manifestos locais em `k8s/` usando `kub
 - `k8s/environment.yaml`
 - `k8s/deployment.yaml`
 - `k8s/service.yaml`
+- `k8s/components.yaml`
 - `k8s/metrics.yaml`
 - `k8s/hpa.yaml`
 
@@ -187,12 +189,12 @@ O Terraform em `infra/main.tf` aplica os manifestos locais em `k8s/` usando `kub
 ## 📄 Collection de APIs
 - Swagger UI: `http://localhost:5000/swagger`
 - OpenAPI JSON: `http://localhost:5000/openapi/v1.json`
-- Postman / Collection completa: exportar a partir do OpenAPI ou inserir link adicional.
+- Insominia / Collection completa: `https://drive.google.com/file/d/10UAa7QatAuzRhwO5IFBi-r4khwwR0zY2/view?usp=sharing`
 
 ---
 
 ## 📽️ Vídeo demonstrativo do ambiente
-- Link do vídeo demonstrativo: `https://link-do-video-demo-aqui`
+- Link do vídeo demonstrativo: `https://drive.google.com/file/d/1JYCgT7LCkiDluvkPqr8svOlnwkUTRZet/view?usp=sharing`
 
 ---
 

@@ -19,7 +19,7 @@ resource "null_resource" "apply_k8s_manifests" {
       filemd5(abspath("${path.module}/../k8s/environment.yaml")),
       filemd5(abspath("${path.module}/../k8s/deployment.yaml")),
       filemd5(abspath("${path.module}/../k8s/service.yaml")),
-      filemd5(abspath("${path.module}/../k8s/metrics.yaml")),
+      filemd5(abspath("${path.module}/../k8s/metrics.yaml")), 
       filemd5(abspath("${path.module}/../k8s/components.yaml")),
       filemd5(abspath("${path.module}/../k8s/hpa.yaml")),
     ])
