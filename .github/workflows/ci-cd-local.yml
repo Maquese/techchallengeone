@@ -36,39 +36,31 @@ jobs:
         working-directory: src
         run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
 
-  deploy-k8s-local:
+  publish-dockerhub:
     needs: build-and-test
     runs-on: [self-hosted, linux, x64]
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    env:
+      DOCKERHUB_IMAGE: maquese/techchallenge-3
+      DOCKERHUB_TAG: v1
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Build da imagem Docker
+      - name: Autenticar no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Construir imagem local e tag do Docker Hub
         working-directory: src
-        run: docker build -t autorepara-api:local .
-
-      - name: Usar o contexto padrão do cluster
         run: |
-          kubectl config current-context
-          kubectl cluster-info
+          docker build \
+            -t ecs-image-api:latest \
+            -t ${DOCKERHUB_IMAGE}:${DOCKERHUB_TAG} .
 
-      - name: Aplicar manifests no cluster padrão
-        run: |
-          kubectl apply -f k8s/volume.yaml
-          kubectl apply -f k8s/persistClaim.yaml
-          kubectl apply -f k8s/deployment-sql.yaml
-          kubectl apply -f k8s/service-sql.yaml
-          kubectl apply -f k8s/secret.yaml
-          kubectl apply -f k8s/environment.yaml
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl apply -f k8s/components.yaml
-          kubectl apply -f k8s/metrics.yaml
-          kubectl apply -f k8s/hpa.yaml
-
-      - name: Aguardar deploy do cluster
-        run: |
-          kubectl rollout status deployment/mysql --timeout=300s
-          kubectl rollout status deployment/auto-repara-deployment --timeout=300s
+      - name: Publicar imagem no Docker Hub
+        run: docker push ${DOCKERHUB_IMAGE}:${DOCKERHUB_TAG}

@@ -17,7 +17,7 @@ namespace IOC;
     {
         public static void AddAppServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<AuthService>();
+            //services.AddScoped<AuthService>();
 
             var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
                 ?? configuration["ConnectionStrings:DefaultConnection"]

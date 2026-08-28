@@ -4,8 +4,8 @@ using Application.Models.Requests;
 
 namespace AutoReparaAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    //[Route("api/[controller]")]
+    //[ApiController]
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
