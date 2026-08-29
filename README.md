@@ -106,6 +106,25 @@ A solução segue uma arquitetura em Clean Architecture mantendo as dlls inicias
 ---
 
 ## ☸️ Deploy em Kubernetes
+
+### CI/CD com self-hosted runner e Docker Hub
+
+O workflow `.github/workflows/ci-cd-local.yml` gera a imagem local `ecs-image-api:latest` e publica `maquese/techchallenge-3:v1` no Docker Hub após cada push na branch `main`.
+
+Configure estes secrets no repositorio:
+
+- `DOCKERHUB_USERNAME`: usuario do Docker Hub (`maquese`);
+- `DOCKERHUB_TOKEN`: token de acesso do Docker Hub com permissao de push.
+
+O runner precisa estar registrado com as labels `self-hosted`, `linux` e `x64` e ter o Docker instalado. A imagem publicada e `maquese/techchallenge-3:v1`.
+
+Para gerar a imagem localmente:
+
+```bash
+cd techchallengeone/src
+docker build -t ecs-image-api:latest .
+```
+
 ### Pré-requisitos
 - Cluster Kubernetes local disponível (`minikube`, `kind`, Docker Desktop Kubernetes, etc.)
 - `kubectl` configurado para o cluster

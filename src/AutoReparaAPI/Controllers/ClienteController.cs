@@ -8,7 +8,7 @@ namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class ClienteController : ControllerBase
     {
         public ClienteController()

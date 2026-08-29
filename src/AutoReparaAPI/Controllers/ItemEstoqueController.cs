@@ -9,7 +9,7 @@ namespace AutoReparaAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class ItemEstoqueController : ControllerBase
     {
         public ItemEstoqueController()
