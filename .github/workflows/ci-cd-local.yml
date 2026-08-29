@@ -39,6 +39,36 @@ jobs:
         working-directory: src
         run: dotnet test GestaoAutoRepara.slnx --no-build --configuration Release --verbosity minimal
 
+  create-pr-to-main:
+    name: Open PR to main
+    needs: build-and-test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Criar PR para main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL=$(gh pr list --base main --head "${GITHUB_REF_NAME}" --state open --json url --jq '.[0].url // empty')
+
+          if [ -z "$PR_URL" ]; then
+            gh pr create \
+              --base main \
+              --head "${GITHUB_REF_NAME}" \
+              --title "feat: ${GITHUB_REF_NAME}" \
+              --body "## Resumo
+              - Build e testes executados na branch de feature
+              - PR pronta para revisão e merge em main"
+          else
+            echo "PR já existente para ${GITHUB_REF_NAME}: $PR_URL"
+          fi
+
   publish-dockerhub:
     name: Publish Docker image
     needs: build-and-test
