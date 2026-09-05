@@ -13,7 +13,7 @@ jobs:
 
     env:
       DOCKERHUB_IMAGE: maquese/techchallenge-3
-      DOCKERHUB_TAG: ${{ github.sha }}
+      DOCKERHUB_TAG: v1
 
     steps:
       - name: Checkout do código
