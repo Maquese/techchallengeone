@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoReparaAPI.Middleware;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 // Add services to the container.
 
+builder.Services.AddHealthChecks();
 builder.Services.AddAppServices(builder.Configuration);
 
 // Configurar JWT
@@ -42,6 +44,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false
+});
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
