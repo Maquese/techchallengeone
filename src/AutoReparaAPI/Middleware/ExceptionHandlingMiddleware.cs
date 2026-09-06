@@ -19,28 +19,41 @@ public class ExceptionHandlingMiddleware
         try
         {
             await _next(context);
-        }
+            }
         catch (DomainException ex)
         {
-            _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
+                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
             await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
         }
          catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
+                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
             await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
         }
          catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Erro de domínio capturado pelo middleware.");
+                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
             await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro inesperado capturado pelo middleware.");
+                _logger.LogError(
+                    new EventId(1002, "OrderProcessingFailure"),
+                    ex,
+                    "Falha inesperada no processamento da ordem de serviço. Status HTTP: {StatusCode}",
+                    StatusCodes.Status500InternalServerError);
             await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, "OOPs algo errado aconteceu, tente novamente mais tarde ou entre em contato", null);
         }
     }
+
+        private void LogOrderProcessingFailure(Exception exception, int statusCode)
+        {
+            _logger.LogWarning(
+                new EventId(1001, "OrderProcessingFailure"),
+                exception,
+                "Falha de domínio no processamento da ordem de serviço. Status HTTP: {StatusCode}",
+                statusCode);
+        }
 
     private static async Task WriteResponseAsync(HttpContext context, int statusCode, bool success, string message, object? data)
     {
