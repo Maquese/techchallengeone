@@ -13,6 +13,7 @@ using Domain.VOs;
 using Application.UseCases.OrdensServico;
 using Application.Models.Requests;
 using Application.Models.Responses;
+using Microsoft.Extensions.Logging;
 
 namespace Aplication.Tests
 {
@@ -24,6 +25,7 @@ namespace Aplication.Tests
         private readonly Mock<OrcamentoRepository> _orcamentoRepoMock;
         private readonly Mock<ItemEstoqueRepository> _itemRepoMock;
         private readonly Mock<ClienteRepository> _clienteRepoMock;
+        private readonly Mock<ILogger<AdicionarOrdemServicoHandler>> _adicionarOrdemServicoLoggerMock;
         private readonly AdicionarOrdemServicoHandler _adicionarOrdemServicoHandler;
         private readonly AtribuirMecanicoDiagnosticoOSHandler _atribuirMecanicoDiagnosticoOSHandler;
         private readonly AtribuirMecanicoExecucaoOSHandler _atribuirMecanicoExecucaoOSHandler;
@@ -47,10 +49,12 @@ namespace Aplication.Tests
             _orcamentoRepoMock = new Mock<OrcamentoRepository>();
             _itemRepoMock = new Mock<ItemEstoqueRepository>();
             _clienteRepoMock = new Mock<ClienteRepository>();
+            _adicionarOrdemServicoLoggerMock = new Mock<ILogger<AdicionarOrdemServicoHandler>>();
             _adicionarOrdemServicoHandler = new AdicionarOrdemServicoHandler(
                 _veiculoRepoMock.Object,
                 _servicoRepoMock.Object,
-                _ordemRepoMock.Object
+                _ordemRepoMock.Object,
+                _adicionarOrdemServicoLoggerMock.Object
             );
             _atribuirMecanicoDiagnosticoOSHandler = new AtribuirMecanicoDiagnosticoOSHandler(
                 _ordemRepoMock.Object
