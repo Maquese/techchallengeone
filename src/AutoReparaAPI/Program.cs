@@ -10,6 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Logging.ClearProviders();
+
+builder.Logging.AddJsonConsole(options =>
+{
+    options.IncludeScopes = true;
+    options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
+});
 // Add services to the container.
 
 builder.Services.AddHealthChecks();
@@ -51,6 +58,7 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions
 });
 
 
+app.UseMiddleware<CorrelationMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
