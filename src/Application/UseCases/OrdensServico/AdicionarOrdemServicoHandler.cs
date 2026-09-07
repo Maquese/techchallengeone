@@ -28,23 +28,26 @@ public class AdicionarOrdemServicoHandler
     
     public async Task<BaseResponse> Handle(AddOrdemServicoRequest ordemServico)
     {
-        var stopwatch = Stopwatch.StartNew();
-
         using var scope = _logger.BeginScope(new Dictionary<string, object?>
         {
+            ["correlation_id"] = Activity.Current?.TraceId.ToString() ?? "n/a",
             ["event_type"] = "order_processing",
             ["operation"] = "create_order",
-            ["vehicle_id"] = ordemServico.VeiculoId
+            ["vehicle_id"] = ordemServico.VeiculoId,
+            ["status"] = "pending"
         });
 
-        _logger.LogInformation("Início da criação da ordem de serviço");
+        _logger.LogInformation(
+            "Início da criação da ordem de serviço. VehicleId: {VehicleId}",
+            ordemServico.VeiculoId);
 
         var veiculo = await _veiculoRepository.ObterPorId(ordemServico.VeiculoId);
 
         if (veiculo == null)
         {
             _logger.LogWarning(
-                "Falha ao criar ordem de serviço: veículo não encontrado");
+                "Falha ao criar ordem de serviço: veículo não encontrado. VehicleId: {VehicleId}",
+                ordemServico.VeiculoId);
 
             throw new DomainException(
                 $"Veículo com ID {ordemServico.VeiculoId} não encontrado.");
@@ -58,13 +61,12 @@ public class AdicionarOrdemServicoHandler
 
         await _ordemServicoRepository.Adicionar(ordemServicoEntity);
 
-        stopwatch.Stop();
-
         _logger.LogInformation(
-            "Ordem de serviço criada com sucesso. OrderId: {OrderId}, Status: {Status}, DurationMs: {DurationMs}",
+            "Ordem de serviço criada com sucesso. OrderId: {OrderId}, VehicleId: {VehicleId}, Status: {Status}, Data de abertura {Data}",
             ordemServicoEntity.Id,
+            ordemServicoEntity.VeiculoId,
             ordemServicoEntity.Status,
-            stopwatch.ElapsedMilliseconds);
+            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
         return new BaseResponse
         {

@@ -5,6 +5,8 @@ using Domain.Entidades;
 using Domain.Exceptions;
 using Application.Interfaces;
 using Application.Models.Responses;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace Application.UseCases.OrdensServico;
 
@@ -14,13 +16,19 @@ public class FinalizarDiagnosticoOSHandler
     private readonly ServicoRepository _servicoRepository;
     private readonly ItemEstoqueRepository _itensEstoqueRepository;
     private readonly OrcamentoRepository _orcamentoRepository;
+    private readonly ILogger<FinalizarDiagnosticoOSHandler> _logger;
 
-    public FinalizarDiagnosticoOSHandler(OrdemServicoRepository ordemServicoRepository, ServicoRepository servicoRepository, ItemEstoqueRepository itensEstoqueRepository, OrcamentoRepository orcamentoRepository)
+    public FinalizarDiagnosticoOSHandler(OrdemServicoRepository ordemServicoRepository, 
+                                         ServicoRepository servicoRepository, 
+                                         ItemEstoqueRepository itensEstoqueRepository, 
+                                         OrcamentoRepository orcamentoRepository,
+                                         ILogger<FinalizarDiagnosticoOSHandler> logger)
     {
         _ordemServicoRepository = ordemServicoRepository;
         _servicoRepository = servicoRepository;
         _itensEstoqueRepository = itensEstoqueRepository;
         _orcamentoRepository = orcamentoRepository; 
+        _logger = logger;
     }
 
       public async Task<BaseResponse> Handle(DiagnosticoFinalizadoRequest diagnosticoFinalizadoModel)
@@ -30,6 +38,16 @@ public class FinalizarDiagnosticoOSHandler
         {
             throw new DomainException($"Ordem de serviço para o veículo ID {diagnosticoFinalizadoModel.Id} não encontrada.");
         }
+
+        using var scope = _logger.BeginScope(new Dictionary<string, object?>
+        {
+            ["correlation_id"] = Activity.Current?.TraceId.ToString() ?? "n/a",
+            ["event_type"] = "order_processing",
+            ["operation"] = "finalize_order_diagnosis",
+            ["order_id"] = ordemServico.Id,
+            ["vehicle_id"] = ordemServico.VeiculoId,
+            ["status"] = ordemServico.Status
+        });
 
         if(ordemServico.Status != "Em diagnóstico")
         {
@@ -47,12 +65,25 @@ public class FinalizarDiagnosticoOSHandler
         }
 
         ordemServico.OSDiagnosticada(itensEstoque);
+        _logger.LogInformation(
+            "Diagnóstico finalizado para a ordem de serviço ID {OrderId}. VehicleId: {VehicleId}, Status: {Status}, Data: {Data}",
+            ordemServico.Id,
+            ordemServico.VeiculoId,
+            ordemServico.Status,
+            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         var orcamento = new Orcamento(
-            diagnosticoFinalizadoModel.Id, 
-            await CalcularValorTotalOrcamento(diagnosticoFinalizadoModel.ItensEstoque, ordemServico.Servicos?.Select(x => x.Id).ToList()),
+            diagnosticoFinalizadoModel.Id,
+            await CalcularValorTotalOrcamento(
+                diagnosticoFinalizadoModel.ItensEstoque,
+                ordemServico.Servicos?.Select(x => x.Id).ToList() ?? new List<int>()),
             "obs");
         await _ordemServicoRepository.Atualizar(ordemServico);
         await _orcamentoRepository.Adicionar(orcamento);
+        _logger.LogInformation(
+            "Orçamento criado para a ordem de serviço ID {OrderId}. VehicleId: {VehicleId}, Status: {Status}",
+            ordemServico.Id,
+            ordemServico.VeiculoId,
+            ordemServico.Status);
         return new BaseResponse
         {
             Success = true,

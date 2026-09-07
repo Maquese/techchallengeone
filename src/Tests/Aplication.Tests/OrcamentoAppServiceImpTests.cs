@@ -11,6 +11,7 @@ using System.Reflection;
 using Application.UseCases.Orcamentos;
 using Application.Models;
 using Application.Models.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace Aplication.Tests
 {
@@ -18,6 +19,7 @@ namespace Aplication.Tests
     {
         private readonly Mock<OrcamentoRepository> _orcamentoRepoMock;
         private readonly Mock<OrdemServicoRepository> _ordemServicoRepoMock;
+        private readonly Mock<ILogger<PagarOrcamentoHandler>> _pagarOrcamentoLoggerMock;
         private readonly AdicionarOrcamentoHandler _adicionarOrcamentoHandler;
         private readonly AprovarOrcamentoHandler _aprovarOrcamentoHandler;
         private readonly PagarOrcamentoHandler _pagarOrcamentoHandler;
@@ -26,9 +28,10 @@ namespace Aplication.Tests
         {
             _orcamentoRepoMock = new Mock<OrcamentoRepository>();
             _ordemServicoRepoMock = new Mock<OrdemServicoRepository>();
+            _pagarOrcamentoLoggerMock = new Mock<ILogger<PagarOrcamentoHandler>>();
             _adicionarOrcamentoHandler = new AdicionarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
             _aprovarOrcamentoHandler = new AprovarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
-            _pagarOrcamentoHandler = new PagarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object);
+            _pagarOrcamentoHandler = new PagarOrcamentoHandler(_orcamentoRepoMock.Object, _ordemServicoRepoMock.Object, _pagarOrcamentoLoggerMock.Object);
         }
 
         [Fact]
