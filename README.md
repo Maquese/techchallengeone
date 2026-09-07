@@ -1,249 +1,257 @@
-﻿# 🚗 Sistema Integrado de Atendimento e Execução de Serviços – Oficina Mecânica
+﻿# Projeto: Nome do Repositório
 
-## 📌 Objetivo desta fase
-Esta fase entrega a evolução do MVP para um backend preparado para produção e orquestração em Kubernetes. O foco foi:
-- estruturar a solução em Clean Architecture;
-- documentar as APIs com OpenAPI/Swagger;
-- habilitar execução local com Docker Compose;
-- provisionar infraestrutura Kubernetes local via Terraform;
-- adicionar deploy em Kubernetes com persistência e autoscaling;
-- garantir testes automatizados e CI/CD básico.
+## 1. Objetivo do projeto
+Descreva aqui o propósito do repositório e o problema que ele resolve.
 
----
-
-## 🧩 Descrição da solução
-O sistema gerencia ordens de serviço, clientes, veículos, serviços e controle de estoque para uma oficina mecânica. A API oferece endpoints REST para:
-- cadastro de clientes, veículos, serviços e peças;
-- cadastro e acompanhamento de ordens de serviço;
-- controle de estoque e orçamentos;
-- autenticação JWT para rotas administrativas;
-- documentação e testes automatizados.
+Exemplo:
+- Gerenciar ordens de serviço de uma oficina mecânica.
+- Controlar clientes, veículos, serviços, estoque e orçamento.
+- Expor APIs para integração com frontend e outros sistemas.
 
 ---
 
-## 🏗️ Arquitetura Proposta
-![alt text](images/c4-lv1.png)
-![alt text](images/c4-lv2.png)
-![alt text](images/c4-lv3.png)
-![alt text](images/infra-fluxo-deploy.png)
+## 2. Tecnologias utilizadas
+- .NET 8 / .NET 9
+- ASP.NET Core
+- C#
+- Entity Framework / Dapper / SQL Server / MySQL
+- Docker
+- Kubernetes
+- Terraform
+- Swagger / OpenAPI
+- GitHub Actions
+- Testes com xUnit / NUnit / MSTest
 
-
-## 🏗️ Arquitetura proposta
-A solução segue uma arquitetura em Clean Architecture mantendo as dlls inicias do DDD:
-- `AutoReparaAPI`: API ASP.NET Core que expõe os endpoints.
-- `Application`: regras de orquestração e casos de uso.
-- `Domain`: entidades, VO, exceções e lógica de negócio.
-- `Infra`: persistência, repositórios e acesso ao banco.
-- `IOC`: bootstrap e injeção de dependência.
-
-
-### Componentes da aplicação
-- `AutoReparaAPI`: camada (WEB) de exposição HTTP e configuração de middleware.
-- `Application`: camada(USECASE) serviços de aplicação, handlers e validações.
-- `Domain`:camada (ENTIDADES) modelos de negócio e regras de domínio.
-- `Infra`: camada (DB)implementações de repositório, ORM e acesso a dados.
-- `IOC`: registro de dependências e configuração de serviços.
-- `Tests`: testes unitários e de integração.
-
-### Infraestrutura provisionada
-- Kubernetes local:
-  - `Deployment` da API (`auto-repara-deployment`)
-  - `Service` da API (`auto-repara-svc`, tipo `LoadBalancer`)
-  - `Deployment` do MySQL (`mysql`)
-  - `Service` do MySQL (`mysql-svc`, tipo `NodePort`, porta `30306`)
-  - `ConfigMap` `appsettings-config`
-  - `Secret` `app-secrets`
-  - `PersistentVolumeClaim` `mysql-pvc`
-  - `HorizontalPodAutoscaler` `auto-repara-hpa`
-  - `metrics-server`
-- `Dockerfile` para build da imagem da API.
-- `docker-compose.yml` para execução local com MySQL e API.
-- `infra/main.tf` para aplicar os manifests Kubernetes locais via Terraform.
-
-### Fluxo de deploy
-1. Build da imagem Docker da API usando `Dockerfile`.
-2. Deploy local com `docker compose` para API + MySQL.
-3. Deploy Kubernetes local aplicando os manifests em `k8s/`.
-4. Configuração e segredos carregados via `ConfigMap` e `Secret`.
-5. `HorizontalPodAutoscaler` escalará a API com base em CPU/Memoria.
-6. Documentação e OpenAPI disponíveis via Swagger.
+> Ajuste conforme o projeto real.
 
 ---
 
-## 🚀 Execução local
-### Pré-requisitos
-- Docker instalado
-- Docker Compose disponível
+## 3. Arquitetura e componentes
 
-### Passos
-1. Clone o repositório e use a main:
-   ```bash
-   git clone https://github.com/Maquese/techchallengeone.git
-   ```
-2. Entre no diretório da aplicação:
-   ```bash
-   cd techchallengeone/src
-   ```
-3. Suba os containers:
-   ```bash
-   docker compose up --build -d
-   ```
-4. Acesse a API:
-   ```text
-   http://localhost:5000
-   ```
-5. Abra a documentação:
-   ```text
-   http://localhost:5000/swagger
-   ```
-6. Encerrar o ambiente:
-   ```bash
-   docker compose down
-   ```
+### Visão geral
+O sistema é composto pelos seguintes módulos:
+- API
+- Application
+- Domain
+- Infra
+- IOC
+- Tests
 
-> A API roda na porta `5000` localmente, mapeada para a porta `80` do container.
+### Diagrama de componentes
+Coloque o diagrama do sistema aqui:
+
+![Diagrama de componentes - inserir imagem](images/diagrama-componentes.png)
+
+> Substitua o caminho e o nome da imagem conforme seu projeto.
+
+### Fluxo principal
+1. Cliente realiza requisição na API.
+2. A API valida a request e direciona para o caso de uso.
+3. A camada de aplicação executa a regra de negócio.
+4. A infraestrutura persiste ou consulta os dados.
+5. A resposta é devolvida em JSON para o cliente.
 
 ---
 
-## ☸️ Deploy em Kubernetes
-
-### CI/CD com self-hosted runner e Docker Hub
-
-O workflow `.github/workflows/ci-cd-local.yml` gera a imagem local `ecs-image-api:latest` e publica `maquese/techchallenge-3:v1` no Docker Hub após cada push na branch `main`.
-
-Configure estes secrets no repositorio:
-
-- `DOCKERHUB_USERNAME`: usuario do Docker Hub (`maquese`);
-- `DOCKERHUB_TOKEN`: token de acesso do Docker Hub com permissao de push.
-
-O runner precisa estar registrado com as labels `self-hosted`, `linux` e `x64` e ter o Docker instalado. A imagem publicada e `maquese/techchallenge-3:v1`.
-
-Para gerar a imagem localmente:
-
-```bash
-cd techchallengeone/src
-docker build -t ecs-image-api:latest .
+## 4. Estrutura do repositório
+```text
+/
+├── src/
+│   ├── AutoReparaAPI/
+│   ├── Application/
+│   ├── Domain/
+│   ├── Infra/
+│   ├── IOC/
+│   └── Tests/
+├── infra/
+│   └── main.tf
+├── k8s/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── ...
+├── Dockerfile
+├── docker-compose.yml
+├── README.md
+└── ...
 ```
 
-### Pré-requisitos
-- Cluster Kubernetes local disponível (`minikube`, `kind`, Docker Desktop Kubernetes, etc.)
-- `kubectl` configurado para o cluster
-- `docker` instalado
-- `terraform` instalado (opcional para este fluxo)
-
-### Passo a passo com kubectl
-1. Verifique o contexto do cluster:
-   ```bash
-   kubectl config current-context
-   kubectl cluster-info
-   ```
-2. Construa a imagem Docker da API:
-   ```bash
-   cd techchallengeone/src
-   docker build -t auto:latest .
-   ```
-3. Aplique os manifestos Kubernetes:
-   ```bash
-   cd ..
-   kubectl apply -f k8s/volume.yaml
-   kubectl apply -f k8s/persistClaim.yaml
-   kubectl apply -f k8s/deployment-sql.yaml
-   kubectl apply -f k8s/service-sql.yaml
-   kubectl apply -f k8s/secret.yaml
-   kubectl apply -f k8s/environment.yaml
-   kubectl apply -f k8s/deployment.yaml
-   kubectl apply -f k8s/service.yaml
-   kubectl apply -f k8s/components.yaml
-   kubectl apply -f k8s/metrics.yaml
-   kubectl apply -f k8s/hpa.yaml
-   ```
-4. Aguarde o rollout dos deployments:
-   ```bash
-   kubectl rollout status deployment/mysql --timeout=300s
-   kubectl rollout status deployment/auto-repara-deployment --timeout=300s
-   ```
-
-### Resultados esperados
-- API disponível via `auto-repara-svc`
-- MySQL em execução via `mysql-svc`
-- Dados persistindo em `mysql-pvc`
-- HPA ativo entre 2 e 10 réplicas
-- Metrics server habilitado para cálculo de escalonamento
+> Se este repositório não precisa de Dockerfile, remova essa linha e mantenha apenas o necessário.
 
 ---
 
-## ⚙️ Provisionamento da infraestrutura com Terraform
-O Terraform em `infra/main.tf` aplica os manifestos locais em `k8s/` usando `kubectl`. Ele não cria o cluster Kubernetes, apenas provisiona os recursos declarados.
-
-### Passos
-1. Entre na pasta do Terraform:
-   ```bash
-   cd techchallengeone/infra
-   ```
-2. Inicialize o Terraform:
-   ```bash
-   terraform init
-   ```
-3. Aplique a infraestrutura:
-   ```bash
-   terraform apply
-   ```
-4. Confirme e aguarde o término.
-
-### O que é aplicado
-- `k8s/volume.yaml`
-- `k8s/persistClaim.yaml`
-- `k8s/deployment-sql.yaml`
-- `k8s/service-sql.yaml`
-- `k8s/secret.yaml`
-- `k8s/environment.yaml`
-- `k8s/deployment.yaml`
-- `k8s/service.yaml`
-- `k8s/components.yaml`
-- `k8s/metrics.yaml`
-- `k8s/hpa.yaml`
+## 5. Pré-requisitos
+Antes de rodar o projeto, verifique se você possui:
+- .NET SDK instalado
+- Docker e Docker Compose instalados
+- Kubernetes / Minikube / Kind (se for deploy local em cluster)
+- Terraform (se a infraestrutura for provisionada via IaC)
+- Banco de dados configurado
 
 ---
 
-## 📄 Collection de APIs
-- Swagger UI: `http://localhost:5000/swagger`
-- OpenAPI JSON: `http://localhost:5000/openapi/v1.json`
-- Insominia / Collection completa: `https://drive.google.com/file/d/10UAa7QatAuzRhwO5IFBi-r4khwwR0zY2/view?usp=sharing`
+## 6. Execução local
 
----
+A aplicação pode ser executada localmente sem qualquer publicação no Docker Hub. O Docker Hub é apenas o repositório da imagem para uso em outros ambientes e no Kubernetes.
 
-## 📽️ Vídeo demonstrativo do ambiente
-- Link do vídeo demonstrativo: `https://drive.google.com/file/d/1JYCgT7LCkiDluvkPqr8svOlnwkUTRZet/view?usp=sharing`
-
----
-
-## 🧪 Testes
-Execute os testes:
+### Opção 1: via Docker Compose
 ```bash
-cd techchallengeone/src
+cd src
+
+docker compose up --build
+```
+
+Acesse:
+- API: http://localhost:<porta>
+- Swagger: http://localhost:<porta>/swagger
+- OpenAPI: http://localhost:<porta>/openapi/v1.json
+
+### Opção 2: via .NET local
+```bash
+dotnet restore
+dotnet build
+dotnet run --project src/AutoReparaAPI/AutoReparaAPI.csproj
+```
+
+### Build local da imagem Docker
+```bash
+docker build -t auto-repara-api:local .
+```
+
+### Publicação no Docker Hub
+Para publicar a imagem no Docker Hub, substitua o nome conforme sua conta:
+
+```bash
+docker build -t SEU_USUARIO/auto-repara-api:latest .
+docker login
+docker push SEU_USUARIO/auto-repara-api:latest
+```
+
+> Altere apenas os valores `SEU_USUARIO` e `auto-repara-api` de acordo com seu usuário e nome do repositório no Docker Hub.
+
+### Onde a pessoa precisa alterar a imagem
+Existem dois pontos principais que normalmente precisam ser ajustados:
+
+1. No comando de build/push:
+```bash
+docker build -t SEU_USUARIO/auto-repara-api:latest .
+```
+
+2. No manifesto do Kubernetes:
+```yaml
+image: SEU_USUARIO/auto-repara-api:latest
+```
+
+Se o projeto usar `docker-compose` com imagem fixa, também pode haver ajuste no campo `image` desse arquivo.
+
+> Em resumo: rodar localmente não depende do Docker Hub; o Docker Hub é apenas para publicar a imagem para uso em outros ambientes, como Kubernetes, homologação ou produção.
+
+---
+
+## 7. Deploy
+
+### Deploy local com Docker
+Descreva aqui como a aplicação é executada em ambiente local/containerizado.
+
+### Deploy em Kubernetes
+Descreva como a aplicação é implantada em cluster Kubernetes.
+
+#### Arquitetura de deploy
+![Arquitetura de deploy - inserir imagem](images/deploy-kubernetes.png)
+
+#### Recursos utilizados
+- Deployment
+- Service
+- ConfigMap
+- Secret
+- PersistentVolumeClaim
+- HPA
+
+> Dockerfile deve existir apenas quando for necessário para build da imagem de aplicação em Kubernetes ou containerização real.
+
+---
+
+## 8. Pipeline de CI/CD
+
+### Visão geral
+A pipeline executa os seguintes passos:
+1. Checkout do código
+2. Restore dos pacotes
+3. Build da solução
+4. Execução dos testes
+5. Publicação da imagem Docker (se aplicável)
+6. Deploy em ambiente de homologação / produção
+
+### Fluxo da pipeline
+![Pipeline - inserir imagem](images/pipeline.png)
+
+### Exemplo de etapas
+- build
+- test
+- docker build
+- push image
+- deploy
+
+> Ajuste conforme o GitHub Actions, Azure DevOps, GitLab CI ou outra ferramenta usada.
+
+---
+
+## 9. Documentação da API
+### Swagger
+- URL local: http://localhost:<porta>/swagger
+- URL de ambiente: <inserir link>
+
+### Postman
+- Collection: <inserir link do Postman>
+- Workspace: <inserir link>
+
+---
+
+## 10. Observabilidade e logs
+- Logs estruturados em JSON
+- Correlação por request
+- Métricas e alertas conforme ambiente
+
+> Descreva aqui quais campos de log e métricas são usados para monitoramento.
+
+---
+
+## 11. Testes
+```bash
 dotnet test
 ```
 
----
-
-## 🔐 Segurança
-- Autenticação JWT configurada via `Jwt:SecretKey`, `Jwt:Issuer` e `Jwt:Audience`.
-- Segredos de banco e conexão no Kubernetes em `app-secrets`.
-- Configuração de ambiente em `appsettings-config`.
+Cobertura esperada:
+- testes unitários
+- testes de integração
+- validação de regras de negócio
 
 ---
 
-## 👥 Equipe
-Kenney Maquese
-Discord: Kenney - rm374177
+## 12. Como contribuir
+1. Faça fork do projeto.
+2. Crie uma branch para a feature.
+3. Faça commit com mensagem clara.
+4. Abra um Pull Request.
 
 ---
 
-## 📎 Links úteis
-- Documentação DDD: https://drive.google.com/file/d/1SiuB8-Hso8AXvtbeRIW2V1-Y8_mfmyWc/view?usp=sharing
-- Documentação completa: https://drive.google.com/drive/folders/17s-o27T-Lx22VP-ce8oVhZQR15ROc96a?usp=sharing
+## 13. Informações adicionais
+- Nome do autor / equipe
+- Repositório relacionado
+- Link para documentação adicional
+- Link para imagens ou diagramas externos
 
 ---
 
-## Considerações finais
-Esta entrega consolida a base do backend com clean archtecture, deploy local e Kubernetes, documentação e infraestrutura de apoio. O próximo passo é evoluir a automação de CI/CD e completar eventuais gaps na orquestração do cluster mas na AWS.
+## 14. Imagens e artefatos
+- [Inserir imagem da arquitetura]
+- [Inserir imagem do diagrama de componentes]
+- [Inserir imagem da pipeline]
+- [Inserir imagem do deploy Kubernetes]
+
+---
+
+## 15. Observações finais
+- Dockerfile somente quando houver necessidade técnica de containerização da aplicação.
+- Este README serve como template base para documentação do repositório.
+- Ajuste os itens para refletir o cenário real do projeto.
