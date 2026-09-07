@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Models.Responses;
 using Domain.Exceptions;
 
@@ -19,41 +20,63 @@ public class ExceptionHandlingMiddleware
         try
         {
             await _next(context);
-            }
+        }
         catch (DomainException ex)
         {
-                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
-            await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest, "domain_error");
         }
-         catch (ArgumentException ex)
+        catch (ArgumentException ex)
         {
-                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
-            await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest, "validation_error");
         }
-         catch (InvalidOperationException ex)
+        catch (InvalidOperationException ex)
         {
-                LogOrderProcessingFailure(ex, StatusCodes.Status400BadRequest);
-            await WriteResponseAsync(context, StatusCodes.Status400BadRequest, false, ex.Message, null);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest, "invalid_operation");
         }
         catch (Exception ex)
         {
-                _logger.LogError(
-                    new EventId(1002, "OrderProcessingFailure"),
-                    ex,
-                    "Falha inesperada no processamento da ordem de serviço. Status HTTP: {StatusCode}",
-                    StatusCodes.Status500InternalServerError);
-            await WriteResponseAsync(context, StatusCodes.Status500InternalServerError, false, "OOPs algo errado aconteceu, tente novamente mais tarde ou entre em contato", null);
+            await HandleExceptionAsync(context, ex, StatusCodes.Status500InternalServerError, "unexpected_error");
         }
     }
 
-        private void LogOrderProcessingFailure(Exception exception, int statusCode)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception, int statusCode, string errorType)
+    {
+        var correlationId = GetCorrelationId(context);
+
+        using (_logger.BeginScope(new Dictionary<string, object?>
         {
-            _logger.LogWarning(
-                new EventId(1001, "OrderProcessingFailure"),
+            ["correlation_id"] = correlationId,
+            ["request_id"] = context.TraceIdentifier,
+            ["trace_id"] = Activity.Current?.TraceId.ToString(),
+            ["event_type"] = "integration_error",
+            ["operation"] = "request_pipeline",
+            ["http_method"] = context.Request.Method,
+            ["http_path"] = context.Request.Path.ToString(),
+            ["status_code"] = statusCode,
+            ["error_type"] = errorType,
+            ["exception_type"] = exception.GetType().Name
+        }))
+        {
+            _logger.LogError(
+                new EventId(1002, "RequestFailure"),
                 exception,
-                "Falha de domínio no processamento da ordem de serviço. Status HTTP: {StatusCode}",
-                statusCode);
+                "Falha no processamento da requisição. Método: {HttpMethod}, Path: {HttpPath}, StatusCode: {StatusCode}, ErrorType: {ErrorType}",
+                context.Request.Method,
+                context.Request.Path,
+                statusCode,
+                errorType);
         }
+
+        await WriteResponseAsync(context, statusCode, false, exception.Message, null);
+    }
+
+    private static string GetCorrelationId(HttpContext context)
+    {
+        var correlationId = context.Request.Headers["X-Correlation-ID"].FirstOrDefault();
+        return string.IsNullOrWhiteSpace(correlationId)
+            ? context.TraceIdentifier
+            : correlationId;
+    }
 
     private static async Task WriteResponseAsync(HttpContext context, int statusCode, bool success, string message, object? data)
     {

@@ -21,7 +21,22 @@ public class CorrelationMiddleware
             correlationId = Guid.NewGuid().ToString();
         }
 
+        context.TraceIdentifier = correlationId;
         context.Response.Headers["X-Correlation-ID"] = correlationId;
+        context.Items["CorrelationId"] = correlationId;
+
+        if (Activity.Current == null)
+        {
+            var activity = new Activity("AutoReparaAPI.Request");
+            activity.SetTag("correlation_id", correlationId);
+            activity.SetTag("http.method", context.Request.Method);
+            activity.SetTag("http.path", context.Request.Path.ToString());
+            activity.Start();
+        }
+        else
+        {
+            Activity.Current?.SetTag("correlation_id", correlationId);
+        }
 
         using (_logger.BeginScope(new Dictionary<string, object>
         {
