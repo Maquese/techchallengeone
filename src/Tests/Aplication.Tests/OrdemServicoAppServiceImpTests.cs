@@ -26,6 +26,10 @@ namespace Aplication.Tests
         private readonly Mock<ItemEstoqueRepository> _itemRepoMock;
         private readonly Mock<ClienteRepository> _clienteRepoMock;
         private readonly Mock<ILogger<AdicionarOrdemServicoHandler>> _adicionarOrdemServicoLoggerMock;
+        private readonly Mock<ILogger<AtribuirMecanicoDiagnosticoOSHandler>> _atribuirMecanicoDiagnosticoLoggerMock;
+        private readonly Mock<ILogger<AtribuirMecanicoExecucaoOSHandler>> _atribuirMecanicoExecucaoLoggerMock;
+        private readonly Mock<ILogger<FinalizarOrdemServicoHandler>> _finalizarOrdemServicoLoggerMock;
+        private readonly Mock<ILogger<FinalizarDiagnosticoOSHandler>> _finalizarDiagnosticoLoggerMock;
         private readonly AdicionarOrdemServicoHandler _adicionarOrdemServicoHandler;
         private readonly AtribuirMecanicoDiagnosticoOSHandler _atribuirMecanicoDiagnosticoOSHandler;
         private readonly AtribuirMecanicoExecucaoOSHandler _atribuirMecanicoExecucaoOSHandler;
@@ -50,6 +54,10 @@ namespace Aplication.Tests
             _itemRepoMock = new Mock<ItemEstoqueRepository>();
             _clienteRepoMock = new Mock<ClienteRepository>();
             _adicionarOrdemServicoLoggerMock = new Mock<ILogger<AdicionarOrdemServicoHandler>>();
+            _atribuirMecanicoDiagnosticoLoggerMock = new Mock<ILogger<AtribuirMecanicoDiagnosticoOSHandler>>();
+            _atribuirMecanicoExecucaoLoggerMock = new Mock<ILogger<AtribuirMecanicoExecucaoOSHandler>>();
+            _finalizarOrdemServicoLoggerMock = new Mock<ILogger<FinalizarOrdemServicoHandler>>();
+            _finalizarDiagnosticoLoggerMock = new Mock<ILogger<FinalizarDiagnosticoOSHandler>>();
             _adicionarOrdemServicoHandler = new AdicionarOrdemServicoHandler(
                 _veiculoRepoMock.Object,
                 _servicoRepoMock.Object,
@@ -57,20 +65,24 @@ namespace Aplication.Tests
                 _adicionarOrdemServicoLoggerMock.Object
             );
             _atribuirMecanicoDiagnosticoOSHandler = new AtribuirMecanicoDiagnosticoOSHandler(
-                _ordemRepoMock.Object
+                _ordemRepoMock.Object,
+                _atribuirMecanicoDiagnosticoLoggerMock.Object
             );
             _atribuirMecanicoExecucaoOSHandler = new AtribuirMecanicoExecucaoOSHandler(
-                _ordemRepoMock.Object
+                _ordemRepoMock.Object,
+                _atribuirMecanicoExecucaoLoggerMock.Object
             );
             _finalizarOrdemServicoHandler = new FinalizarOrdemServicoHandler(
                 _ordemRepoMock.Object,
-                _itemRepoMock.Object
+                _itemRepoMock.Object,
+                _finalizarOrdemServicoLoggerMock.Object
             );
             _finalizarDiagnosticoOSHandler = new FinalizarDiagnosticoOSHandler(
                 _ordemRepoMock.Object,
                 _servicoRepoMock.Object,
                 _itemRepoMock.Object,
-                _orcamentoRepoMock.Object
+                _orcamentoRepoMock.Object,
+                _finalizarDiagnosticoLoggerMock.Object
             );
             _adicionarServicoHandler = new AdicionarServicoHandler(
                 _servicoRepoMock.Object
@@ -95,16 +107,22 @@ namespace Aplication.Tests
                 _servicoRepoMock.Object
             );
             _atribuirMecanicoExecucaoHandler = new AtribuirMecanicoExecucaoOSHandler(
-                _ordemRepoMock.Object
+                _ordemRepoMock.Object,
+                _atribuirMecanicoExecucaoLoggerMock.Object
             );
             _finalizarDiagnosticoOSHandler = new FinalizarDiagnosticoOSHandler(
                 _ordemRepoMock.Object,
                 _servicoRepoMock.Object,
                 _itemRepoMock.Object,
-                _orcamentoRepoMock.Object
+                _orcamentoRepoMock.Object,
+                _finalizarDiagnosticoLoggerMock.Object
             );
-            _diagnosticoFinalizadoHandler = new FinalizarDiagnosticoOSHandler(_ordemRepoMock.Object,
-            _servicoRepoMock.Object,_itemRepoMock.Object,_orcamentoRepoMock.Object);
+            _diagnosticoFinalizadoHandler = new FinalizarDiagnosticoOSHandler(
+                _ordemRepoMock.Object,
+                _servicoRepoMock.Object,
+                _itemRepoMock.Object,
+                _orcamentoRepoMock.Object,
+                _finalizarDiagnosticoLoggerMock.Object);
         }
 
         [Fact]
