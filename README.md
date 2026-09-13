@@ -1,4 +1,4 @@
-﻿# Projeto: Nome do Repositório
+﻿# Projeto: Auto-repara-API
 
 ## 1. Objetivo do projeto
 Descreva aqui o propósito do repositório e o problema que ele resolve.
@@ -11,18 +11,15 @@ Exemplo:
 ---
 
 ## 2. Tecnologias utilizadas
-- .NET 8 / .NET 9
-- ASP.NET Core
+- .NET 10
 - C#
-- Entity Framework / Dapper / SQL Server / MySQL
+- Entity Framework
 - Docker
 - Kubernetes
 - Terraform
 - Swagger / OpenAPI
 - GitHub Actions
-- Testes com xUnit / NUnit / MSTest
-
-> Ajuste conforme o projeto real.
+- Testes com  NUnit
 
 ---
 
@@ -38,11 +35,8 @@ O sistema é composto pelos seguintes módulos:
 - Tests
 
 ### Diagrama de componentes
-Coloque o diagrama do sistema aqui:
+![Diagrama de componentes - ](images/componentes.png)
 
-![Diagrama de componentes - inserir imagem](images/diagrama-componentes.png)
-
-> Substitua o caminho e o nome da imagem conforme seu projeto.
 
 ### Fluxo principal
 1. Cliente realiza requisição na API.
@@ -74,8 +68,6 @@ Coloque o diagrama do sistema aqui:
 ├── README.md
 └── ...
 ```
-
-> Se este repositório não precisa de Dockerfile, remova essa linha e mantenha apenas o necessário.
 
 ---
 
@@ -150,21 +142,13 @@ Se o projeto usar `docker-compose` com imagem fixa, também pode haver ajuste no
 ## 7. Deploy
 
 ### Deploy local com Docker
-Descreva aqui como a aplicação é executada em ambiente local/containerizado.
+Sobe uma imagem docker dentro do ambiente local.
 
 ### Deploy em Kubernetes
-Descreva como a aplicação é implantada em cluster Kubernetes.
+Sobe um pod num cluster Kubernetes.
 
-#### Arquitetura de deploy
-![Arquitetura de deploy - inserir imagem](images/deploy-kubernetes.png)
-
-#### Recursos utilizados
-- Deployment
-- Service
-- ConfigMap
-- Secret
-- PersistentVolumeClaim
-- HPA
+### Deploy docker-hub
+Sobe a imagem e disponibiliza no repo do docker-hub
 
 > Dockerfile deve existir apenas quando for necessário para build da imagem de aplicação em Kubernetes ou containerização real.
 
@@ -182,27 +166,21 @@ A pipeline executa os seguintes passos:
 6. Deploy em ambiente de homologação / produção
 
 ### Fluxo da pipeline
-![Pipeline - inserir imagem](images/pipeline.png)
-
-### Exemplo de etapas
 - build
 - test
 - docker build
 - push image
 - deploy
 
-> Ajuste conforme o GitHub Actions, Azure DevOps, GitLab CI ou outra ferramenta usada.
-
 ---
 
 ## 9. Documentação da API
 ### Swagger
 - URL local: http://localhost:<porta>/swagger
-- URL de ambiente: <inserir link>
 
-### Postman
-- Collection: <inserir link do Postman>
-- Workspace: <inserir link>
+### Insominia
+- Collection: https://drive.google.com/file/d/1qeOqcmxKIwq-32-0sxej9vbQJo34ZpdQ/view?usp=drive_link
+- Workspace: New Environment aws (copy) 
 
 ---
 
@@ -210,8 +188,6 @@ A pipeline executa os seguintes passos:
 - Logs estruturados em JSON
 - Correlação por request
 - Métricas e alertas conforme ambiente
-
-> Descreva aqui quais campos de log e métricas são usados para monitoramento.
 
 ---
 
@@ -227,31 +203,3 @@ Cobertura esperada:
 
 ---
 
-## 12. Como contribuir
-1. Faça fork do projeto.
-2. Crie uma branch para a feature.
-3. Faça commit com mensagem clara.
-4. Abra um Pull Request.
-
----
-
-## 13. Informações adicionais
-- Nome do autor / equipe
-- Repositório relacionado
-- Link para documentação adicional
-- Link para imagens ou diagramas externos
-
----
-
-## 14. Imagens e artefatos
-- [Inserir imagem da arquitetura]
-- [Inserir imagem do diagrama de componentes]
-- [Inserir imagem da pipeline]
-- [Inserir imagem do deploy Kubernetes]
-
----
-
-## 15. Observações finais
-- Dockerfile somente quando houver necessidade técnica de containerização da aplicação.
-- Este README serve como template base para documentação do repositório.
-- Ajuste os itens para refletir o cenário real do projeto.
