@@ -12,6 +12,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter())
     .CreateLogger();
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
