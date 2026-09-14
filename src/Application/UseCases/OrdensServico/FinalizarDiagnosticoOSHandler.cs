@@ -65,11 +65,14 @@ public class FinalizarDiagnosticoOSHandler
 
         ordemServico.OSDiagnosticada(itensEstoque);
         _logger.LogInformation(
-            "Diagnóstico finalizado para a ordem de serviço ID {OrderId}. VehicleId: {VehicleId}, Status: {Status}, Data: {Data}",
-            ordemServico.Id,
-            ordemServico.VeiculoId,
-            ordemServico.Status,
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            "Diagnóstico finalizado {@Diagnosis}",
+            new
+            {
+                OrderId = ordemServico.Id,
+                VehicleId = ordemServico.VeiculoId,
+                Status = ordemServico.Status,
+                Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
         var orcamento = new Orcamento(
             diagnosticoFinalizadoModel.Id,
             await CalcularValorTotalOrcamento(
@@ -79,10 +82,14 @@ public class FinalizarDiagnosticoOSHandler
         await _ordemServicoRepository.Atualizar(ordemServico);
         await _orcamentoRepository.Adicionar(orcamento);
         _logger.LogInformation(
-            "Orçamento criado para a ordem de serviço ID {OrderId}. VehicleId: {VehicleId}, Status: {Status}",
-            ordemServico.Id,
-            ordemServico.VeiculoId,
-            ordemServico.Status);
+            "Orçamento criado {@Budget}",
+            new
+            {
+                OrderId = ordemServico.Id,
+                VehicleId = ordemServico.VeiculoId,
+                Status = ordemServico.Status,
+                BudgetId = orcamento.Id
+            });
         return new BaseResponse
         {
             Success = true,

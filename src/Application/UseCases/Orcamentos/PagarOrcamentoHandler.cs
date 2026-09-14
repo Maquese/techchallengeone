@@ -58,12 +58,15 @@ public class PagarOrcamentoHandler
         ordemServico.OrdemServicoEntregue();
         await _orcamentoRepository.Atualizar(orcamento);
         _logger.LogInformation(
-            "Orçamento ID {OrcamentoId} pago com sucesso. OrderId: {OrderId}, VehicleId: {VehicleId}, Status: {Status}, Data: {Data}",
-            orcamento.Id,
-            ordemServico.Id,
-            ordemServico.VeiculoId,
-            ordemServico.Status,
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            "Orçamento pago com sucesso {@Payment}",
+            new
+            {
+                OrcamentoId = orcamento.Id,
+                OrderId = ordemServico.Id,
+                VehicleId = ordemServico.VeiculoId,
+                Status = ordemServico.Status,
+                Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
         return new BaseResponse
         {
             Success = true, 
