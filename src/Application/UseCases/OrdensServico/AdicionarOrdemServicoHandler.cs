@@ -28,14 +28,13 @@ public class AdicionarOrdemServicoHandler
     
     public async Task<BaseResponse> Handle(AddOrdemServicoRequest ordemServico)
     {
-        using var scope = _logger.BeginScope(new Dictionary<string, object?>
-        {
-            ["correlation_id"] = Activity.Current?.TraceId.ToString() ?? "n/a",
-            ["event_type"] = "order_processing",
-            ["operation"] = "create_order",
-            ["vehicle_id"] = ordemServico.VeiculoId,
-            ["status"] = "pending"
-        });
+        using var scope = _logger.BeginScope(
+            "correlation_id={CorrelationId} event_type={EventType} operation={Operation} vehicle_id={VehicleId} status={Status}",
+            Activity.Current?.TraceId.ToString() ?? "n/a",
+            "order_processing",
+            "create_order",
+            ordemServico.VeiculoId,
+            "pending");
 
         _logger.LogInformation(
             "Início da criação da ordem de serviço. VehicleId: {VehicleId}",

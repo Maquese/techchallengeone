@@ -28,15 +28,14 @@ public class AtribuirMecanicoDiagnosticoOSHandler
             throw new DomainException($"Ordem de serviço com ID {atribuiEmDiagnostico.OrdemServicoId} não encontrada.");
         }
 
-        using var scope = _logger.BeginScope(new Dictionary<string, object?>
-        {
-            ["correlation_id"] = Activity.Current?.TraceId.ToString() ?? "n/a",
-            ["event_type"] = "order_processing",
-            ["operation"] = "start_order_diagnosis",
-            ["order_id"] = ordemServico.Id,
-            ["vehicle_id"] = ordemServico.VeiculoId,
-            ["status"] = ordemServico.Status
-        });
+        using var scope = _logger.BeginScope(
+            "correlation_id={CorrelationId} event_type={EventType} operation={Operation} order_id={OrderId} vehicle_id={VehicleId} status={Status}",
+            Activity.Current?.TraceId.ToString() ?? "n/a",
+            "order_processing",
+            "start_order_diagnosis",
+            ordemServico.Id,
+            ordemServico.VeiculoId,
+            ordemServico.Status);
 
         if(ordemServico.Status != "Recebida")
         {

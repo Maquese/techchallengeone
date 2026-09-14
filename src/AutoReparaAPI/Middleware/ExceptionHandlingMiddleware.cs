@@ -43,19 +43,18 @@ public class ExceptionHandlingMiddleware
     {
         var correlationId = GetCorrelationId(context);
 
-        using (_logger.BeginScope(new Dictionary<string, object?>
-        {
-            ["correlation_id"] = correlationId,
-            ["request_id"] = context.TraceIdentifier,
-            ["trace_id"] = Activity.Current?.TraceId.ToString(),
-            ["event_type"] = "integration_error",
-            ["operation"] = "request_pipeline",
-            ["http_method"] = context.Request.Method,
-            ["http_path"] = context.Request.Path.ToString(),
-            ["status_code"] = statusCode,
-            ["error_type"] = errorType,
-            ["exception_type"] = exception.GetType().Name
-        }))
+        using (_logger.BeginScope(
+            "correlation_id={CorrelationId} request_id={RequestId} trace_id={TraceId} event_type={EventType} operation={Operation} http_method={HttpMethod} http_path={HttpPath} status_code={StatusCode} error_type={ErrorType} exception_type={ExceptionType}",
+            correlationId,
+            context.TraceIdentifier,
+            Activity.Current?.TraceId.ToString(),
+            "integration_error",
+            "request_pipeline",
+            context.Request.Method,
+            context.Request.Path.ToString(),
+            statusCode,
+            errorType,
+            exception.GetType().Name))
         {
             _logger.LogError(
                 new EventId(1002, "RequestFailure"),
