@@ -66,13 +66,13 @@ public class AdicionarOrdemServicoHandler
 
         _logger.LogInformation(
             "Ordem de serviço criada com sucesso {@Order}",
-            new
+            System.Text.Json.JsonSerializer.Serialize(new
             {
                 OrderId = ordemServicoEntity.Id,
                 VehicleId = ordemServicoEntity.VeiculoId,
                 Status = ordemServicoEntity.Status,
                 Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-            });
+            }));
 
         return new BaseResponse
         {
