@@ -9,9 +9,9 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
+    .Enrich.WithProperty("service", "auto-repara-api")
     .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter())
     .CreateLogger();
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +19,6 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.Host.UseSerilog();
 
-builder.Logging.ClearProviders();
 // Add services to the container.
 
 builder.Services.AddHealthChecks();
