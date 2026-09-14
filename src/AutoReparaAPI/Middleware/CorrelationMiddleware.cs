@@ -38,14 +38,13 @@ public class CorrelationMiddleware
             Activity.Current?.SetTag("correlation_id", correlationId);
         }
 
-        using (_logger.BeginScope(new Dictionary<string, object>
-        {
-            ["correlation_id"] = correlationId,
-            ["request_id"] = context.TraceIdentifier,
-            ["trace_id"] = Activity.Current?.TraceId.ToString() ?? string.Empty,
-            ["http_method"] = context.Request.Method,
-            ["http_path"] = context.Request.Path.ToString()
-        }))
+        using (_logger.BeginScope(
+            "correlation_id={CorrelationId} request_id={RequestId} trace_id={TraceId} http_method={HttpMethod} http_path={HttpPath}",
+            correlationId,
+            context.TraceIdentifier,
+            Activity.Current?.TraceId.ToString() ?? string.Empty,
+            context.Request.Method,
+            context.Request.Path.ToString()))
         {
             _logger.LogInformation("Requisição iniciada");
             await _next(context);

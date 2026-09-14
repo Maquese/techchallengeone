@@ -35,15 +35,14 @@ public class FinalizarOrdemServicoHandler
         {
             throw new DomainException($"Ordem de serviço com ID {ordemServico.Id} não está no status 'Em execução' para finalização.");
         }
-        using var scope = _logger.BeginScope(new Dictionary<string, object?>
-        {
-            ["correlation_id"] = Activity.Current?.TraceId.ToString() ?? "n/a",
-            ["event_type"] = "order_processing",
-            ["operation"] = "finalize_order_execution",
-            ["order_id"] = ordemServico.Id,
-            ["vehicle_id"] = ordemServico.VeiculoId,
-            ["status"] = ordemServico.Status
-        });
+        using var scope = _logger.BeginScope(
+            "correlation_id={CorrelationId} event_type={EventType} operation={Operation} order_id={OrderId} vehicle_id={VehicleId} status={Status}",
+            Activity.Current?.TraceId.ToString() ?? "n/a",
+            "order_processing",
+            "finalize_order_execution",
+            ordemServico.Id,
+            ordemServico.VeiculoId,
+            ordemServico.Status);
         await DeduzirItensEstoque(ordemServico.OrdemServicoItensEstoque?.Select(i => new AddItensOrdemServicoRequest { id = i.ItemEstoqueId, quantidade = i.Quantidade }).ToList() ?? new List<AddItensOrdemServicoRequest>());
 
         ordemServico.FinalizarOrdemServico();
