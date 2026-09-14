@@ -5,18 +5,21 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoReparaAPI.Middleware;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter())
+    .CreateLogger();
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Logging.ClearProviders();
+builder.Host.UseSerilog();
 
-builder.Logging.AddJsonConsole(options =>
-{
-    options.IncludeScopes = true;
-    options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffZ";
-});
+builder.Logging.ClearProviders();
 // Add services to the container.
 
 builder.Services.AddHealthChecks();
