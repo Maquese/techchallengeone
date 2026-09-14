@@ -37,8 +37,12 @@ public class AdicionarOrdemServicoHandler
             "pending");
 
         _logger.LogInformation(
-            "Início da criação da ordem de serviço. VehicleId: {VehicleId}",
-            ordemServico.VeiculoId);
+            "Ordem de serviço em criação {@OrderCreateContext}",
+            new
+            {
+                VehicleId = ordemServico.VeiculoId,
+                Operation = "create_order"
+            });
 
         var veiculo = await _veiculoRepository.ObterPorId(ordemServico.VeiculoId);
 
@@ -61,11 +65,14 @@ public class AdicionarOrdemServicoHandler
         await _ordemServicoRepository.Adicionar(ordemServicoEntity);
 
         _logger.LogInformation(
-            "Ordem de serviço criada com sucesso. OrderId: {OrderId}, VehicleId: {VehicleId}, Status: {Status}, Data de abertura {Data}",
-            ordemServicoEntity.Id,
-            ordemServicoEntity.VeiculoId,
-            ordemServicoEntity.Status,
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            "Ordem de serviço criada com sucesso {@Order}",
+            new
+            {
+                OrderId = ordemServicoEntity.Id,
+                VehicleId = ordemServicoEntity.VeiculoId,
+                Status = ordemServicoEntity.Status,
+                Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
 
         return new BaseResponse
         {

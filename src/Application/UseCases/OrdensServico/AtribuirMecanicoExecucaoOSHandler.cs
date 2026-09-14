@@ -41,12 +41,15 @@ public class AtribuirMecanicoExecucaoOSHandler
         ordemServico.EmExecucao(atribuiEmReparo.MecanicoAtribuido);
         await _ordemServicoRepository.Atualizar(ordemServico);
         _logger.LogInformation(
-            "Mecânico '{Mecanico}' atribuído à ordem de serviço ID {OrderId}. VehicleId: {VehicleId}, Status: {Status}, Data: {Data}",
-            atribuiEmReparo.MecanicoAtribuido,
-            ordemServico.Id,
-            ordemServico.VeiculoId,
-            ordemServico.Status,
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            "Mecânico atribuído à execução {@Assignment}",
+            new
+            {
+                Mechanic = atribuiEmReparo.MecanicoAtribuido,
+                OrderId = ordemServico.Id,
+                VehicleId = ordemServico.VeiculoId,
+                Status = ordemServico.Status,
+                Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
         return new BaseResponse
         {
             Success = true,

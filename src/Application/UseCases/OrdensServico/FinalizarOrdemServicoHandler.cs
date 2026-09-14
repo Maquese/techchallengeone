@@ -48,11 +48,14 @@ public class FinalizarOrdemServicoHandler
         ordemServico.FinalizarOrdemServico();
         await _ordemServicoRepository.Atualizar(ordemServico);
         _logger.LogInformation(
-            "Ordem de serviço ID {OrderId} finalizada com sucesso. VehicleId: {VehicleId}, Status: {Status}, Data: {Data}",
-            ordemServico.Id,
-            ordemServico.VeiculoId,
-            ordemServico.Status,
-            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            "Ordem de serviço finalizada com sucesso {@Order}",
+            new
+            {
+                OrderId = ordemServico.Id,
+                VehicleId = ordemServico.VeiculoId,
+                Status = ordemServico.Status,
+                Data = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
         return new BaseResponse{
             Message = $"Ordem de serviço ID {ordemServicoId} finalizada com sucesso.",
             Success = true,

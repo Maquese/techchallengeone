@@ -46,11 +46,28 @@ public class CorrelationMiddleware
             context.Request.Method,
             context.Request.Path.ToString()))
         {
-            _logger.LogInformation("Requisição iniciada");
+            _logger.LogInformation(
+                "Requisição iniciada {@RequestStarted}",
+                new
+                {
+                    CorrelationId = correlationId,
+                    RequestId = context.TraceIdentifier,
+                    TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty,
+                    HttpMethod = context.Request.Method,
+                    HttpPath = context.Request.Path.ToString()
+                });
             await _next(context);
             _logger.LogInformation(
-                "Requisição finalizada com status HTTP {StatusCode}",
-                context.Response.StatusCode);
+                "Requisição finalizada {@RequestFinished}",
+                new
+                {
+                    CorrelationId = correlationId,
+                    RequestId = context.TraceIdentifier,
+                    TraceId = Activity.Current?.TraceId.ToString() ?? string.Empty,
+                    StatusCode = context.Response.StatusCode,
+                    HttpMethod = context.Request.Method,
+                    HttpPath = context.Request.Path.ToString()
+                });
         }
     }
 }
