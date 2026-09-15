@@ -28,13 +28,15 @@ namespace IOC;
                 throw new InvalidOperationException("A connection string 'DefaultConnection' must be configured.");
             }
             
+            Console.WriteLine($"Using connection string: {connectionString}");
+
             services.AddDbContext<EFContext>(options =>
                 options.UseMySQL(connectionString));
 
-            using var serviceProvider = services.BuildServiceProvider();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<EFContext>();
-            dbContext.Database.Migrate();
+            // using var serviceProvider = services.BuildServiceProvider();
+            // using var scope = serviceProvider.CreateScope();
+            // var dbContext = scope.ServiceProvider.GetRequiredService<EFContext>();
+            // dbContext.Database.Migrate();
 
 
             services.AddTransient<ItemEstoqueRepository, ItemEstoqueRepositoryImp>();
