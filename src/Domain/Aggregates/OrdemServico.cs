@@ -77,6 +77,16 @@ public class OrdemServico : IEntity
         DataFechamento = DateTime.Now;
     }
 
+    public double TempoMedioExecucao()
+    {
+        if (DataInicioExecucao.HasValue && DataFimExecucao.HasValue)
+        {
+            return (DataFimExecucao.Value - DataInicioExecucao.Value).TotalMilliseconds;
+        }
+
+        throw new InvalidOperationException("Datas de início e fim da execução não estão definidas.");
+    }
+
     public decimal? CalcularValorOrdemServico()
     {
         return Servicos?.Sum(x => x.Valor) + OrdemServicoItensEstoque?.Sum(x => x.Quantidade * x.ItemEstoque.Valor);
