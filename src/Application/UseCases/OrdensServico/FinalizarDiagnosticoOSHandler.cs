@@ -85,7 +85,7 @@ public class FinalizarDiagnosticoOSHandler
             "Orçamento criado {@Budget}",
             new
             {
-                TempoGasto = (ordemServico.DataAbertura - DateTime.Now).TotalMilliseconds,
+                TempoGasto = (DateTime.Now - ordemServico.DataAbertura).TotalMilliseconds,
                 OrderId = ordemServico.Id,
                 VehicleId = ordemServico.VeiculoId,
                 Status = ordemServico.Status,
