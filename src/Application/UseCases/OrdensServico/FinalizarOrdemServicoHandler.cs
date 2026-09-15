@@ -51,6 +51,7 @@ public class FinalizarOrdemServicoHandler
             "Ordem de serviço finalizada com sucesso {@Order}",
             new
             {
+                TempoGasto = ordemServico.TempoMedioExecucao(),
                 OrderId = ordemServico.Id,
                 VehicleId = ordemServico.VeiculoId,
                 Status = ordemServico.Status,

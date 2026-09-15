@@ -61,6 +61,7 @@ public class PagarOrcamentoHandler
             "Orçamento pago com sucesso {@Payment}",
             new
             {
+                TempoGasto = (ordemServico.DataAbertura - DateTime.Now).TotalMilliseconds,
                 OrcamentoId = orcamento.Id,
                 OrderId = ordemServico.Id,
                 VehicleId = ordemServico.VeiculoId,
